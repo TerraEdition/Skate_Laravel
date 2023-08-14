@@ -1,31 +1,40 @@
-.text-indigo{
-    color:var(--bs-indigo);
+.side-height{
+    min-height: 100vh;
 }
-.btn-indigo{
-    background-color:var(--bs-indigo);
+.text-indigo {
+    color: var(--bs-indigo);
 }
-.btn-indigo:hover{
-    background-color:var(--bs-indigo);
+
+.btn-indigo {
+    background-color: var(--bs-indigo);
 }
-a.text-indigo:hover{
-    background-color:#b99ee6;
+
+.btn-indigo:hover {
+    background-color: var(--bs-indigo);
 }
-.background-nav{
+
+a.text-indigo:hover {
+    background-color: #b99ee6;
+}
+
+.background-nav {
     background-color: #ebeff3;
 }
-.border-indigo{
-    border-color:var(--bs-indigo);
-}
-.border-none{
-    border:none;
+
+.border-indigo {
+    border-color: var(--bs-indigo);
 }
 
-body{
+.border-none {
+    border: none;
+}
+
+body {
     overflow-x: hidden;
 }
+
 .rounded-pill .form-control,
 .rounded-pill .input-group-text {
-border-radius: 50rem;
-background-color:transparent
+    border-radius: 50rem;
+    background-color: transparent
 }
-

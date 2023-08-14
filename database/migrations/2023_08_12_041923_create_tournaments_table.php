@@ -18,6 +18,7 @@ return new class extends Migration
             $table->datetime('end_date');
             $table->string('location');
             $table->text('description');
+            $table->string('slug');
             $table->timestamps();
             $table->index('tournament');
             $table->index('location');
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tournament');
+        Schema::dropIfExists('tournaments');
     }
 };

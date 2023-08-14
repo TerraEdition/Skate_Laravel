@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->string('team')->nullable(false);
-            $table->string('address')->nullable(true);
-            $table->string('phone')->nullable(true);
-            $table->string('email')->nullable(true);
-            $table->string('image')->nullable(true);
+            $table->string('coach');
+            $table->string('address');
+            $table->string('phone');
+            $table->string('email');
+            $table->string('image');
+            $table->string('slug');
             $table->timestamps();
         });
     }

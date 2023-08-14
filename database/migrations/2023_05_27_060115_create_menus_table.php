@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('icon');
             $table->string('slug');
             $table->string('parent_id');
+            $table->enum('type', ['app', 'setting']);
             $table->timestamps();
         });
 
@@ -30,33 +31,37 @@ return new class extends Migration
                 'icon' => 'fa-solid fa-house',
                 'slug' => 'dashboard',
                 'parent_id' => '0',
+                'type' => 'app',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'menu' => 'Tim',
                 'url' => '/team',
-                'icon' => 'fa-brands fa-microsoft',
+                'icon' => 'fa-solid fa-people-group',
                 'slug' => 'tim',
                 'parent_id' => '0',
+                'type' => 'app',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'menu' => 'Turnamen',
                 'url' => '/tournament',
-                'icon' => 'fa-brands fa-microsoft',
+                'icon' => 'fa-solid fa-trophy',
                 'slug' => 'turnamen',
                 'parent_id' => '0',
+                'type' => 'app',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'menu' => 'Peserta',
                 'url' => '/participant',
-                'icon' => 'fa-brands fa-microsoft',
+                'icon' => 'fa-solid fa-person-skating',
                 'slug' => 'peserta',
                 'parent_id' => '0',
+                'type' => 'app',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],

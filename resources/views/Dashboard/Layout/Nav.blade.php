@@ -1,6 +1,6 @@
 @php
-    use App\Helpers\Menu;
-    $menu = Menu::get_menu_active();
+use App\Helpers\Menu;
+$menu = Menu::get_menu_active();
 @endphp
 <div class="container py-5">
     <div class="">
@@ -11,8 +11,7 @@
                 <div class="row m-auto my-2">
                     <div class="col-7 m-auto">
                         <span class="input-group rounded-pill">
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><i
-                                    class="fa-solid fa-magnifying-glass"></i></span>
+                            <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
                             <input type="text" class="form-control">
                         </span>
                     </div>
@@ -23,11 +22,9 @@
                         <i class="fa-solid fa-moon fa-lg"></i>
                     </div>
                     <div class="col-2 m-auto">
-                        <img src="<?= asset('storage/image/profile/default.png') ?>" alt="profile"
-                            class="rounded-circle" style="width:50px">
+                        <img src="<?= asset('storage/image/profile/default.png') ?>" alt="profile" class="rounded-circle" style="width:50px">
                     </div>
                 </div>
-                </span>
             </div>
         </div>
     </div>

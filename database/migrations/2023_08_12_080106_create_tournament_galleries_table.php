@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tournament_id');
             $table->string('image');
             $table->text('description');
+            $table->string('slug');
             $table->timestamps();
             $table->foreign('tournament_id')->references('id')->on('tournaments');
             $table->index(['image']);

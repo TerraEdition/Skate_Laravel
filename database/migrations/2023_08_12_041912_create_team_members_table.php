@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('team_id');
             $table->string('member')->nullable(false);
-            $table->enum('gender',['1','2'])->comment('1=>Male, 2=>Female');
+            $table->enum('gender', ['1', '2'])->comment('1=>Male, 2=>Female');
             $table->date('birth');
             $table->string('address');
             $table->string('image');
+            $table->string('slug');
             $table->timestamps();
             $table->foreign('team_id')->references('id')->on('teams');
         });

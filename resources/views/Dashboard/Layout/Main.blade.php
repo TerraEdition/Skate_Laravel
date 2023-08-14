@@ -20,10 +20,10 @@
             @include('Dashboard.Layout.Nav')
 
             @yield('content')
-
         </div>
     </div>
     <script src="<?= asset('vendors/fontawesome/js/all.min.js') ?>"></script>
+    <script src="<?= asset('vendors/bootstrap/bootstrap.min.js') ?>"></script>
     @yield('js')
 </body>
 

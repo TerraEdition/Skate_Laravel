@@ -53,6 +53,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('team')->group(function () {
         Route::controller(TeamController::class)->group(function () {
             Route::get('/', 'index');
+            Route::get('/create', 'create');
+            Route::get('/{slug}', 'detail');
+            Route::post('/create', 'store');
         });
     });
 });
