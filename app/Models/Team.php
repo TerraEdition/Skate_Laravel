@@ -6,6 +6,7 @@ use App\Helpers\Format;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Team extends Model
 {
@@ -34,8 +35,21 @@ class Team extends Model
             });
 
         $result
-            // ->orderBy($request->get('sort_at') ?? 'id', $request->get('sort_by') ?? 'desc')
+            ->orderBy($request->get('sort_at') ?? 'id', $request->get('sort_by') ?? 'desc')
             ->paginate($request->get('limit') ?? 20);
         return  $result->get();
+    }
+
+    # team controller
+    public static function get_detail_by_slug($slug)
+    {
+        $result = Team::select(
+            'teams.*',
+            DB::raw('(select CONCAT(contact_persons.phone," (",contact_persons.name,")") from contact_persons where contact_persons.team_id = teams.id order by id desc limit 1) as phone'),
+        )
+            ->where('slug', $slug)
+            ->first();
+
+        return $result;
     }
 }

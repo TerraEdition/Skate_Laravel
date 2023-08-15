@@ -11,7 +11,7 @@
     @yield('css')
     <link rel="icon" type="image/x-icon" href="<?= asset('storage/image/logo.png') ?>">
     <style>
-        <style>body {
+        body {
             margin: 0;
             padding: 0;
         }
@@ -52,7 +52,7 @@
 </head>
 
 <body>
-    <div class="row bg-auth">
+    <div class="row bg-auth mt-5">
         <div class="col-md-7">
             <div class="container text-center">
                 <div class="border-radius text-center my-5">
@@ -69,9 +69,9 @@
         <div class="col-md-5">
             <div class="container my-5 px-5">
                 @if (session('msg'))
-                    <div class="alert alert-danger">
-                        {{ session('msg') }}
-                    </div>
+                <div class="alert alert-danger">
+                    {{ session('msg') }}
+                </div>
                 @endif
                 @yield('content')
             </div>

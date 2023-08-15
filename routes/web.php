@@ -10,6 +10,7 @@ use App\Http\Controllers\Dashboard\FileController;
 use App\Http\Controllers\Dashboard\ScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamMemberController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,6 +57,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/create', 'create');
             Route::get('/{slug}', 'detail');
             Route::post('/create', 'store');
+        });
+    });
+    Route::prefix('member')->group(function () {
+        Route::controller(TeamMemberController::class)->group(function () {
+            Route::get('/create', 'create');
+            Route::get('/{slug}', 'detail');
+            Route::post('/create/{slug}', 'store');
         });
     });
 });

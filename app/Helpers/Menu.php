@@ -13,8 +13,13 @@ class Menu
 
     public static function get_menu_active()
     {
-        $menu =  MenuModel::where(function ($query) {
-            $key = explode('/', Format::clean_char_search(request()->path()));
+        $key = explode('/', Format::clean_char_search(request()->path()));
+        # member tidak ada di menu
+        if (in_array('member', $key)) {
+            return (object)['id' => '0', 'menu' => 'Anggota'];
+        }
+
+        $menu =  MenuModel::where(function ($query) use ($key) {
             $query->where(function ($query) use ($key) {
                 $query->orWhere('url', 'like', '%' . $key[0] . '%');
             });

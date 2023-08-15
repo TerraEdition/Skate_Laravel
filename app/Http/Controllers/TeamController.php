@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContactPerson;
 use App\Models\Team;
+use App\Models\TeamMember;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +23,7 @@ class TeamController extends Controller
             return view('Dashboard.Team.Index', $data);
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
-            Session::flash('message', $th->getMessage());
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();
         }
     }
@@ -31,7 +33,7 @@ class TeamController extends Controller
             return view('Dashboard.Team.Create');
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
-            Session::flash('message', $th->getMessage());
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();
         }
     }
@@ -43,16 +45,22 @@ class TeamController extends Controller
                 'team' => ['required', Rule::unique('teams', 'team')],
                 'coach' => 'required|max:100',
                 'address' => 'required',
-                'phone' => 'required|integer',
+                'web' => 'nullable|active_url',
                 'email' => 'required|email',
                 'image' => 'nullable|image',
+                'contact' => 'nullable|array',
+                'contact.*.name' => 'required',
+                'contact.*.phone' => 'required|integer',
             ], [], [
                 'team' => 'Tim',
                 'coach' => 'Pelatih',
+                'web' => 'URL Website',
                 'address' => 'Alamat',
-                'phone' => 'No HP',
                 'email' => 'Email',
                 'image' => 'Logo',
+                'contact' => 'Kontak',
+                'contact.*.name' => 'Nama Kontak',
+                'contact.*.phone' => 'No HP',
             ]);
             # check if validation fails
             if ($validator->fails()) {
@@ -60,27 +68,36 @@ class TeamController extends Controller
             }
 
             DB::beginTransaction();
-
-            $logo_name = Carbon::now()->unix() . '.' . $request->file('image')->extension();
-            $request->file('image')->storeAs('public/image/teams', $logo_name);
+            if ($request->file('image')) {
+                $logo_name = Carbon::now()->unix() . '.' . $request->file('image')->extension();
+                $request->file('image')->storeAs('public/image/teams', $logo_name);
+            }
 
             $save_team = new Team();
             $save_team->team = trim($request->input('team'));
             $save_team->address = trim($request->input('address'));
-            $save_team->phone = trim($request->input('phone'));
             $save_team->email = trim($request->input('email'));
+            $save_team->website = trim($request->input('web'));
             $save_team->coach = trim($request->input('coach'));
-            $save_team->image = $logo_name;
+            $save_team->image = $logo_name ?? 'default.png';
             $save_team->save();
 
+            foreach ($request->input('contact') as $contact) {
+                $save_cp = new ContactPerson();
+                $save_cp->team_id = $save_team->id;
+                $save_cp->name = trim($contact['name']);
+                $save_cp->phone = trim($contact['phone']);
+                $save_cp->save();
+            }
+
+            DB::commit();
             Session::flash('bg', 'alert-success');
             Session::flash('message', __('global.team_created'));
             return redirect()->to('team/' . $save_team->slug);
-            DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             Session::flash('bg', 'alert-danger');
-            Session::flash('message', $th->getMessage());
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();
         }
     }
@@ -88,7 +105,8 @@ class TeamController extends Controller
     {
         try {
             $data = [
-                'data' => Team::where('slug', $slug)->first(),
+                'data' => Team::get_detail_by_slug($slug),
+                'member' => TeamMember::get_by_team_slug($slug)
             ];
             if (empty($data['data'])) {
                 Session::flash('bg', 'alert-danger');
@@ -98,7 +116,7 @@ class TeamController extends Controller
             return view('Dashboard.Team.Detail', $data);
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
-            Session::flash('message', $th->getMessage());
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();
         }
     }

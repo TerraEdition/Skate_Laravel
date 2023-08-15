@@ -18,6 +18,8 @@ return new class extends Migration
             $table->enum('gender', ['1', '2'])->comment('1=>Male, 2=>Female');
             $table->date('birth');
             $table->string('address');
+            $table->string('phone');
+            $table->string('email');
             $table->string('image');
             $table->string('slug');
             $table->timestamps();
