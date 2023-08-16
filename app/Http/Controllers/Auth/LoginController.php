@@ -29,7 +29,6 @@ class LoginController extends Controller
                     # email not verify
                     if (!$user->email_verified_at) {
                         # send again email verified
-
                         return redirect()->back()->with('msg', __('global.user_email_not_verified'));
                     }
                     return redirect()->back()->with('msg', __('global.user_not_active'));

@@ -71,10 +71,8 @@
             <div class=" mb-3">
                 <label for="image" class="form-label">Foto</label>
                 <input class="form-control" type="file" id="image" name="image" accept="image/*" onchange="previewImg()" />
+
                 @error('image')
-
-
-
                 <small class="text-danger ms-2">{{$message}}</small>
                 @enderror
             </div>

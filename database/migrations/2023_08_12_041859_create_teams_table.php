@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('website');
             $table->string('address');
             $table->string('email');
-            $table->string('image');
+            $table->string('image')->default('default.png');
             $table->string('slug');
             $table->timestamps();
         });

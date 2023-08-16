@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone');
             $table->string('email');
-            $table->string('image');
+            $table->string('image')->default('default.png');
             $table->string('slug');
             $table->timestamps();
             $table->foreign('team_id')->references('id')->on('teams');

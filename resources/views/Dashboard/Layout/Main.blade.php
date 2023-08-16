@@ -9,17 +9,20 @@
     <link rel="stylesheet" href="<?= asset('vendors/bootstrap/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendors/fontawesome/css/all.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/style.css') ?>">
+    @yield('css')
 </head>
 
 <body>
+    <div id="dropzone" class="dropzone"></div>
     <div class="row background-nav">
         <div class="col-md-3 bg-white">
             @include('Dashboard.Layout.Side')
         </div>
         <div class="col-md-9">
             @include('Dashboard.Layout.Nav')
-
-            @yield('content')
+            <div class="container pt-3 mb-5">
+                @yield('content')
+            </div>
         </div>
     </div>
     <script src="<?= asset('vendors/fontawesome/js/all.min.js') ?>"></script>
