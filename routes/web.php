@@ -11,6 +11,7 @@ use App\Http\Controllers\Dashboard\ScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
+use App\Http\Controllers\TournamentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,23 +48,32 @@ Route::middleware('already.login')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
-            Route::get('/', 'index')->name('home');
+            Route::get('', 'index')->name('home');
         });
     });
 
     Route::prefix('team')->group(function () {
         Route::controller(TeamController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('/create', 'create');
-            Route::get('/{slug}', 'detail');
-            Route::post('/create', 'store');
+            Route::get('', 'index');
+            Route::get('create', 'create');
+            Route::get('{slug}', 'detail');
+            Route::post('create', 'store');
         });
     });
     Route::prefix('member')->group(function () {
         Route::controller(TeamMemberController::class)->group(function () {
-            Route::get('/create', 'create');
-            Route::get('/{slug}', 'detail');
-            Route::post('/create/{slug}', 'store');
+            Route::get('create', 'create');
+            Route::get('{slug}', 'detail');
+            Route::post('create/{slug}', 'store');
+        });
+    });
+    Route::prefix('tournament')->group(function () {
+        Route::controller(TournamentController::class)->group(function () {
+            Route::get('', 'index');
+            Route::get('create', 'create');
+            Route::post('create', 'store');
+            Route::get('{slug}', 'detail');
+            Route::post('create/{slug}', 'store');
         });
     });
 });

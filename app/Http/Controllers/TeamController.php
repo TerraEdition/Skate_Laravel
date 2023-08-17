@@ -101,12 +101,12 @@ class TeamController extends Controller
             return redirect()->back();
         }
     }
-    public function detail($slug)
+    public function detail(Request $request, $slug)
     {
         try {
             $data = [
                 'data' => Team::get_detail_by_slug($slug),
-                'member' => TeamMember::get_by_team_slug($slug)
+                'member' => TeamMember::get_by_team_slug($request, $slug)
             ];
             if (empty($data['data'])) {
                 Session::flash('bg', 'alert-danger');

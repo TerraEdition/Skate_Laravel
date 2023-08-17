@@ -20,6 +20,19 @@ class Date
 
         return $carbonDate->format('d') . ' ' . $month[$carbonDate->format('n')] . ' ' . $carbonDate->format('Y');
     }
+    public static function format_short($date, $lang = 'indonesia')
+    {
+        $carbonDate = Carbon::parse($date);
+
+        $month = [
+            1 => 'Jan', 2 => 'Feb', 3 => 'Mar',
+            4 => 'Apr', 5 => 'Mei', 6 => 'Jun',
+            7 => 'Jul', 8 => 'Agus', 9 => 'Sep',
+            10 => 'Okt', 11 => 'Nov', 12 => 'Des'
+        ];
+
+        return $carbonDate->format('d') . ' ' . $month[$carbonDate->format('n')] . ' ' . $carbonDate->format('Y');
+    }
 
     public static function diff_date($start_date, $end_date)
     {

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('group')->nullable(false);
             $table->enum('gender', ['0', '1', '2'])->comment('0=>All, 1=>Male, 2=>Female');
             $table->text('description');
+            $table->integer('max_participant');
+            $table->integer('max_per_group');
             $table->string('slug');
             $table->timestamps();
             $table->foreign('tournament_id')->references('id')->on('tournaments');

@@ -32,33 +32,4 @@ class Format
             return addslashes(trim($keyword));
         }
     }
-
-    # for nominal money
-    public static function money($nominal, $is_decimal = false, $rounded = false)
-    {
-        $config = Config::get('all_config');
-
-        $decimal_digit = $config->decimal_digit;
-        if ($config->decimal_active == '1' && $decimal_digit > 0) {
-            $nominal = (float)$nominal;
-            $arr_nominal = explode('.', $nominal);
-            if ($is_decimal) {
-                if (isset($arr_nominal[1])) {
-                    if ($arr_nominal[1] == 0) {
-                        $decimal_digit = 0;
-                    } else if ($rounded) {
-                        $decimal_digit = strlen($arr_nominal[1]);
-                    }
-                } else {
-                    $decimal_digit = 0;
-                }
-            }
-
-            $res = number_format($nominal, $decimal_digit, $config->decimal_separator, $config->thousand_separator);
-        } else {
-            $res = number_format($nominal, 0, "", $config->thousand_separator);
-        }
-
-        return $res;
-    }
 }

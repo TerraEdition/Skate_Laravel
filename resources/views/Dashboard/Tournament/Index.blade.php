@@ -1,7 +1,11 @@
+@php
+    use App\Helpers\Date;
+@endphp
+
 @extends('Dashboard.Layout.Main')
 @section('content')
     <div class="d-flex justify-content-between mb-3">
-        <x-button.create url="team" />
+        <x-button.create url="tournament" />
     </div>
     <x-alert.danger />
     <div class="table-responsive">
@@ -9,8 +13,9 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <td>Tim</td>
-                    <td>Tanggal</td>
+                    <td>Turnamen</td>
+                    <td>Tanggal Acara</td>
+                    <td>Lokasi</td>
                     <td>Aksi</td>
                 </tr>
             </thead>
@@ -18,12 +23,13 @@
                 @foreach ($data as $r)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $r->team }}</td>
-                        <td>{{ $r->updated_at }}</td>
+                        <td>{{ $r->tournament }}</td>
+                        <td>{{ Date::format_short($r->start_date) }} - {{ Date::format_short($r->end_date) }}</td>
+                        <td>{{ $r->location }}</td>
                         <td>
                             <div class="d-flex gap-2">
-                                <x-button.detail url="team" :id="$r->slug" />
-                                <x-button.delete url="team" :id="$r->slug" />
+                                <x-button.detail url="tournament" :id="$r->slug" />
+                                <x-button.delete url="tournament" :id="$r->slug" />
                             </div>
                         </td>
                     </tr>
