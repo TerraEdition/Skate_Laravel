@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Format;
 use App\Models\Tournament;
+use App\Models\TournamentGroup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -89,11 +90,12 @@ class TournamentController extends Controller
         }
     }
 
-    public function detail($slug)
+    public function detail(Request $request, $slug)
     {
         try {
             $data = [
-                'date' => Tournament::get_detail_by_slug($slug),
+                'data' => Tournament::get_detail_by_slug($slug),
+                'group' => TournamentGroup::get_by_tournament_slug($request, $slug)
             ];
             return view('Dashboard.Tournament.Detail', $data);
         } catch (\Throwable $th) {

@@ -11,6 +11,7 @@ class Convert
     public static function gender($val, $to_id = true)
     {
         $statuses = [
+            'Putra dan Putri' => '0',
             'Putra' => '1',
             'Putri' => '2',
         ];

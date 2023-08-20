@@ -12,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\TournamentController;
+use App\Http\Controllers\TournamentGroupController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,12 +60,12 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('{slug}', 'detail');
             Route::post('create', 'store');
         });
-    });
-    Route::prefix('member')->group(function () {
-        Route::controller(TeamMemberController::class)->group(function () {
-            Route::get('create', 'create');
-            Route::get('{slug}', 'detail');
-            Route::post('create/{slug}', 'store');
+        Route::prefix('member')->group(function () {
+            Route::controller(TeamMemberController::class)->group(function () {
+                Route::get('create/{team}', 'create');
+                Route::get('{slug}', 'detail');
+                Route::post('create/{team}', 'store');
+            });
         });
     });
     Route::prefix('tournament')->group(function () {
@@ -74,6 +75,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('create', 'store');
             Route::get('{slug}', 'detail');
             Route::post('create/{slug}', 'store');
+        });
+        Route::prefix('group')->group(function () {
+            Route::controller(TournamentGroupController::class)->group(function () {
+                Route::get('{team_slug}/create', 'create');
+                Route::post('{team_slug}/create', 'store');
+                Route::get('{team_slug}/{slug}', 'detail');
+                Route::post('create/{slug}', 'store');
+            });
         });
     });
 });

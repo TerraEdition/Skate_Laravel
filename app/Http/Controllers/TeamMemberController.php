@@ -13,21 +13,19 @@ use Illuminate\Validation\Rule;
 
 class TeamMemberController extends Controller
 {
-    public function create(Request $request)
+    public function create($team)
     {
         try {
-            # check input validation
-            $validator = Validator::make($request->all(), [
-                'team' => 'required',
-            ], [], ['team' => "Tim"]);
+            # check team exist
+            $team = Team::where('slug', $team)->first();
             # check if validation fails
-            if ($validator->fails()) {
+            if (empty($team)) {
                 Session::flash('bg', 'alert-danger');
                 Session::flash('message', __('global.team_not_found'));
                 return redirect()->back();
             }
             $data = [
-                'slug' => $request->get('team'),
+                'slug' => $team,
             ];
             return view('Dashboard.Team.Member.Create', $data);
         } catch (\Throwable $th) {

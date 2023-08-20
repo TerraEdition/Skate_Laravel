@@ -71,6 +71,6 @@ class Tournament extends Model
                 'tournaments.description',
                 'tournaments.slug',
             );
-        return $result->get();
+        return $result->first();
     }
 }

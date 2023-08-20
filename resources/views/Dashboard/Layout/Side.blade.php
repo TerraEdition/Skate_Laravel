@@ -1,5 +1,5 @@
 @php
-use App\Helpers\Menu;
+    use App\Helpers\Menu;
 @endphp
 <div class="container side-height">
     <h1 class="text-center my-5 fw-bold py-3 px-1">
@@ -21,22 +21,24 @@ use App\Helpers\Menu;
     </ul>
     <!-- APP MENU -->
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="app-tab-pane" role="tabpanel" aria-labelledby="app-tab" tabindex="0">
+        <div class="tab-pane fade show active" id="app-tab-pane" role="tabpanel" aria-labelledby="app-tab"
+            tabindex="0">
             <div class="list-group">
                 @foreach (Menu::get_menus('app') as $r)
-                <a href="{{ $r->url }}" class="list-group-item list-group-flush border-none rounded my-1">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <i class="{{ $r->icon }}"></i> {{ $r->menu }}
-                        </div>
-                        <div @class(['border-end border-5 border-indigo'=> str_contains(
-                            url()->current(),
-                            $r->url),
+                    <a href="{{ $r->url }}" class="list-group-item list-group-flush border-none rounded my-1">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="{{ $r->icon }}"></i> {{ $r->menu }}
+                            </div>
+                            <div @class([
+                                'border-end border-5 border-indigo' => str_contains(
+                                    url()->current(),
+                                    $r->url),
                             ])>
-                            &nbsp;
+                                &nbsp;
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
                 @endforeach
             </div>
         </div>
