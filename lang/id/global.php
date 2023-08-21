@@ -14,8 +14,8 @@ return [
     'member_team_updated' => 'Anggota Tim berhasil di ubah!',
     'member_team_deleted' => 'Anggota Tim berhasil di hapus!',
     'member_team_not_found' => 'Anggota Tim tidak ditemukan!',
-    'tournamnet_created' => 'Turnamen berhasil di tambah!',
-    'tournamnet_updated' => 'Turnamen berhasil di ubah!',
-    'tournamnet_deleted' => 'Turnamen berhasil di hapus!',
-    'tournamnet_not_found' => 'Turnamen tidak ditemukan!',
+    'tournament_created' => 'Turnamen berhasil di tambah!',
+    'tournament_updated' => 'Turnamen berhasil di ubah!',
+    'tournament_deleted' => 'Turnamen berhasil di hapus!',
+    'tournament_not_found' => 'Turnamen tidak ditemukan!',
 ];

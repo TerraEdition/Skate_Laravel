@@ -13,6 +13,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\TournamentGroupController;
+use App\Http\Controllers\TournamentParticipantController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,11 +61,11 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('{slug}', 'detail');
             Route::post('create', 'store');
         });
-        Route::prefix('member')->group(function () {
+        Route::prefix('{team_slug}/member')->group(function () {
             Route::controller(TeamMemberController::class)->group(function () {
-                Route::get('create/{team}', 'create');
+                Route::get('create', 'create');
                 Route::get('{slug}', 'detail');
-                Route::post('create/{team}', 'store');
+                Route::post('create', 'store');
             });
         });
     });
@@ -76,12 +77,18 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('{slug}', 'detail');
             Route::post('create/{slug}', 'store');
         });
-        Route::prefix('group')->group(function () {
+        Route::prefix('{tournament_slug}/group')->group(function () {
             Route::controller(TournamentGroupController::class)->group(function () {
-                Route::get('{team_slug}/create', 'create');
-                Route::post('{team_slug}/create', 'store');
-                Route::get('{team_slug}/{slug}', 'detail');
-                Route::post('create/{slug}', 'store');
+                Route::get('create', 'create');
+                Route::post('create', 'store');
+                Route::get('{slug}', 'detail');
+            });
+            Route::prefix('{group_slug}/participant')->group(function () {
+                Route::controller(TournamentParticipantController::class)->group(function () {
+                    Route::get('create', 'create');
+                    Route::post('create', 'store');
+                    Route::get('{slug}', 'detail');
+                });
             });
         });
     });

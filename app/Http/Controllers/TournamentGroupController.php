@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Format;
-use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\TournamentGroup;
 use Illuminate\Http\Request;
@@ -14,10 +13,13 @@ use Illuminate\Validation\Rule;
 
 class TournamentGroupController extends Controller
 {
-    public function create()
+    public function create($tournament_slug)
     {
         try {
-            return view('Dashboard.Tournament.Group.Create');
+            $data = [
+                'tournament_slug' => $tournament_slug,
+            ];
+            return view('Dashboard.Tournament.Group.Create', $data);
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());
@@ -34,6 +36,8 @@ class TournamentGroupController extends Controller
                 'category.*' => 'required|in:1,2',
                 'max_participant' => 'required|integer',
                 'max_participant_per_team' => 'required|integer|gt:0|lte:' . $request->input('max_participant') ?? 1,
+                'min_age' => 'required|integer|gt:0',
+                'max_age' => 'required|integer|gte:' . $request->input('min_age') ?? 1,
                 'description' => 'nullable',
             ], [], [
                 'group' => 'Group',
@@ -41,6 +45,8 @@ class TournamentGroupController extends Controller
                 'max_participant' => 'Total semua peserta',
                 'max_participant_per_team' => 'Total peserta per tim',
                 'description' => 'Deskripsi',
+                'min_age' => 'Minimal umur peserta',
+                'max_age' => 'Maksimal umur peserta',
             ]);
 
             # check if validation fails
@@ -62,6 +68,8 @@ class TournamentGroupController extends Controller
             $save_group->max_participant = trim($request->input('max_participant'));
             $save_group->max_per_team = trim($request->input('max_participant_per_team'));
             $save_group->description = Format::clean(trim($request->input('description')));
+            $save_group->min_age = trim($request->input('min_age'));
+            $save_group->max_age = trim($request->input('max_age'));
             $save_group->gender = trim($gender);
             $save_group->save();
 

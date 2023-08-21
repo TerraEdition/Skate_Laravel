@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('description')->nullable(true);
             $table->integer('max_participant');
             $table->integer('max_per_team');
+            $table->integer('min_age');
+            $table->integer('max_age');
             $table->string('slug');
             $table->timestamps();
             $table->foreign('tournament_id')->references('id')->on('tournaments');

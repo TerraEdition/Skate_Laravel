@@ -13,10 +13,8 @@ class Detail extends Component
      */
     public function __construct(
         public string $url,
-        public string $id
     ) {
         $this->url = $url;
-        $this->id = $id;
     }
 
     /**
