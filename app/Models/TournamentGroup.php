@@ -27,6 +27,8 @@ class TournamentGroup extends Model
         return TournamentGroup::select(
             'tournament_groups.group',
             'tournament_groups.gender',
+            'tournament_groups.min_age',
+            'tournament_groups.max_age',
             'tournament_groups.slug',
             DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
         )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id')
@@ -51,6 +53,8 @@ class TournamentGroup extends Model
         return TournamentGroup::select(
             'tournament_groups.group',
             'tournament_groups.gender',
+            'tournament_groups.min_age',
+            'tournament_groups.max_age',
             'tournament_groups.max_participant',
             'tournament_groups.max_per_team',
             'tournament_groups.slug',
@@ -65,6 +69,8 @@ class TournamentGroup extends Model
             ->groupBy(
                 'tournament_groups.group',
                 'tournament_groups.gender',
+                'tournament_groups.min_age',
+                'tournament_groups.max_age',
                 'tournament_groups.max_participant',
                 'tournament_groups.max_per_team',
                 'tournament_groups.slug',

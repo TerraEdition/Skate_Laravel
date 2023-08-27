@@ -19,7 +19,7 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('location');
-            $table->text('description');
+            $table->text('description')->nullable(true);
             $table->string('slug');
             $table->timestamps();
             $table->index('tournament');
