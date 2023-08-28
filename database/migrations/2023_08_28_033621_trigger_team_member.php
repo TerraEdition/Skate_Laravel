@@ -11,14 +11,15 @@ return new class extends Migration
     public function up(): void
     {
         DB::unprepared('
-            CREATE TRIGGER teams_insert_trigger
-            AFTER INSERT ON teams FOR EACH ROW
+            CREATE TRIGGER team_members_insert_trigger
+            AFTER INSERT ON team_members FOR EACH ROW
             BEGIN
                 INSERT INTO teams_log (
+                    member_id,
                     team_id,
-                    team,
-                    coach,
-                    website,
+                    member,
+                    gender,
+                    birth,
                     address,
                     email,
                     image,
@@ -28,11 +29,11 @@ return new class extends Migration
                     status_log
                 ) VALUES (
                     NEW.id,
-                    NEW.team,
-                    NEW.coach,
-                    NEW.website,
+                    NEW.team_id,
+                    NEW.member,
+                    NEW.gender,
+                    NEW.birth,
                     NEW.address,
-                    NEW.email,
                     NEW.image,
                     NEW.slug,
                     NEW.created_at,
@@ -43,14 +44,15 @@ return new class extends Migration
         ');
 
         DB::unprepared('
-            CREATE TRIGGER teams_update_trigger
-            BEFORE UPDATE ON teams FOR EACH ROW
+            CREATE TRIGGER team_members_update_trigger
+            BEFORE UPDATE ON team_members FOR EACH ROW
             BEGIN
                 INSERT INTO teams_log (
+                   member_id,
                     team_id,
-                    team,
-                    coach,
-                    website,
+                    member,
+                    gender,
+                    birth,
                     address,
                     email,
                     image,
@@ -60,11 +62,11 @@ return new class extends Migration
                     status_log
                 ) VALUES (
                     NEW.id,
-                    NEW.team,
-                    NEW.coach,
-                    NEW.website,
+                    NEW.team_id,
+                    NEW.member,
+                    NEW.gender,
+                    NEW.birth,
                     NEW.address,
-                    NEW.email,
                     NEW.image,
                     NEW.slug,
                     NEW.created_at,
@@ -75,14 +77,15 @@ return new class extends Migration
         ');
 
         DB::unprepared('
-            CREATE TRIGGER teams_delete_trigger
-            AFTER DELETE ON teams FOR EACH ROW
+            CREATE TRIGGER team_members_delete_trigger
+            AFTER DELETE ON team_members FOR EACH ROW
             BEGIN
                 INSERT INTO teams_log (
+                    member_id,
                     team_id,
-                    team,
-                    coach,
-                    website,
+                    member,
+                    gender,
+                    birth,
                     address,
                     email,
                     image,
@@ -92,11 +95,11 @@ return new class extends Migration
                     status_log
                 ) VALUES (
                     OLD.id,
-                    OLD.team,
-                    OLD.coach,
-                    OLD.website,
+                    OLD.team_id,
+                    OLD.member,
+                    OLD.gender,
+                    OLD.birth,
                     OLD.address,
-                    OLD.email,
                     OLD.image,
                     OLD.slug,
                     OLD.created_at,

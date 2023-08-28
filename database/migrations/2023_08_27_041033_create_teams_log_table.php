@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team_members', function (Blueprint $table) {
+        Schema::create('teams_log', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('team_id');
-            $table->string('member')->nullable(false);
-            $table->enum('gender', ['1', '2'])->comment('1=>Male, 2=>Female');
-            $table->date('birth');
-            $table->string('address')->nullable(true);
-            $table->string('phone')->nullable(true);
-            $table->string('email')->nullable(true);
+            $table->string('team')->nullable(false);
+            $table->string('coach');
+            $table->string('website');
+            $table->string('address');
+            $table->string('email');
             $table->string('image')->default('default.png');
             $table->string('slug');
+            $table->string('status_log');
             $table->timestamps();
-            $table->foreign('team_id')->references('id')->on('teams');
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_members');
+        Schema::dropIfExists('teams_log');
     }
 };

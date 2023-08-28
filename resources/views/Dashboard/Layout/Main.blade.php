@@ -26,7 +26,7 @@
         </div>
     </div>
     <script>
-        var base_url = @json(url('/'));
+    var base_url = @json(url('/'));
     </script>
     <script src="<?= asset('vendors/fontawesome/js/all.min.js') ?>"></script>
     <script src="<?= asset('vendors/bootstrap/bootstrap.min.js') ?>"></script>
