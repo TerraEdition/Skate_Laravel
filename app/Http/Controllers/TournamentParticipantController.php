@@ -20,7 +20,7 @@ class TournamentParticipantController extends Controller
                 Session::flash('message', __('global.tournament_not_found'));
                 return redirect()->back();
             }
-            # check tournament exist
+            # check group exist
             $group = TournamentGroup::where('slug', $group_slug)->first();
             # check if validation fails
             if (empty($group)) {
@@ -28,10 +28,9 @@ class TournamentParticipantController extends Controller
                 Session::flash('message', __('global.group_not_found'));
                 return redirect()->back();
             }
-
             $data = [
                 'tournament_slug' => $tournament_slug,
-                'group_slug' => $group_slug,
+                'group' => $group,
             ];
             return view('Dashboard.Tournament.Group.Participant.Create', $data);
         } catch (\Throwable $th) {
