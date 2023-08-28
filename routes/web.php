@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('create', 'create');
             Route::get('{slug}', 'detail');
             Route::post('create', 'store');
+            Route::get('search', 'search');
         });
         Route::prefix('{team_slug}/member')->group(function () {
             Route::controller(TeamMemberController::class)->group(function () {

@@ -17,6 +17,8 @@ class Menu
         # member tidak ada di menu
         if (in_array('member', $key)) {
             return (object)['id' => '0', 'menu' => 'Anggota'];
+        } else if (in_array('participant', $key)) {
+            return (object)['id' => '0', 'menu' => 'Peserta'];
         } else if (in_array('group', $key)) {
             return (object)['id' => '0', 'menu' => 'Grup'];
         }
