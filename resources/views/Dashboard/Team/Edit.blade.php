@@ -13,7 +13,7 @@
         <x-button.back url="team" />
     </div>
 
-    <x-alert.danger />
+    <x-alert />
     <div class="row">
         <div class="col-md-8">
             @csrf

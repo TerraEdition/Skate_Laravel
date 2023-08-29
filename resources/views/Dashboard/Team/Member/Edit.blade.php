@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-between mb-3">
         <x-button.back url="team/{{$slug}}" />
     </div>
-    <x-alert.danger />
+    <x-alert />
     <div class="row">
         <div class="col-md-8">
             @csrf

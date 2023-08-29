@@ -10,7 +10,7 @@ use App\Helpers\Convert;
     <x-button.back url="team" />
 </div>
 
-<x-alert.danger />
+<x-alert />
 <div class="h4 pb-2 my-3 text-dark border-bottom border-dark">
     <h3>{{ $data->team }}</h3>
 </div>

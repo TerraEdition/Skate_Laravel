@@ -3,7 +3,7 @@
 <div class="d-flex justify-content-between mb-3">
     <x-button.create url="team" />
 </div>
-<x-alert.danger />
+<x-alert />
 <div class="table-responsive">
     <table class="table table-bordered">
         <thead>

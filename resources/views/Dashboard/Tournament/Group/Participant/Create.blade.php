@@ -11,7 +11,7 @@
     <div class="d-flex justify-content-between mb-3">
         <x-button.back url="tournament/{{ $tournament_slug }}/group/{{ $group->slug }}" />
     </div>
-    <x-alert.danger />
+    <x-alert />
     <div class="row">
         <div class="col-md-8">
             @csrf
@@ -19,8 +19,7 @@
                 <label for="team" class="form-label">Tim
                     <x-required />
                 </label>
-                <input type="text" class="form-control" id="team" name="team"
-                    class="@error('team') is-invalid @enderror" value="{{ old('team') }}" autocomplete="off">
+                <input type="text" class="form-control" id="team" name="team" class="@error('team') is-invalid @enderror" value="{{ old('team') }}" autocomplete="off">
                 @error('team')
                 <small class="text-danger ms-2">{{ $message }}</small>
                 @enderror
@@ -29,9 +28,7 @@
                 <label for="participant" class="form-label">Peserta
                     <x-required />
                 </label>
-                <input type="text" class="form-control" id="participant" name="participant"
-                    class="@error('participant') is-invalid @enderror" value="{{ old('participant') }}"
-                    disabled="disabled" autocomplete="off">
+                <input type="text" class="form-control" id="participant" name="participant" class="@error('participant') is-invalid @enderror" value="{{ old('participant') }}" disabled="disabled" autocomplete="off">
                 @error('participant')
                 <small class="text-danger ms-2">{{ $message }}</small>
                 @enderror

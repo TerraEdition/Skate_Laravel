@@ -7,7 +7,7 @@ use App\Helpers\Date;
 <div class="d-flex justify-content-between mb-3">
     <x-button.create url="tournament" />
 </div>
-<x-alert.danger />
+<x-alert />
 <div class="table-responsive">
     <table class="table table-bordered">
         <thead>
