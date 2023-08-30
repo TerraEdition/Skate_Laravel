@@ -14,7 +14,7 @@ return new class extends Migration
             CREATE TRIGGER team_members_insert_trigger
             AFTER INSERT ON team_members FOR EACH ROW
             BEGIN
-                INSERT INTO teams_log (
+                INSERT INTO team_members_log (
                     member_id,
                     team_id,
                     member,
@@ -34,6 +34,7 @@ return new class extends Migration
                     NEW.gender,
                     NEW.birth,
                     NEW.address,
+                    NEW.email,
                     NEW.image,
                     NEW.slug,
                     NEW.created_at,
@@ -47,8 +48,8 @@ return new class extends Migration
             CREATE TRIGGER team_members_update_trigger
             BEFORE UPDATE ON team_members FOR EACH ROW
             BEGIN
-                INSERT INTO teams_log (
-                   member_id,
+                INSERT INTO team_members_log (
+                    member_id,
                     team_id,
                     member,
                     gender,
@@ -67,6 +68,7 @@ return new class extends Migration
                     NEW.gender,
                     NEW.birth,
                     NEW.address,
+                    NEW.email,
                     NEW.image,
                     NEW.slug,
                     NEW.created_at,
@@ -80,7 +82,7 @@ return new class extends Migration
             CREATE TRIGGER team_members_delete_trigger
             AFTER DELETE ON team_members FOR EACH ROW
             BEGIN
-                INSERT INTO teams_log (
+                INSERT INTO team_members_log (
                     member_id,
                     team_id,
                     member,
@@ -100,6 +102,7 @@ return new class extends Migration
                     OLD.gender,
                     OLD.birth,
                     OLD.address,
+                    OLD.email,
                     OLD.image,
                     OLD.slug,
                     OLD.created_at,

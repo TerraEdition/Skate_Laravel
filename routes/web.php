@@ -58,14 +58,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(TeamController::class)->group(function () {
             Route::get('', 'index');
             Route::get('create', 'create');
-            Route::get('{slug}', 'detail');
+            Route::get('{team_slug}', 'detail');
             Route::post('create', 'store');
             Route::get('search', 'search');
         });
         Route::prefix('{team_slug}/member')->group(function () {
             Route::controller(TeamMemberController::class)->group(function () {
                 Route::get('create', 'create');
-                Route::get('{slug}', 'detail');
+                Route::get('{member_slug}', 'detail');
                 Route::post('create', 'store');
             });
         });

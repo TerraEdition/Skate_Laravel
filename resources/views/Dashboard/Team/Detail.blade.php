@@ -72,8 +72,8 @@ use App\Helpers\Convert;
                 <td>{{ Date::calculate_age($r->birth) }} Tahun</td>
                 <td>
                     <div class="d-flex gap-2">
-                        <x-button.detail url="team/{{$r->slug}}/member/{{$r->slug}}" />
-                        <x-button.delete url="team/{{$r->slug}}/member/{{$r->slug}}" />
+                        <x-button.detail url="team/{{$data->slug}}/member/{{$r->slug}}" />
+                        <x-button.delete url="team/{{$data->slug}}/member/{{$r->slug}}" />
                     </div>
                 </td>
             </tr>

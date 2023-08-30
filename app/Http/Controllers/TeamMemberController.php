@@ -13,11 +13,11 @@ use Illuminate\Validation\Rule;
 
 class TeamMemberController extends Controller
 {
-    public function create($team)
+    public function create($team_slug)
     {
         try {
             # check team exist
-            $team = Team::where('slug', $team)->first();
+            $team = Team::where('slug', $team_slug)->first();
             # check if validation fails
             if (empty($team)) {
                 Session::flash('bg', 'alert-danger');
@@ -25,7 +25,7 @@ class TeamMemberController extends Controller
                 return redirect()->back();
             }
             $data = [
-                'slug' => $team,
+                'slug' => $team_slug,
             ];
             return view('Dashboard.Team.Member.Create', $data);
         } catch (\Throwable $th) {
@@ -34,7 +34,7 @@ class TeamMemberController extends Controller
             return redirect()->back();
         }
     }
-    public function store(Request $request, $slug)
+    public function store(Request $request, $team_slug)
     {
         try {
             # check input validation
@@ -43,7 +43,7 @@ class TeamMemberController extends Controller
                 'address' => 'nullable',
                 'birth' => 'required|date_format:Y-m-d',
                 'email' => 'nullable|email',
-                'phone' => 'nullable|integer',
+                'phone' => 'nullable|numeric',
                 'gender' => 'required|in:1,2',
                 'image' => 'nullable|image',
             ], [], [
@@ -59,7 +59,7 @@ class TeamMemberController extends Controller
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-            $team = Team::where('slug', $slug)->first();
+            $team = Team::where('slug', $team_slug)->first();
             if (empty($team)) {
                 Session::flash('bg', 'alert-danger');
                 Session::flash('message', __('global.team_not_found'));
@@ -67,8 +67,8 @@ class TeamMemberController extends Controller
             }
             DB::beginTransaction();
             if ($request->file('image')) {
-                $image = Carbon::now()->unix() . '.' . $request->file('image')->extension();
-                $request->file('image')->storeAs('public/image/teams/member', $image);
+                $image_name = Carbon::now()->unix() . '.' . $request->file('image')->extension();
+                $request->file('image')->storeAs('public/image/teams/member', $image_name);
             }
             $save_member = new TeamMember();
             $save_member->team_id = $team->id;
@@ -78,14 +78,45 @@ class TeamMemberController extends Controller
             $save_member->address = trim($request->input('address'));
             $save_member->phone = trim($request->input('phone'));
             $save_member->gender = trim($request->input('gender'));
-            $save_member->image = $image ?? 'default.png';
+            $save_member->image = $image_name ?? 'default.png';
             $save_member->save();
             DB::commit();
             Session::flash('bg', 'alert-success');
             Session::flash('message', __('global.member_team_created'));
-            return redirect()->to('team/' . $slug);
+            return redirect()->to('team/' . $team_slug);
         } catch (\Throwable $th) {
             DB::rollback();
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
+
+    public function detail($team_slug, $member_slug)
+    {
+        try {
+            # check team exist
+            $team = Team::where('slug', $team_slug)->first();
+            # check if validation fails
+            if (empty($team)) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.team_not_found'));
+                return redirect()->back();
+            }
+            # check team exist
+            $member = TeamMember::where('slug', $member_slug)->first();
+            # check if validation fails
+            if (empty($member)) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.member_team_not_found'));
+                return redirect()->back();
+            }
+            $data = [
+                'team_slug' => $team_slug,
+                'data' => $member,
+            ];
+            return view('Dashboard.Team.Member.Detail', $data);
+        } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();

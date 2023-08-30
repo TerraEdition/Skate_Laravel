@@ -22,7 +22,8 @@ class TeamMember extends Model
     public static function get_by_team_slug($request, $slug)
     {
         $key = $request->get('key') ?? '';
-        return TeamMember::join('teams', 'teams.id', '=', 'team_members.team_id')
+        return TeamMember::select('team_members.*')
+            ->join('teams', 'teams.id', '=', 'team_members.team_id')
             ->where(function ($query) use ($key) {
                 $key = explode(' ', Format::clean_char_search($key));
                 foreach ($key as $r) {

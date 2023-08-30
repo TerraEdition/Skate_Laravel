@@ -50,7 +50,7 @@ class TeamController extends Controller
                 'image' => 'nullable|image',
                 'contact' => 'nullable|array',
                 'contact.*.name' => 'required',
-                'contact.*.phone' => 'required|integer',
+                'contact.*.phone' => 'required|numeric',
             ], [], [
                 'team' => 'Tim',
                 'coach' => 'Pelatih',
@@ -135,7 +135,7 @@ class TeamController extends Controller
                 'image' => 'nullable|image',
                 'contact' => 'nullable|array',
                 'contact.*.name' => 'required',
-                'contact.*.phone' => 'required|integer',
+                'contact.*.phone' => 'required|numeric',
             ], [], [
                 'team' => 'Tim',
                 'coach' => 'Pelatih',
