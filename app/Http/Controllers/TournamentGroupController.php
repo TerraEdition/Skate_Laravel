@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Format;
 use App\Models\Tournament;
 use App\Models\TournamentGroup;
+use App\Models\TournamentParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -88,9 +89,11 @@ class TournamentGroupController extends Controller
     public function detail($tournament_slug, $slug)
     {
         try {
+            $group = TournamentGroup::get_by_slug($slug);
             $data = [
                 'tournament_slug' => $tournament_slug,
-                'data' => TournamentGroup::get_by_slug($slug),
+                'data' => $group,
+                'participant' => TournamentParticipant::get_by_group_id($group->id),
             ];
             return view('Dashboard.Tournament.Group.Detail', $data);
         } catch (\Throwable $th) {
