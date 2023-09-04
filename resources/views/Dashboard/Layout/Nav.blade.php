@@ -1,5 +1,4 @@
 @php
-use App\Helpers\Menu;
 $menu = Menu::get_menu_active();
 @endphp
 <div class="container py-5">

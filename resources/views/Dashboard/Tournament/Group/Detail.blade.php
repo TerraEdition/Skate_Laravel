@@ -49,16 +49,37 @@ use App\Helpers\Convert;
 <div class="table-responsive">
     <div class="d-flex justify-content-between">
         <h5>Peserta</h5>
+        @if ($can_add_participant)
         <x-button.create url="tournament/{{ $tournament_slug }}/group/{{ $data->slug }}/participant" />
+        @endif
     </div>
     <table class="table">
         <tr>
             <th>#</th>
+            <th>Tim</th>
             <th>Nama</th>
             <th>Jenis Kelamin</th>
             <th>Umur</th>
             <th>Aksi</th>
         </tr>
+        @foreach ($participant as $r )
+        <tr>
+            <td>{{$loop->iteration}}</td>
+            <td>{{$r->team}}</td>
+            <td>{{$r->member}}</td>
+            <td>{{ Convert::gender($r->gender, false) }}</td>
+            <td>{{ Date::calculate_age($r->birth) }} Tahun</td>
+        </tr>
+        @endforeach
     </table>
 </div>
+
+
+
+
+
+
+
+
+
 @endsection

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'success' => 'Sukses',
     'login_success' => 'Berhasil masuk',
     'logout_success' => 'Berhasil keluar',
     'email_not_found' => 'Email tidak ditemukan',
@@ -26,4 +27,5 @@ return [
     'participant_updated' => 'Peserta Turnament berhasil di ubah!',
     'participant_deleted' => 'Peserta Turnament berhasil di hapus!',
     'participant_not_found' => 'Peserta Turnament tidak ditemukan!',
+    'max_participant_reached' => 'Peserta Turnament sudah mencapai maksimal!',
 ];

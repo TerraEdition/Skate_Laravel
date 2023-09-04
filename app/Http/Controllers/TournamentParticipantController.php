@@ -34,11 +34,12 @@ class TournamentParticipantController extends Controller
                 return redirect()->back();
             }
 
+            $team = Team::select('slug', 'team')->orderBy('team', 'asc')->get();
             $data = [
                 'tournament_slug' => $tournament_slug,
                 'group' => $group,
-                'teams' => Team::select('id', 'team')->orderBy('team', 'asc')->get(),
-                'members_team' => TeamMember::get_member_by_rule_group_id($group),
+                'teams' => $team,
+                'members_team' => TeamMember::get_member_by_rule_group($group, $team[0]->slug),
             ];
             return view('Dashboard.Tournament.Group.Participant.Create', $data);
         } catch (\Throwable $th) {
@@ -53,10 +54,8 @@ class TournamentParticipantController extends Controller
         try {
             # check input validation
             $validator = Validator::make($request->all(), [
-                'team_id' => 'required|integer',
                 'member_id' => 'required|integer',
             ], [], [
-                'team_id' => 'Tim',
                 'member_id' => 'Anggota Tim',
             ]);
 
@@ -71,6 +70,13 @@ class TournamentParticipantController extends Controller
                 Session::flash('message', __('global.group_not_found'));
                 return redirect()->back();
             }
+            $total_participant = TournamentParticipant::total_participant();
+            if ($total_participant >= $group->max_participant) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.max_participant_reached'));
+                return redirect()->back();
+            }
+
             # save tournament_participants
             $save_tournament_participant = new TournamentParticipant();
             $save_tournament_participant->tournament_id = '1';

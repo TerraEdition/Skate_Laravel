@@ -10,7 +10,6 @@ class Date
     public static function format_long($date, $lang = 'indonesia')
     {
         $carbonDate = Carbon::parse($date);
-
         $month = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
             4 => 'April', 5 => 'Mei', 6 => 'Juni',

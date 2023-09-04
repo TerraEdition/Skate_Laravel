@@ -90,10 +90,15 @@ class TournamentGroupController extends Controller
     {
         try {
             $group = TournamentGroup::get_by_slug($slug);
+            $total_participant = TournamentParticipant::total_participant();
+
+            $can_add_participant = !($total_participant >= $group->max_participant);
+
             $data = [
                 'tournament_slug' => $tournament_slug,
                 'data' => $group,
                 'participant' => TournamentParticipant::get_by_group_id($group->id),
+                'can_add_participant' => $can_add_participant,
             ];
             return view('Dashboard.Tournament.Group.Detail', $data);
         } catch (\Throwable $th) {

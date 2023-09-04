@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -183,6 +183,10 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Date' => App\Helpers\Date::class,
+        'Menu' => App\Helpers\Menu::class,
+        'Convert' => App\Helpers\Convert::class,
+        'Format' => App\Helpers\Format::class,
     ])->toArray(),
 
 ];

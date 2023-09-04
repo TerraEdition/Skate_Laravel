@@ -11,7 +11,6 @@ class TeamController extends Controller
 {
     public function search(Request $request)
     {
-
         try {
             # check input validation
             $validator = Validator::make($request->all(), [

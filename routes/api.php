@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\TeamController;
+use App\Http\Controllers\API\TeamMemberController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('team')->group(function () {
     Route::controller(TeamController::class)->group(function () {
         Route::get('search', 'search');
+    });
+    Route::prefix('member')->group(function () {
+        Route::controller(TeamMemberController::class)->group(function () {
+            Route::get('search', 'search');
+        });
     });
 });

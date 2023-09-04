@@ -1,8 +1,3 @@
-@php
-use App\Helpers\Date;
-use App\Helpers\Convert;
-@endphp
-
 @extends('Dashboard.Layout.Main')
 @section('content')
 <div class="d-flex gap-2 mb-3">
@@ -82,6 +77,8 @@ use App\Helpers\Convert;
     </table>
     {{ $member->links('Paginate.Custom') }}
 </div>
+
+
 
 
 

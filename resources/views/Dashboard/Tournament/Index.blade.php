@@ -1,7 +1,3 @@
-@php
-use App\Helpers\Date;
-@endphp
-
 @extends('Dashboard.Layout.Main')
 @section('content')
 <div class="d-flex justify-content-between mb-3">

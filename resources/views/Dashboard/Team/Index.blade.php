@@ -19,7 +19,7 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $r->team }}</td>
-                <td>{{ $r->updated_at }}</td>
+                <td>{{ Date::format_long($r->updated_at) }}</td>
                 <td>
                     <div class="d-flex gap-2">
                         <x-button.detail url="team/{{$r->slug}}" />

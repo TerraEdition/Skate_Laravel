@@ -39,7 +39,7 @@ class TeamMember extends Model
     }
 
     # tournament participant controller
-    public static function get_member_by_rule_group_id($group)
+    public static function get_member_by_rule_group($group, $team_slug)
     {
         $min_birth = Carbon::now()->subYears($group->min_age);
         $max_birth = Carbon::now()->subYears($group->max_age);
@@ -49,12 +49,19 @@ class TeamMember extends Model
         } else {
             $gender = [$gender];
         }
-        return TeamMember::select('id', 'member')
-            ->where('team_id', '1')
+        # check max join member team to group tournament
+        $check_limit = TournamentParticipant::is_over_limit_participant_per_team_by_group($group, $team_slug);
+
+        if ($check_limit) {
+            return [];
+        }
+        return TeamMember::select('team_members.id', 'team_members.member')
+            ->join('teams', 'teams.id', '=', 'team_members.team_id')
+            ->where('teams.slug', $team_slug)
             ->whereIn('gender', $gender)
-            ->where('birth', '>=', $max_birth)
-            ->where('birth', '<=', $min_birth)
-            ->whereRaw('id NOT IN ( SELECT member_id FROM tournament_participants where group_id = ' . $group->id . ')')
-            ->orderBy('member', 'asc')->get();
+            ->where('team_members.birth', '>=', $max_birth)
+            ->where('team_members.birth', '<=', $min_birth)
+            ->whereRaw('team_members.id NOT IN ( SELECT member_id FROM tournament_participants where group_id = ' . $group->id . ')')
+            ->orderBy('team_members.member', 'ASC')->get();
     }
 }
