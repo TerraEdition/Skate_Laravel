@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\CredentialController;
 use App\Http\Controllers\Dashboard\FileController;
 use App\Http\Controllers\Dashboard\ScheduleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\TournamentController;
@@ -91,6 +92,11 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::get('{slug}', 'detail');
                 });
             });
+        });
+    });
+    Route::prefix('participant')->group(function () {
+        Route::controller(ParticipantController::class)->group(function () {
+            Route::get('', 'index');
         });
     });
 });

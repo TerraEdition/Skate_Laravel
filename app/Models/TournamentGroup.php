@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\Format;
+use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,36 @@ class TournamentGroup extends Model
             ]
         ];
     }
-
+    # participant controller
+    public static function get_all($status)
+    {
+        $result = TournamentGroup::select(
+            'tournaments.tournament',
+            'tournaments.start_date',
+            'tournaments.end_date',
+            'tournaments.location',
+            'tournaments.start_time',
+            'tournaments.end_time',
+            'tournament_groups.group',
+            'tournament_groups.gender',
+            'tournament_groups.min_age',
+            'tournament_groups.max_age',
+            'tournament_groups.slug',
+            DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
+        )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id');
+        if ($status == 'now') {
+            $result->where('tournaments.start_date', '<=', Date("Y-m-d"));
+            $result->where('tournaments.end_date', '>=', Date("Y-m-d"));
+        } else if ($status == 'completed') {
+            $result->where('tournaments.end_date', '<', Date("Y-m-d"));
+        } else if ($status == 'incoming') {
+            $result->where('tournaments.start_date', '>', Date("Y-m-d"));
+        }
+        return $result->orderBy('start_date', 'asc')
+            ->orderBy('tournaments.tournament', 'asc')
+            ->orderBy('tournament_groups.group', 'asc')
+            ->paginate(20);
+    }
     # tournament group controller
     public static function get_by_tournament_slug($request, $tournament_slug)
     {
