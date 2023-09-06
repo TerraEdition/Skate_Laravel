@@ -2,7 +2,8 @@
 @section('content')
 
 <x-alert />
-<div class="d-flex justify-content-between">
+<x-button.back url="participant" />
+<div class="d-flex justify-content-between mt-3">
     <div class="fs-5"> Peserta Turnamen <b>{{$group->tournament}}</b> di Grup <b>{{$group->group}}</b></div>
     @if ($group->status!=2)
     <a href="{{url()->current()}}/competition" class="btn btn-outline-primary">{{ $group->status == 0 ? "Mulai Pertandingan" : "Lanjutkan Pertandingan" }}
@@ -34,6 +35,9 @@
         @endforeach
     </table>
 </div>
+
+
+
 
 
 

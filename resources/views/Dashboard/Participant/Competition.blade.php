@@ -2,7 +2,8 @@
 @section('content')
 
 <x-alert />
-<div class="d-flex justify-content-between">
+<x-button.back url="participant" />
+<div class="d-flex justify-content-between mt-3">
     <div class="fs-5"> Peserta Turnamen <b>{{$group->tournament}}</b> di Grup <b>{{$group->group}}</b></div>
     @if ($group->status==1)
     <a href="{{url()->current()}}/close" class="btn btn-outline-primary">Tutup Pertandingan Grup Ini</a>
@@ -103,7 +104,7 @@
         data = await save_time_participant(participant_id);
         if (data.status) {
             document.querySelector("#time_participant" + participant_id).textContent = show_time.textContent
-            document.querySelector(`#show_stopwatch[data-participant_id="${participant_id}"]`).remove()
+            // document.querySelector(`#show_stopwatch[data-participant_id="${participant_id}"]`).remove()
             show_time.textContent = "00:00:000";
         } else {
             alert(data.message)
@@ -124,6 +125,7 @@
         }
     }
 </script>
+
 
 
 
