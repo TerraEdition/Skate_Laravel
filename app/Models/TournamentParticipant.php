@@ -9,20 +9,27 @@ class TournamentParticipant extends Model
 {
     use HasFactory;
 
-    # tournament group controller
-    public static function get_by_group_id($group_id)
+    # tournament participant controller
+    public static function get_by_group_slug($group_slug, $order_by_time = false)
     {
-        return TournamentParticipant::select(
+        $result =  TournamentParticipant::select(
+            'tournament_participants.id as participant_id',
             'tournament_groups.group',
             'teams.team',
             'team_members.birth',
             'team_members.gender',
             'team_members.member',
+            'tournament_participants.time',
         )
             ->leftJoin('tournament_groups', 'tournament_groups.id', '=', 'tournament_participants.group_id')
             ->leftJoin('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
             ->leftJoin('teams', 'teams.id', '=', 'team_members.team_id')
-            ->get();
+            ->where('tournament_groups.slug', $group_slug);
+
+        if ($order_by_time) {
+            $result->orderBy('tournament_participants.time', 'asc');
+        }
+        return $result->get();
     }
     # tournament participant controller
     public static function total_participant()

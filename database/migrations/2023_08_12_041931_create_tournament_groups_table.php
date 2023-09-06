@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('max_per_team');
             $table->integer('min_age');
             $table->integer('max_age');
+            $table->enum('status', ['0', '1', '2'])->comment('0 => not yet start, 1 => already start, 2 => finished');
             $table->string('slug');
             $table->timestamps();
             $table->foreign('tournament_id')->references('id')->on('tournaments');

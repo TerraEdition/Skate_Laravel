@@ -97,7 +97,7 @@ class TournamentGroupController extends Controller
             $data = [
                 'tournament_slug' => $tournament_slug,
                 'data' => $group,
-                'participant' => TournamentParticipant::get_by_group_id($group->id),
+                'participant' => TournamentParticipant::get_by_group_slug($group->slug),
                 'can_add_participant' => $can_add_participant,
             ];
             return view('Dashboard.Tournament.Group.Detail', $data);

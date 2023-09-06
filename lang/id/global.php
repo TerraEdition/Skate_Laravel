@@ -28,4 +28,5 @@ return [
     'participant_deleted' => 'Peserta Turnament berhasil di hapus!',
     'participant_not_found' => 'Peserta Turnament tidak ditemukan!',
     'max_participant_reached' => 'Peserta Turnament sudah mencapai maksimal!',
+    'tournament_group_is_finished' => 'Turnament Grup sudah selesai',
 ];

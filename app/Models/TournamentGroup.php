@@ -40,14 +40,17 @@ class TournamentGroup extends Model
         if ($status == 'now') {
             $result->where('tournaments.start_date', '<=', Date("Y-m-d"));
             $result->where('tournaments.end_date', '>=', Date("Y-m-d"));
+            $result->orWhere('tournament_groups.status', '1');
         } else if ($status == 'completed') {
             $result->where('tournaments.end_date', '<', Date("Y-m-d"));
+            $result->orWhere('tournament_groups.status', '2');
         } else if ($status == 'incoming') {
             $result->where('tournaments.start_date', '>', Date("Y-m-d"));
+            $result->where('tournament_groups.status', '0');
         }
         return $result->orderBy('start_date', 'asc')
-            ->orderBy('tournaments.tournament', 'asc')
             ->orderBy('tournament_groups.group', 'asc')
+            ->orderBy('tournaments.tournament', 'asc')
             ->paginate(20);
     }
     # tournament group controller
@@ -78,15 +81,19 @@ class TournamentGroup extends Model
             ->paginate($request->get('limit') ?? 20);
     }
     # tournament group controller
+    # tournament participant controller
     public static function get_by_slug($slug)
     {
         return TournamentGroup::select(
+            'tournament_groups.id',
+            'tournaments.tournament',
             'tournament_groups.group',
             'tournament_groups.gender',
             'tournament_groups.min_age',
             'tournament_groups.max_age',
             'tournament_groups.max_participant',
             'tournament_groups.max_per_team',
+            'tournament_groups.status',
             'tournament_groups.slug',
             DB::raw('COUNT(tournament_participants.id) as total_participant'),
             DB::raw('COUNT(teams.id) as team_register')
@@ -97,12 +104,15 @@ class TournamentGroup extends Model
             ->leftJoin('teams', 'teams.id', '=', 'team_members.team_id')
             ->where('tournament_groups.slug', $slug)
             ->groupBy(
+                'tournament_groups.id',
+                'tournaments.tournament',
                 'tournament_groups.group',
                 'tournament_groups.gender',
                 'tournament_groups.min_age',
                 'tournament_groups.max_age',
                 'tournament_groups.max_participant',
                 'tournament_groups.max_per_team',
+                'tournament_groups.status',
                 'tournament_groups.slug',
             )
             ->first();

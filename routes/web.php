@@ -97,6 +97,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('participant')->group(function () {
         Route::controller(ParticipantController::class)->group(function () {
             Route::get('', 'index');
+            Route::get('{group_slug}', 'detail');
+            Route::get('{group_slug}/competition', 'competition');
+            Route::get('{group_slug}/competition/close', 'close_competition');
         });
     });
 });
