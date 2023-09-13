@@ -20,7 +20,6 @@ class ParticipantController extends Controller
             ];
             return view('Dashboard.Participant.Index', $data);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();
