@@ -76,7 +76,7 @@ class TournamentGroupController extends Controller
 
             DB::commit();
             Session::flash('bg', 'alert-success');
-            Session::flash('message', __('global.tournament_created'));
+            Session::flash('message', __('global.tournament__group_created'));
             return redirect()->to('tournament/' . $tournament_slug);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -89,7 +89,12 @@ class TournamentGroupController extends Controller
     public function detail($tournament_slug, $slug)
     {
         try {
-            $group = TournamentGroup::get_by_slug($slug);
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($slug);
+            if (empty($group)) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.tournament_group_not_found'));
+                return redirect()->back();
+            }
             $total_participant = TournamentParticipant::total_participant();
 
             $can_add_participant = !($total_participant >= $group->max_participant);
@@ -101,6 +106,25 @@ class TournamentGroupController extends Controller
                 'can_add_participant' => $can_add_participant,
             ];
             return view('Dashboard.Tournament.Group.Detail', $data);
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
+    public function edit($tournament_slug, $slug)
+    {
+        try {
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($slug);
+            if (empty($group)) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.tournament_group_not_found'));
+                return redirect()->back();
+            }
+            $data = [
+                'data' => $group,
+            ];
+            return view('Dashboard.Tournament.Group.Edit', $data);
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());

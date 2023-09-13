@@ -27,9 +27,9 @@ class ParticipantController extends Controller
         }
     }
 
-    public function detail($group_slug)
+    public function detail($tournament_slug, $group_slug)
     {
-        $group = TournamentGroup::get_by_slug($group_slug);
+        $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
         if (empty($group)) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', __("global.group_not_found"));
@@ -47,10 +47,10 @@ class ParticipantController extends Controller
             return redirect()->back();
         }
     }
-    public function competition($group_slug)
+    public function competition($tournament_slug, $group_slug)
     {
         try {
-            $group = TournamentGroup::get_by_slug($group_slug);
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
                 Session::flash('message', __("global.group_not_found"));
@@ -78,10 +78,10 @@ class ParticipantController extends Controller
         }
     }
 
-    public function close_competition($group_slug)
+    public function close_competition($tournament_slug, $group_slug)
     {
         try {
-            $group = TournamentGroup::get_by_slug($group_slug);
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
                 Session::flash('message', __("global.group_not_found"));

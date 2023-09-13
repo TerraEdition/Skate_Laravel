@@ -90,13 +90,18 @@ class TournamentController extends Controller
         }
     }
 
-    public function detail(Request $request, $slug)
+    public function detail(Request $request, $tournament_slug)
     {
         try {
             $data = [
-                'data' => Tournament::get_detail_by_slug($slug),
-                'group' => TournamentGroup::get_by_tournament_slug($request, $slug)
+                'data' => Tournament::get_detail_by_slug($tournament_slug),
+                'group' => TournamentGroup::get_by_tournament_slug($request, $tournament_slug)
             ];
+            if (empty($data['data'])) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.tournament_not_found'));
+                return redirect()->back();
+            }
             return view('Dashboard.Tournament.Detail', $data);
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
@@ -104,7 +109,26 @@ class TournamentController extends Controller
             return redirect()->back();
         }
     }
+    public function edit($tournament_slug)
+    {
+        try {
+            $data = [
+                'data' => Tournament::get_detail_by_slug($tournament_slug),
+            ];
 
+            if (empty($data['data'])) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.tournament_not_found'));
+                return redirect()->back();
+            }
+
+            return view('Dashboard.Tournament.Edit', $data);
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
     public function export_tournament()
     {
     }

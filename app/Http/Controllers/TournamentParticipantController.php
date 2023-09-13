@@ -17,16 +17,8 @@ class TournamentParticipantController extends Controller
     public function create($tournament_slug, $group_slug)
     {
         try {
-            # check tournament exist
-            $tournament = Tournament::where('slug', $tournament_slug)->first();
-            # check if validation fails
-            if (empty($tournament)) {
-                Session::flash('bg', 'alert-danger');
-                Session::flash('message', __('global.tournament_not_found'));
-                return redirect()->back();
-            }
             # check group exist
-            $group = TournamentGroup::where('slug', $group_slug)->first();
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             # check if validation fails
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
@@ -64,7 +56,7 @@ class TournamentParticipantController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
             # check group
-            $group = TournamentGroup::where('slug', $group_slug)->first();
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
                 Session::flash('message', __('global.group_not_found'));

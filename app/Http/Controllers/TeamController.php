@@ -191,15 +191,23 @@ class TeamController extends Controller
             $save_team->image = $logo_name ?? $save_team->image;
             $save_team->save();
 
-            ContactPerson::where('team_id', $save_team->id)->delete();
+            $contact_exist = [];
             foreach ($request->input('contact') as $contact) {
-                $save_cp = new ContactPerson();
-                $save_cp->team_id = $save_team->id;
-                $save_cp->name = trim($contact['name']);
-                $save_cp->phone = trim($contact['phone']);
-                $save_cp->save();
+                $check_contact = ContactPerson::select('id')->where('name', $contact['name'])->where('phone', $contact['phone'])->where('team_id', $save_team->id)->first();
+                if (empty($check_contact)) {
+                    $save_cp = new ContactPerson();
+                    $save_cp->team_id = $save_team->id;
+                    $save_cp->name = trim($contact['name']);
+                    $save_cp->phone = trim($contact['phone']);
+                    $save_cp->save();
+                } else {
+                    $contact_exist[] = $check_contact->id;
+                }
             }
-
+            # delete contact
+            if (!empty($contact_exist)) {
+                ContactPerson::where('team_id', $save_team->id)->whereNotIn('id', $contact_exist)->delete();
+            }
             DB::commit();
             Session::flash('bg', 'alert-success');
             Session::flash('message', __('global.team_created'));

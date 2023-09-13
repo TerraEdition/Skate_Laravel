@@ -82,7 +82,7 @@ class TournamentGroup extends Model
     }
     # tournament group controller
     # tournament participant controller
-    public static function get_by_slug($slug)
+    public static function get_by_tournament_slug_by_group_slug($tournament_slug, $slug)
     {
         return TournamentGroup::select(
             'tournament_groups.id',
@@ -103,6 +103,7 @@ class TournamentGroup extends Model
             ->leftJoin('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
             ->leftJoin('teams', 'teams.id', '=', 'team_members.team_id')
             ->where('tournament_groups.slug', $slug)
+            ->where('tournaments.slug', $tournament_slug)
             ->groupBy(
                 'tournament_groups.id',
                 'tournaments.tournament',
