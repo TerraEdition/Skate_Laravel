@@ -77,6 +77,7 @@ class ParticipantController extends Controller
             return redirect()->back();
         }
     }
+
     public function close_competition($group_slug)
     {
         try {

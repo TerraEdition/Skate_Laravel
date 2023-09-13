@@ -29,4 +29,5 @@ return [
     'participant_not_found' => 'Peserta Turnament tidak ditemukan!',
     'max_participant_reached' => 'Peserta Turnament sudah mencapai maksimal!',
     'tournament_group_is_finished' => 'Turnament Grup sudah selesai',
+    'unique' => 'Kolom :attribute sudah ada sebelumnya',
 ];

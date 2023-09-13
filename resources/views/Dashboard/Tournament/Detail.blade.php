@@ -2,6 +2,8 @@
 @section('content')
 <div class="d-flex justify-content-between mb-3">
     <x-button.back url="tournament" />
+    <a class="btn btn-primary btn-sm" href="{{url()->current()}}/export"><i class="fa-solid fa-file-excel"></i> Ekspor
+        Template Excel</a>
 </div>
 <x-alert />
 <div class="border-bottom border-3 border-secondary p-2">

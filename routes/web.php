@@ -60,13 +60,16 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('', 'index');
             Route::get('create', 'create');
             Route::get('{team_slug}', 'detail');
+            Route::get('edit/{team_slug}', 'edit');
+            Route::put('edit/{team_slug}', 'put');
             Route::post('create', 'store');
-            Route::get('search', 'search');
         });
         Route::prefix('{team_slug}/member')->group(function () {
             Route::controller(TeamMemberController::class)->group(function () {
                 Route::get('create', 'create');
+                Route::get('edit/{member_slug}', 'edit');
                 Route::get('{member_slug}', 'detail');
+                Route::put('edit/{member_slug}', 'put');
                 Route::post('create', 'store');
             });
         });
@@ -75,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(TournamentController::class)->group(function () {
             Route::get('', 'index');
             Route::get('create', 'create');
+            Route::get('export', 'export_tournament');
             Route::post('create', 'store');
             Route::get('{slug}', 'detail');
             Route::post('create/{slug}', 'store');

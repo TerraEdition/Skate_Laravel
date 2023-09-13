@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ContactPerson;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Rules\unique_slug;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -120,14 +121,33 @@ class TeamController extends Controller
             return redirect()->back();
         }
     }
+    public function edit($slug)
+    {
+        try {
+            $team = Team::get_detail_by_slug($slug);
+            if (empty($team)) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.team_not_found'));
+                return redirect()->back();
+            }
+            $data = [
+                'data' => $team,
+                'contact' => ContactPerson::where("team_id", $team->id)->get()
+            ];
+            return view('Dashboard.Team.Edit', $data);
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
 
-    public function put(Request $request)
+    public function put(Request $request, $team_slug)
     {
         try {
             # check input validation
             $validator = Validator::make($request->all(), [
-                'team_id' => 'required|integer',
-                'team' => ['required', Rule::unique('teams', 'team')->ignore($request->input('team_id'))],
+                'team' => ['required', new unique_slug('teams', 'team', $team_slug)],
                 'coach' => 'required|max:100',
                 'address' => 'required',
                 'web' => 'nullable|active_url',
@@ -151,14 +171,13 @@ class TeamController extends Controller
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-
             DB::beginTransaction();
             if ($request->file('image')) {
                 $logo_name = Carbon::now()->unix() . '.' . $request->file('image')->extension();
                 $request->file('image')->storeAs('public/image/teams', $logo_name);
             }
 
-            $save_team = Team::where('id', $request->input('team_id'))->first();
+            $save_team = Team::where('slug', $team_slug)->first();
             if (empty($save_team)) {
                 Session::flash('bg', 'alert-danger');
                 Session::flash('message', __('global.team_not_found'));
@@ -169,9 +188,10 @@ class TeamController extends Controller
             $save_team->email = trim($request->input('email'));
             $save_team->website = trim($request->input('web'));
             $save_team->coach = trim($request->input('coach'));
-            $save_team->image = $logo_name ?? 'default.png';
+            $save_team->image = $logo_name ?? $save_team->image;
             $save_team->save();
 
+            ContactPerson::where('team_id', $save_team->id)->delete();
             foreach ($request->input('contact') as $contact) {
                 $save_cp = new ContactPerson();
                 $save_cp->team_id = $save_team->id;
@@ -190,5 +210,9 @@ class TeamController extends Controller
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();
         }
+    }
+
+    public function import_excel()
+    {
     }
 }

@@ -1,6 +1,7 @@
 @extends('Dashboard.Layout.Main')
 @section('content')
-<div class="d-flex justify-content-between mb-3">
+<div class="d-flex gap-2">
+    <x-button.edit url="team/{{$team_slug}}/member/edit/{{ $data->slug }}" />
     <x-button.back url="team/{{ $team_slug }}" />
 </div>
 <x-alert />
@@ -73,6 +74,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 

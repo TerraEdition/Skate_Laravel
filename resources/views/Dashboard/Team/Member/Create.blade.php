@@ -57,9 +57,9 @@
                 <label for="gender" class="form-label">Jenis Kelamin
                     <x-required />
                 </label>
-                <select class="form-control" id="gender" name="gender" class="@error('gender') is-invalid @enderror" value="{{ old('gender') }}">
-                    <option value="1">Putra</option>
-                    <option value="2">Putri</option>
+                <select class="form-control" id="gender" name="gender" class="@error('gender') is-invalid @enderror">
+                    <option value="1" {{old('gender')=='1'?'selected':''}}>Putra</option>
+                    <option value="2" {{old('gender')=='2'?'selected':''}}>Putri</option>
                 </select>
                 @error('gender')
                 <small class="text-danger ms-2">{{ $message }}</small>

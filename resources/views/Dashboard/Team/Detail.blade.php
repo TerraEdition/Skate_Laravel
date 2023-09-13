@@ -27,13 +27,22 @@
                 <tr>
                     <td>No HP</td>
                     <td>:</td>
-                    <td> {{ $data->phone }}</td>
+                    <td>{{ $data->phone }}</td>
                 </tr>
                 <tr>
                     <td>Email</td>
                     <td>:</td>
-                    <td> {{ $data->email }}</td>
+                    <td> <a href="mailto:{{$data->email}}">{{ $data->email }}</a></td>
                 </tr>
+                @if($data->website)
+                <tr>
+                    <td>Website</td>
+                    <td>:</td>
+                    <td>
+                        <a href="{{$data->website}}" target="_blank">Official</a>
+                    </td>
+                </tr>
+                @endif
             </table>
         </div>
     </div>
@@ -77,6 +86,16 @@
     </table>
     {{ $member->links('Paginate.Custom') }}
 </div>
+
+
+
+
+
+
+
+
+
+
 
 
 
