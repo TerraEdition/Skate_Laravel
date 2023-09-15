@@ -43,7 +43,7 @@ class Tournament extends Model
             ->paginate($request->get('limit') ?? 20);
     }
 
-    # tournament controll
+    # tournament controller
     public static function get_detail_by_slug($slug)
     {
         $result = Tournament::select(
@@ -60,6 +60,36 @@ class Tournament extends Model
         )
             ->leftJoin('tournament_participants', 'tournament_participants.tournament_id', '=', 'tournaments.id')
             ->where('tournaments.slug', $slug)
+            ->groupBy(
+                'tournaments.id',
+                'tournaments.tournament',
+                'tournaments.start_date',
+                'tournaments.end_date',
+                'tournaments.start_time',
+                'tournaments.end_time',
+                'tournaments.location',
+                'tournaments.description',
+                'tournaments.slug',
+            );
+        return $result->first();
+    }
+
+    public static function get_near_tournament()
+    {
+        $result = Tournament::select(
+            'tournaments.id',
+            'tournaments.tournament',
+            'tournaments.start_date',
+            'tournaments.end_date',
+            'tournaments.start_time',
+            'tournaments.end_time',
+            'tournaments.location',
+            'tournaments.description',
+            'tournaments.slug',
+            DB::raw('COUNT(tournament_participants.id) as total_participant')
+        )
+            ->leftJoin('tournament_participants', 'tournament_participants.tournament_id', '=', 'tournaments.id')
+            ->where('tournaments.start_date', '>', date("Y-m-d"))
             ->groupBy(
                 'tournaments.id',
                 'tournaments.tournament',

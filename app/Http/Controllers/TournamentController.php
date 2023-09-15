@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Excel\Tournament as ExcelTournament;
 use App\Helpers\Format;
 use App\Models\Tournament;
 use App\Models\TournamentGroup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 class TournamentController extends Controller
 {
@@ -129,7 +135,8 @@ class TournamentController extends Controller
             return redirect()->back();
         }
     }
-    public function export_tournament()
+    public function export_tournament($tournament_slug)
     {
+        ExcelTournament::export_excel($tournament_slug);
     }
 }

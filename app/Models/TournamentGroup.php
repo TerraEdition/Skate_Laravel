@@ -21,7 +21,8 @@ class TournamentGroup extends Model
         ];
     }
     # participant controller
-    public static function get_all($status)
+    # tournament excel
+    public static function get_all($status, $tournament_slug = false)
     {
         $result = TournamentGroup::select(
             'tournaments.tournament',
@@ -34,6 +35,7 @@ class TournamentGroup extends Model
             'tournament_groups.gender',
             'tournament_groups.min_age',
             'tournament_groups.max_age',
+            'tournament_groups.max_per_team',
             'tournament_groups.slug',
             DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
         )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id');
@@ -48,10 +50,14 @@ class TournamentGroup extends Model
             $result->where('tournaments.start_date', '>', Date("Y-m-d"));
             $result->where('tournament_groups.status', '0');
         }
-        return $result->orderBy('start_date', 'asc')
-            ->orderBy('tournament_groups.group', 'asc')
-            ->orderBy('tournaments.tournament', 'asc')
-            ->paginate(20);
+        if ($tournament_slug) {
+            return $result->where('tournaments.slug', $tournament_slug)->orderBy('tournament_groups.group', 'asc')->get();
+        } else {
+            return $result->orderBy('tournaments.start_date', 'asc')
+                ->orderBy('tournament_groups.group', 'asc')
+                ->orderBy('tournaments.tournament', 'asc')
+                ->paginate(20);
+        }
     }
     # tournament group controller
     public static function get_by_tournament_slug($request, $tournament_slug)

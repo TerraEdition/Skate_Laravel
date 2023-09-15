@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ContactPerson;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\Tournament;
 use App\Rules\unique_slug;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -107,7 +108,8 @@ class TeamController extends Controller
         try {
             $data = [
                 'data' => Team::get_detail_by_slug($slug),
-                'member' => TeamMember::get_by_team_slug($request, $slug)
+                'member' => TeamMember::get_by_team_slug($request, $slug),
+                'near_tournament' => Tournament::get_near_tournament(),
             ];
             if (empty($data['data'])) {
                 Session::flash('bg', 'alert-danger');

@@ -3,6 +3,7 @@
 <div class="d-flex gap-2 mb-3">
     <x-button.edit url="team/edit/{{ $data->slug }}" />
     <x-button.back url="team" />
+    <x-button.register-tournament :tournament=$near_tournament />
 </div>
 
 <x-alert />
@@ -86,6 +87,10 @@
     </table>
     {{ $member->links('Paginate.Custom') }}
 </div>
+
+
+
+
 
 
 
