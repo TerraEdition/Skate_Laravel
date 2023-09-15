@@ -20,7 +20,7 @@ $completedClass = $status == 'completed' ? 'btn-primary' : 'btn-outline-primary'
 @endif
 <div class="d-flex flex-wrap gap-2">
     @foreach ($data as $r)
-    <a href="{{url()->current()}}/{{$r->slug}}" class="d-block text-decoration-none">
+    <a href="{{url()->current()}}/{{$r->tournament_slug}}/{{$r->slug}}" class="d-block text-decoration-none">
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-end">

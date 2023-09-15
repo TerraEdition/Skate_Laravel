@@ -31,7 +31,7 @@ class ParticipantController extends Controller
         $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
         if (empty($group)) {
             Session::flash('bg', 'alert-danger');
-            Session::flash('message', __("global.group_not_found"));
+            Session::flash('message', __("global.tournament_group_not_found"));
             return redirect()->back();
         }
         try {
@@ -52,7 +52,7 @@ class ParticipantController extends Controller
             $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
-                Session::flash('message', __("global.group_not_found"));
+                Session::flash('message', __("global.tournament_group_not_found"));
                 return redirect()->back();
             } else {
                 if ($group->status == 0) {
@@ -83,7 +83,7 @@ class ParticipantController extends Controller
             $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
-                Session::flash('message', __("global.group_not_found"));
+                Session::flash('message', __("global.tournament_group_not_found"));
                 return redirect()->back();
             }
 
@@ -93,7 +93,7 @@ class ParticipantController extends Controller
 
             Session::flash('bg', 'alert-success');
             Session::flash('message', __('global.group_updated'));
-            return redirect()->to('participant/' . $group_slug);
+            return redirect()->to('participant/' . $tournament_slug . '/' . $group_slug);
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());

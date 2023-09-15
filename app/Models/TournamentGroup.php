@@ -31,6 +31,7 @@ class TournamentGroup extends Model
             'tournaments.location',
             'tournaments.start_time',
             'tournaments.end_time',
+            'tournaments.slug as tournament_slug',
             'tournament_groups.group',
             'tournament_groups.gender',
             'tournament_groups.min_age',
