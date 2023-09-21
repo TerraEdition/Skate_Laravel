@@ -29,7 +29,7 @@
             <td>{{$p->team}}</td>
             <td id="time_participant{{$p->participant_id}}">{{$p->time ?? '00:00:000'}}</td>
             <td>
-                <div data-participant_id="{{$p->participant_id}}" class="btn btn-sm btn-primary" id="show_stopwatch">
+                <div data-participant_id="{{$p->participant_id}}" data-participant_name="{{$p->member}}" class="btn btn-sm btn-primary" id="show_stopwatch">
                     Mulai</div>
             </td>
         </tr>
@@ -58,5 +58,8 @@
 @endsection
 
 @section('js')
+
+
+<script src="{{asset('js/peer.min.js')}}"></script>
 <script src="{{asset('js/participant/competition.js')}}"></script>
 @endsection

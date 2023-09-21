@@ -13,7 +13,12 @@
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div id="screen-main">
+        <h3>Peserta : <span id="participant_name">-</span></h3>
+        <div>Time</div>
+        <div id="show_time">00:00</div>
+    </div>
+    <div class="container mt-5" id="screen-sub">
         <h1>{{strtoupper($data->tournament)}}</h1>
         <h5>{{strtoupper($data->group)}}</h5>
         <table class="table table-striped">
@@ -42,3 +47,38 @@
 </body>
 
 </html>
+<script>
+    const show_time = document.getElementById("show_time")
+    const participant_name = document.getElementById("participant_name")
+    let milliseconds = 0
+    window.addEventListener('message', function(event) {
+        // Memeriksa sumber pesan
+        if (event.data.message == "Start") {
+            startTime = setInterval(update_time, 10)
+        } else if (event.data.message == "Stop") {
+            stop_time()
+        } else if (event.data.message == "Participant") {
+            participant_name.textContent = event.data.value
+        } else {
+            stop_time()
+            show_time.textContent = event.data.value
+        }
+    }, false);
+    // // Mengirim pesan ke jendela utama
+    // window.opener.postMessage('Halo dari jendela anak!', '*');
+
+    function update_time() {
+        milliseconds += 10
+        let minutes = Math.floor(milliseconds / 60000);
+        let seconds = Math.floor((milliseconds % 60000) / 1000);
+        let miliseconds = (milliseconds % 1000)
+
+        show_time.textContent =
+            (minutes < 10 ? "0" : "") + minutes + ":" +
+            (seconds < 10 ? "0" : "") + seconds + ":" +
+            (miliseconds < 100 ? "0" : "") + (miliseconds < 10 ? "0" : "") + miliseconds;
+    }
+    async function stop_time() {
+        clearInterval(startTime);
+    }
+</script>

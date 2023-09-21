@@ -4,24 +4,15 @@ const finish_btn = document.querySelector("#finish_time")
 const show_time = document.getElementById("show_time")
 let milliseconds = 0
 const modal_stopwatch = new bootstrap.Modal('#timeCompetition')
-
+let ready_screen = false
 show_modal_btn.forEach(btn => {
     btn.addEventListener('click', function () {
-        finish_btn.setAttribute('data-participant_id', this.dataset.participant_id)
-        modal_stopwatch.show()
+        if (!ready_screen) {
+            alert("Tampilkan Layar Turnamen Terlebih Dahulu")
+        }
     })
 })
-start_btn.addEventListener('click', function () {
-    toggle_btn()
-    milliseconds = 0
-    startTime = setInterval(update_time, 10)
-})
 
-finish_btn.addEventListener('click', function () {
-    participant_id = this.dataset.participant_id;
-    toggle_btn()
-    stop_time(participant_id);
-})
 
 function toggle_btn() {
     finish_btn.classList.toggle('d-none');
@@ -42,15 +33,15 @@ function update_time() {
 
 async function stop_time(participant_id) {
     clearInterval(startTime);
-    modal_stopwatch.hide()
-    data = await save_time_participant(participant_id);
-    if (data.status) {
-        document.querySelector("#time_participant" + participant_id).textContent = show_time.textContent
-        // document.querySelector(`#show_stopwatch[data-participant_id="${participant_id}"]`).remove()
-        show_time.textContent = "00:00:000";
-    } else {
-        alert(data.message)
-    }
+    // modal_stopwatch.hide()
+    // data = await save_time_participant(participant_id);
+    // if (data.status) {
+    //     document.querySelector("#time_participant" + participant_id).textContent = show_time.textContent
+    //     // document.querySelector(`#show_stopwatch[data-participant_id="${participant_id}"]`).remove()
+    //     show_time.textContent = "00:00:000";
+    // } else {
+    //     alert(data.message)
+    // }
 }
 
 async function save_time_participant(participant_id) {
@@ -71,8 +62,39 @@ async function save_time_participant(participant_id) {
 // Open New Screen
 const openScreen = document.querySelector('#new-screen');
 openScreen.addEventListener('click', function () {
-    const params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
-width=600,height=300,left=100,top=100`;
-    open(current_url + '/screen', 'Screen', params);
-    const peer = new Peer();
+    const params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=600,height=300,left=100,top=100`;
+    const window_screen = open(current_url + '/screen', 'Screen', params);
+    window.addEventListener('message', function (event) {
+        // Memeriksa sumber pesan
+        if (event.source === window_screen) {
+            // Melakukan sesuatu dengan pesan yang diterima
+            console.log('Pesan dari jendela anak:', event.data);
+        }
+    });
+    window_screen.onload = function () {
+        ready_screen = true
+        show_modal_btn.forEach(btn => {
+            btn.addEventListener('click', function () {
+                if (ready_screen) {
+                    finish_btn.setAttribute('data-participant_id', this.dataset.participant_id)
+                    modal_stopwatch.show()
+                    window_screen.postMessage({ message: "Participant", value: this.dataset.participant_name }, '*');
+                }
+            })
+        })
+        start_btn.addEventListener('click', function () {
+            toggle_btn()
+            milliseconds = 0
+            startTime = setInterval(update_time, 10)
+            window_screen.postMessage({ message: "Start", value: "00:00:000" }, '*');
+        })
+
+        finish_btn.addEventListener('click', function () {
+            toggle_btn()
+            participant_id = this.dataset.participant_id;
+            stop_time(participant_id);
+            window_screen.postMessage({ message: "Stop", value: show_time.textContent }, '*');
+        })
+    }
+
 })
