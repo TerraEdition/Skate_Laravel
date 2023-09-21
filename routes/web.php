@@ -102,9 +102,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('participant')->group(function () {
         Route::controller(ParticipantController::class)->group(function () {
             Route::get('', 'index');
-            Route::get('{tournament_slug}/{group_slug}', 'detail');
-            Route::get('{tournament_slug}/{group_slug}/competition', 'competition');
-            Route::get('{tournament_slug}/{group_slug}/competition/close', 'close_competition');
+            Route::prefix('{tournament_slug}/{group_slug}')->group(function () {
+                Route::get('', 'detail');
+                Route::get('competition', 'competition');
+                Route::get('competition/screen', 'tournament_screen');
+                Route::get('competition/close', 'close_competition');
+            });
         });
     });
 });

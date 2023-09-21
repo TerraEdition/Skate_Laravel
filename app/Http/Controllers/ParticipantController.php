@@ -100,4 +100,19 @@ class ParticipantController extends Controller
             return redirect()->back();
         }
     }
+
+    public function tournament_screen($tournament_slug, $group_slug)
+    {
+        try {
+            $data = [
+                'data' => TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug),
+                'participant' => TournamentParticipant::get_by_group_slug($group_slug)
+            ];
+            return view('Dashboard.Participant.Screen', $data);
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
 }

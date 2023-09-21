@@ -86,10 +86,10 @@ class TournamentGroupController extends Controller
         }
     }
 
-    public function detail($tournament_slug, $slug)
+    public function detail($tournament_slug, $group_slug)
     {
         try {
-            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($slug);
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
                 Session::flash('message', __('global.tournament_group_not_found'));
@@ -112,10 +112,10 @@ class TournamentGroupController extends Controller
             return redirect()->back();
         }
     }
-    public function edit($tournament_slug, $slug)
+    public function edit($tournament_slug, $group_slug)
     {
         try {
-            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($slug);
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
                 Session::flash('message', __('global.tournament_group_not_found'));
