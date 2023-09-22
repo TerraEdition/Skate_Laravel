@@ -9,7 +9,7 @@
 <div class="d-flex justify-content-between mt-3">
     <div class="fs-5"> Peserta Turnamen <b>{{$group->tournament}}</b> di Grup <b>{{$group->group}}</b></div>
     @if ($group->status==1)
-    <a href="{{url()->current()}}/close" class="btn btn-outline-primary">Tutup Pertandingan Grup Ini</a>
+    <div class="btn btn-outline-primary" id="close_group">Tutup Pertandingan Grup Ini</div>
     @endif
 </div>
 
@@ -58,6 +58,7 @@
 @endsection
 
 @section('js')
+
 
 
 <script src="{{asset('js/peer.min.js')}}"></script>

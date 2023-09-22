@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class TournamentParticipant extends Model
 {
@@ -27,7 +28,13 @@ class TournamentParticipant extends Model
             ->where('tournament_groups.slug', $group_slug);
 
         if ($order_by_time) {
-            $result->orderBy('tournament_participants.time', 'asc');
+            $result->orderBy(DB::raw(
+                " CASE
+                WHEN tournament_participants.time = '' THEN 2
+                ELSE 1
+                END ASC,
+                tournament_participants.time"
+            ), "ASC");
         }
         return $result->get();
     }

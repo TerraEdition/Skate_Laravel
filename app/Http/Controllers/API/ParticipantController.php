@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\Response;
 use App\Http\Controllers\Controller;
+use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

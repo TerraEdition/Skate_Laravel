@@ -8,38 +8,58 @@
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="<?= asset('vendors/bootstrap/bootstrap.min.css') ?>">
     <style>
-        /* Tambahkan CSS tambahan jika diperlukan */
+        body {
+            background-color: #248022;
+            color: white;
+        }
+
+        div#screen {
+            height: 100vh;
+            width: 100vw;
+            border: 10px solid white;
+        }
+
+        div#mini_screen {
+            border: 5px solid white;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 30vw;
+            height: 40vh;
+            overflow-y: auto;
+            text-align: center;
+            padding: 16px 32px;
+            transition: 0.3s;
+            background-color: #2c5c2b;
+        }
+
+        /* div#mini_screen:hover {
+            width: 90vw;
+            height: 80vh;
+            transition: 0.5s;
+        } */
+
+        div#mini_screen.fullscreen {
+            width: 100vw;
+            height: 100vh;
+            transition: 0.5s;
+        }
+
+        div#show_time {
+            font-size: 15vh;
+        }
     </style>
 </head>
 
 <body>
-    <div id="screen-main">
-        <h3>Peserta : <span id="participant_name">-</span></h3>
-        <div>Time</div>
-        <div id="show_time">00:00</div>
+    <div id="screen" class="d-flex flex-column pt-5">
+        <div class="text-center my-5">
+            <h3>Peserta</h3>
+            <h4 id="participant_name"></h4>
+            <div id="show_time">00:00:000</div>
+        </div>
     </div>
-    <div class="container mt-5" id="screen-sub">
-        <h1>{{strtoupper($data->tournament)}}</h1>
-        <h5>{{strtoupper($data->group)}}</h5>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Nama Peserta</th>
-                    <th>Waktu</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($participant as $p)
-                <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$p->member}}</td>
-                    <td>{{$p->time ? $p->time : '00:00'}}</td>
-                </tr>
-                @endforeach
-                <!-- Anda dapat menambahkan peserta lainnya sesuai kebutuhan -->
-            </tbody>
-        </table>
+    <div class="container" id="mini_screen">
     </div>
 
     <!-- Include Bootstrap JS (opsional) -->
@@ -50,22 +70,26 @@
 <script>
     const show_time = document.getElementById("show_time")
     const participant_name = document.getElementById("participant_name")
+    const mini_screen = document.getElementById("mini_screen")
     let milliseconds = 0
     window.addEventListener('message', function(event) {
-        // Memeriksa sumber pesan
         if (event.data.message == "Start") {
             startTime = setInterval(update_time, 10)
         } else if (event.data.message == "Stop") {
             stop_time()
+            show_time.textContent = event.data.value
+            milliseconds = 0
+            loadMiniScreen();
         } else if (event.data.message == "Participant") {
             participant_name.textContent = event.data.value
+            show_time.textContent = '00:00:000'
+        } else if (event.data.message == "Finish") {
+            mini_screen.classList.add('fullscreen')
         } else {
-            stop_time()
+            alert(event.data.value)
             show_time.textContent = event.data.value
         }
     }, false);
-    // // Mengirim pesan ke jendela utama
-    // window.opener.postMessage('Halo dari jendela anak!', '*');
 
     function update_time() {
         milliseconds += 10
@@ -81,4 +105,30 @@
     async function stop_time() {
         clearInterval(startTime);
     }
+
+    // load mini screen
+    async function loadMiniScreen() {
+        try {
+            mini_screen.innerHTML = `
+            <div class="spinner-grow mt-5" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow mt-5" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow mt-5" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            `
+            const response = await fetch(window.location.href + '/mini');
+            const data = await response.json();
+            if (data.status) {
+                mini_screen.innerHTML = data.data
+            }
+        } catch (error) {
+            console.log("Error fetching data:", error)
+        }
+    }
+
+    loadMiniScreen()
 </script>

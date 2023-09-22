@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Response;
 use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
 use Illuminate\Http\Request;
@@ -92,7 +93,7 @@ class ParticipantController extends Controller
             $group->update();
 
             Session::flash('bg', 'alert-success');
-            Session::flash('message', __('global.group_updated'));
+            Session::flash('message', __('global.tournament_group_updated'));
             return redirect()->to('participant/' . $tournament_slug . '/' . $group_slug);
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
@@ -104,15 +105,25 @@ class ParticipantController extends Controller
     public function tournament_screen($tournament_slug, $group_slug)
     {
         try {
-            $data = [
-                'data' => TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug),
-                'participant' => TournamentParticipant::get_by_group_slug($group_slug)
-            ];
-            return view('Dashboard.Participant.Screen', $data);
+            return view('Dashboard.Participant.Screen');
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();
+        }
+    }
+
+    public function mini_screen($tournament_slug, $group_slug)
+    {
+        try {
+            $data = [
+                'data' => TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug),
+                'participant' => TournamentParticipant::get_by_group_slug($group_slug, true)
+            ];
+            $view = view('Dashboard.Participant.MiniScreen', $data)->render();
+            return Response::make(200, __('global.success'), $view);
+        } catch (\Throwable $th) {
+            return Response::make(500, $th->getMessage() . ' : ' . $th->getLine());
         }
     }
 }

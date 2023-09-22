@@ -106,6 +106,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('', 'detail');
                 Route::get('competition', 'competition');
                 Route::get('competition/screen', 'tournament_screen');
+                Route::get('competition/screen/mini', 'mini_screen');
                 Route::get('competition/close', 'close_competition');
             });
         });
