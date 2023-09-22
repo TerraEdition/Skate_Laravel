@@ -37,6 +37,14 @@ class TeamMember extends Model
             ->orderBy($request->get('sort_at') ?? 'team_members.member', $request->get('sort_by') ?? 'asc')
             ->paginate($request->get('limit') ?? 20);
     }
+    # tournament excel export
+    public static function get_all_by_team_slug($slug)
+    {
+        return TeamMember::select('teams.team', 'team_members.*')
+            ->join('teams', 'teams.id', '=', 'team_members.team_id')
+            ->where('teams.slug', $slug)
+            ->orderBy('team_members.member', 'asc')->get();
+    }
 
     # tournament participant controller
     public static function get_member_by_rule_group($group, $team_slug)

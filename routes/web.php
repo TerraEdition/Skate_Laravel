@@ -79,7 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(TournamentController::class)->group(function () {
             Route::get('', 'index');
             Route::get('create', 'create');
-            Route::get('{slug}/export', 'export_tournament');
+            Route::get('{slug}/export/{team_slug?}', 'export_tournament');
             Route::post('create', 'store');
             Route::get('{slug}', 'detail');
             Route::post('create/{slug}', 'store');

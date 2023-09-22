@@ -16,18 +16,19 @@
                             <label for="excel" class="form-label">Upload File Pendaftaran</label>
                             <input class="form-control" type="file" id="excel">
                         </div>
-                        <button class="btn btn-primary btn-sm form-control" type="submit">
+                        <button class="btn btn-primary btn-sm form-control" type="button" onclick="alert(`ON Development`)">
                             <i class="fa-solid fa-floppy-disk"></i>
                             Simpan
                         </button>
                     </form>
-                    <a href="{{url('')}}/tournament/{{$tournament->slug}}/export" class="text-decoration-none">
+                    <a href="{{url('')}}/tournament/{{$tournament->slug}}/export/$team_slug" class="text-decoration-none">
                         <small class="pb-2 mb-4 text-danger border-bottom border-danger">
                             Jika belum ada formulir, maka bisa didownload disini
                         </small>
                     </a>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

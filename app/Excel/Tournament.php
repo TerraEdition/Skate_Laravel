@@ -5,6 +5,7 @@ namespace App\Excel;
 use App\Helpers\Convert;
 use App\Helpers\Date;
 use App\Helpers\Excel;
+use App\Models\TeamMember;
 use App\Models\Tournament as ModelsTournament;
 use App\Models\TournamentGroup;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -13,12 +14,13 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 class Tournament
 {
-    public static function export_excel($tournament_slug)
+    public static function export_excel($tournament_slug, $team_slug = false)
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $tournament = ModelsTournament::get_detail_by_slug($tournament_slug);
         $group = TournamentGroup::get_all('incoming', $tournament_slug);
+
         $spreadsheet->getSheet(0)->setTitle('Pendaftaran');
         # sheet pendaftaran
         $sheet->setCellValueExplicit('A1', 'Form Pendaftaran', DataType::TYPE_STRING);
@@ -43,6 +45,21 @@ class Tournament
         $sheet->setCellValueExplicit('D4', 'Group', DataType::TYPE_STRING);
         $sheet->getStyle('D4')->applyFromArray(array_merge_recursive(Excel::center_middle()));
         $sheet->mergeCells('D4:' . Excel::number_to_alphabet(($group->count() - 1) + 4) . '4');
+        if ($team_slug) {
+            $member = TeamMember::get_all_by_team_slug($team_slug);
+            $sheet->setCellValueExplicit('A3', $member[0]->team, DataType::TYPE_STRING);
+            $sheet->mergeCells('A3:B3');
+            $col = 'A';
+            $row = 7;
+            foreach ($member as $m) {
+                $sheet->setCellValueExplicit($col++ . $row, $m->member, DataType::TYPE_STRING);
+                $sheet->getStyle($col . $row)->getNumberFormat()->setFormatCode('d/m/Y');
+                $sheet->setCellValueExplicit($col++ . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($m->birth), DataType::TYPE_NUMERIC);
+                $sheet->setCellValueExplicit($col++ . $row, $m->gender == '1' ? 'L' : 'P', DataType::TYPE_STRING);
+                $row++;
+                $col = 'A';
+            }
+        }
         $col = 'D';
         $row = 5;
         foreach ($group as $g) {
@@ -52,10 +69,6 @@ class Tournament
         $sheet->setCellValueExplicit('D6', 'isi dengan angka 1 untuk mendaftar', DataType::TYPE_STRING);
         $sheet->mergeCells('D6:' . Excel::number_to_alphabet(($group->count() - 1) + 4) . '6');
         $sheet->getStyle('D6')->applyFromArray(array_merge_recursive(Excel::center_middle()));
-
-
-
-
 
         # sheet informasi
         $sheet2 =  $spreadsheet->createSheet();

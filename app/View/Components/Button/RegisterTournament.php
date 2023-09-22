@@ -11,9 +11,8 @@ class RegisterTournament extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public $tournament)
+    public function __construct(public $tournament, public string $team_slug)
     {
-        $this->tournament = $tournament;
     }
 
     /**

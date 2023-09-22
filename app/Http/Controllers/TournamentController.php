@@ -135,8 +135,8 @@ class TournamentController extends Controller
             return redirect()->back();
         }
     }
-    public function export_tournament($tournament_slug)
+    public function export_tournament($tournament_slug, $team_slug = '')
     {
-        ExcelTournament::export_excel($tournament_slug);
+        ExcelTournament::export_excel($tournament_slug, $team_slug);
     }
 }
