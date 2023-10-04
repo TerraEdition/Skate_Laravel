@@ -39,11 +39,18 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
-
+        'excel' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/excel'),
+        ],
+        'image' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/image'),
+        ],
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -71,6 +78,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('excel') => storage_path('app/public/excel'),
+        public_path('image') => storage_path('app/public/image'),
     ],
 
 ];

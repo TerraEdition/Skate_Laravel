@@ -36,4 +36,19 @@ class Convert
             return array_search($val, $statuses) ?? 'unknown';
         }
     }
+
+    # team controller
+    public static function gender_short($val, $to_id = true)
+    {
+        $statuses = [
+            'L' => '1',
+            'P' => '2',
+        ];
+
+        if ($to_id) {
+            return $statuses[$val] ?? '0';
+        } else {
+            return array_search($val, $statuses) ?? 'unknown';
+        }
+    }
 }

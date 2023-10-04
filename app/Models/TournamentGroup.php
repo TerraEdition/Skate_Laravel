@@ -93,6 +93,7 @@ class TournamentGroup extends Model
     {
         return TournamentGroup::select(
             'tournament_groups.id',
+            'tournaments.id as tournament_id',
             'tournaments.tournament',
             'tournament_groups.group',
             'tournament_groups.gender',
@@ -124,5 +125,47 @@ class TournamentGroup extends Model
                 'tournament_groups.slug',
             )
             ->first();
+    }
+
+    # team controller
+    public static function get_all_by_tournament_name($status, $tournament)
+    {
+        $result = TournamentGroup::select(
+            'tournaments.id as tournament_id',
+            'tournaments.tournament',
+            'tournaments.start_date',
+            'tournaments.end_date',
+            'tournaments.location',
+            'tournaments.start_time',
+            'tournaments.end_time',
+            'tournaments.slug as tournament_slug',
+            'tournament_groups.id as group_id',
+            'tournament_groups.group',
+            'tournament_groups.gender',
+            'tournament_groups.min_age',
+            'tournament_groups.max_age',
+            'tournament_groups.max_per_team',
+            'tournament_groups.slug',
+            DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
+        )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id');
+        if ($status == 'now') {
+            $result->where('tournaments.start_date', '<=', Date("Y-m-d"));
+            $result->where('tournaments.end_date', '>=', Date("Y-m-d"));
+            $result->orWhere('tournament_groups.status', '1');
+        } else if ($status == 'completed') {
+            $result->where('tournaments.end_date', '<', Date("Y-m-d"));
+            $result->orWhere('tournament_groups.status', '2');
+        } else if ($status == 'incoming') {
+            $result->where('tournaments.start_date', '>', Date("Y-m-d"));
+            $result->where('tournament_groups.status', '0');
+        }
+        if ($tournament) {
+            return $result->where('tournaments.tournament', $tournament)->orderBy('tournament_groups.group', 'asc')->get();
+        } else {
+            return $result->orderBy('tournaments.start_date', 'asc')
+                ->orderBy('tournament_groups.group', 'asc')
+                ->orderBy('tournaments.tournament', 'asc')
+                ->paginate(20);
+        }
     }
 }

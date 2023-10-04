@@ -43,6 +43,10 @@ class Date
     {
         return date('Y-m-d', strtotime('monday this week'));
     }
+    public static function date_us($date)
+    {
+        return date('Y-m-d', strtotime($date));
+    }
 
     public static function compare_date($date1, $date2)
     {
@@ -57,5 +61,14 @@ class Date
         $now = Carbon::now();
         $birth_date = Carbon::parse($date);
         return $birth_date->diffInYears($now);
+    }
+
+    public static function is_format_excel($date)
+    {
+        if (preg_match("/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/", $date)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

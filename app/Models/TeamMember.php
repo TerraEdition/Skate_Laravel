@@ -72,4 +72,13 @@ class TeamMember extends Model
             ->whereRaw('team_members.id NOT IN ( SELECT member_id FROM tournament_participants where group_id = ' . $group->id . ')')
             ->orderBy('team_members.member', 'ASC')->get();
     }
+
+    # team controller
+    public static function get_id_by_member_name_by_team_slug($member, $team_slug)
+    {
+        return TeamMember::select('id')
+            ->join('teams', 'teams.id', '=', 'team_members.team_id')
+            ->where('teams.slug', $team_slug)
+            ->where('team_members.member', $member)->first();
+    }
 }

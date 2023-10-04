@@ -59,11 +59,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(TeamController::class)->group(function () {
             Route::get('', 'index');
             Route::get('create', 'create');
-            Route::get('register-tournament', 'import_excel');
             Route::get('{team_slug}', 'detail');
             Route::get('edit/{team_slug}', 'edit');
             Route::put('edit/{team_slug}', 'put');
             Route::post('create', 'store');
+            Route::post('{team_slug}/register-tournament', 'import_excel');
         });
         Route::prefix('{team_slug}/member')->group(function () {
             Route::controller(TeamMemberController::class)->group(function () {

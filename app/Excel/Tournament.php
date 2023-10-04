@@ -35,7 +35,7 @@ class Tournament
         $sheet->setCellValueExplicit('B4', 'Tanggal Lahir', DataType::TYPE_STRING);
         $sheet->getStyle('B4')->applyFromArray(array_merge_recursive(Excel::center_middle()));
         $sheet->mergeCells('B4:B5');
-        $sheet->setCellValueExplicit('B6', 'd/m/Y (' . date('d/m/Y') . ')', DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit('B6', 'd-m-Y (' . date('d-m-Y') . ')', DataType::TYPE_STRING);
         $sheet->getStyle('B6')->applyFromArray(array_merge_recursive(Excel::center_middle()));
         $sheet->setCellValueExplicit('C4', 'Jenis Kelamin', DataType::TYPE_STRING);
         $sheet->getStyle('C4')->applyFromArray(array_merge_recursive(Excel::center_middle()));
@@ -53,8 +53,8 @@ class Tournament
             $row = 7;
             foreach ($member as $m) {
                 $sheet->setCellValueExplicit($col++ . $row, $m->member, DataType::TYPE_STRING);
-                $sheet->getStyle($col . $row)->getNumberFormat()->setFormatCode('d/m/Y');
-                $sheet->setCellValueExplicit($col++ . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($m->birth), DataType::TYPE_NUMERIC);
+                // $sheet->getStyle($col . $row)->getNumberFormat()->setFormatCode('d-m-Y');
+                $sheet->setCellValueExplicit($col++ . $row, date('d-m-Y', strtotime($m->birth)), DataType::TYPE_STRING);
                 $sheet->setCellValueExplicit($col++ . $row, $m->gender == '1' ? 'L' : 'P', DataType::TYPE_STRING);
                 $row++;
                 $col = 'A';

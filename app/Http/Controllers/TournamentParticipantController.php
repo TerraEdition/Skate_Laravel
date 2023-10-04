@@ -71,7 +71,7 @@ class TournamentParticipantController extends Controller
 
             # save tournament_participants
             $save_tournament_participant = new TournamentParticipant();
-            $save_tournament_participant->tournament_id = '1';
+            $save_tournament_participant->tournament_id = $group->tournament_id;
             $save_tournament_participant->time = '00:00';
             $save_tournament_participant->group_id = trim($group->id);
             $save_tournament_participant->member_id = trim($request->input('member_id'));
