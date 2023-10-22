@@ -21,6 +21,8 @@ class Menu
             return (object)['id' => '0', 'menu' => 'Peserta'];
         } else if (in_array('group', $key)) {
             return (object)['id' => '0', 'menu' => 'Grup'];
+        } else if (in_array('password', $key)) {
+            return (object)['id' => '0', 'menu' => 'Ganti Password'];
         }
 
         $menu =  MenuModel::where(function ($query) use ($key) {

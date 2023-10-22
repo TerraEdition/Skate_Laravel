@@ -10,6 +10,7 @@ use App\Http\Controllers\Dashboard\FileController;
 use App\Http\Controllers\Dashboard\ScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\TournamentController;
@@ -52,6 +53,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::get('', 'index')->name('home');
+        });
+    });
+    Route::prefix('password')->group(function () {
+        Route::controller(ProfileController::class)->group(function () {
+            Route::get('', 'password');
         });
     });
 
