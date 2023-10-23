@@ -113,6 +113,7 @@ class TournamentGroup extends Model
             ->where('tournament_groups.slug', $slug)
             ->where('tournaments.slug', $tournament_slug)
             ->groupBy(
+                'tournaments.id',
                 'tournament_groups.id',
                 'tournaments.tournament',
                 'tournament_groups.group',

@@ -85,6 +85,8 @@
             show_time.textContent = '00:00:000'
         } else if (event.data.message == "Finish") {
             mini_screen.classList.add('fullscreen')
+        } else if (event.data.message == "Save") {
+            show_time.textContent = event.data.value
         } else {
             alert(event.data.value)
             show_time.textContent = event.data.value
@@ -103,7 +105,9 @@
             (miliseconds < 100 ? "0" : "") + (miliseconds < 10 ? "0" : "") + miliseconds;
     }
     async function stop_time() {
-        clearInterval(startTime);
+        if (typeof startTime != 'undefined') {
+            clearInterval(startTime)
+        };
     }
 
     // load mini screen

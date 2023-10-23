@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('icon');
             $table->string('slug');
             $table->string('parent_id');
-            $table->enum('type', ['app', 'setting']);
+            $table->string('tab_id');
             $table->timestamps();
         });
 
@@ -31,7 +31,7 @@ return new class extends Migration
                 'icon' => 'fa-solid fa-house',
                 'slug' => 'dashboard',
                 'parent_id' => '0',
-                'type' => 'app',
+                'tab_id' => '1',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
@@ -41,7 +41,7 @@ return new class extends Migration
                 'icon' => 'fa-solid fa-people-group',
                 'slug' => 'tim',
                 'parent_id' => '0',
-                'type' => 'app',
+                'tab_id' => '1',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
@@ -51,7 +51,7 @@ return new class extends Migration
                 'icon' => 'fa-solid fa-trophy',
                 'slug' => 'turnamen',
                 'parent_id' => '0',
-                'type' => 'app',
+                'tab_id' => '1',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
@@ -61,7 +61,27 @@ return new class extends Migration
                 'icon' => 'fa-solid fa-person-skating',
                 'slug' => 'peserta',
                 'parent_id' => '0',
-                'type' => 'app',
+                'tab_id' => '1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+            [
+                'menu' => 'Pengguna',
+                'url' => '/user',
+                'icon' => 'fa-solid fa-user',
+                'slug' => 'user',
+                'parent_id' => '0',
+                'tab_id' => '2',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+            [
+                'menu' => 'Ganti Password',
+                'url' => '/password',
+                'icon' => 'fa-solid fa-lock',
+                'slug' => 'password',
+                'parent_id' => '0',
+                'tab_id' => '3',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],

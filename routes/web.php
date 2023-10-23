@@ -2,12 +2,6 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Dashboard\ApplicationClinicalAuthorizationController;
-use App\Http\Controllers\Dashboard\ApproveController;
-use App\Http\Controllers\Dashboard\CertificateController;
-use App\Http\Controllers\Dashboard\CredentialController;
-use App\Http\Controllers\Dashboard\FileController;
-use App\Http\Controllers\Dashboard\ScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ProfileController;
@@ -16,6 +10,7 @@ use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\TournamentGroupController;
 use App\Http\Controllers\TournamentParticipantController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -115,6 +110,11 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('competition/screen/mini', 'mini_screen');
                 Route::get('competition/close', 'close_competition');
             });
+        });
+    });
+    Route::prefix('user')->group(function () {
+        Route::controller(UserController::class)->group(function () {
+            Route::get('', 'index');
         });
     });
 });

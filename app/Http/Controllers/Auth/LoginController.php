@@ -34,7 +34,7 @@ class LoginController extends Controller
                     return redirect()->back()->with('msg', __('global.user_not_active'));
                 }
             } else {
-                return redirect()->back()->with('msg', __('global.login_not_valid'));
+                return redirect()->back()->with('msg', __('global.password_not_valid'));
             }
         } catch (\Throwable $th) {
             # throw $th;

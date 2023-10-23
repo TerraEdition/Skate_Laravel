@@ -6,9 +6,13 @@ use App\Models\Menu as MenuModel;
 
 class Menu
 {
-    public static function get_menus($type = 'app')
+    public static function get_menus($type = false)
     {
-        return MenuModel::orderBy('id', 'asc')->where('type', $type)->get();
+        $result = MenuModel::orderBy('id', 'asc');
+        if ($type) {
+            $result->where('tab_id', $type);
+        }
+        return $result->get();
     }
 
     public static function get_menu_active()
