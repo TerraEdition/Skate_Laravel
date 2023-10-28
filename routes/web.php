@@ -105,6 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('', 'index');
             Route::prefix('{tournament_slug}/{group_slug}')->group(function () {
                 Route::get('', 'detail');
+                Route::get('export-excel', 'export_excel_participant');
                 Route::get('competition', 'competition');
                 Route::get('competition/screen', 'tournament_screen');
                 Route::get('competition/screen/mini', 'mini_screen');

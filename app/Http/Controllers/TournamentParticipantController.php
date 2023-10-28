@@ -27,6 +27,11 @@ class TournamentParticipantController extends Controller
             }
 
             $team = Team::select('slug', 'team')->orderBy('team', 'asc')->get();
+            if ($team->isEmpty()) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.team_not_found'));
+                return redirect()->back();
+            }
             $data = [
                 'tournament_slug' => $tournament_slug,
                 'group' => $group,
@@ -62,16 +67,9 @@ class TournamentParticipantController extends Controller
                 Session::flash('message', __('global.group_not_found'));
                 return redirect()->back();
             }
-            $total_participant = TournamentParticipant::total_participant();
-            if ($total_participant >= $group->max_participant) {
-                Session::flash('bg', 'alert-danger');
-                Session::flash('message', __('global.max_participant_reached'));
-                return redirect()->back();
-            }
 
             # save tournament_participants
             $save_tournament_participant = new TournamentParticipant();
-            $save_tournament_participant->tournament_id = $group->tournament_id;
             $save_tournament_participant->time = '00:00';
             $save_tournament_participant->group_id = trim($group->id);
             $save_tournament_participant->member_id = trim($request->input('member_id'));

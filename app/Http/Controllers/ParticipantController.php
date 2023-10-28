@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Excel\Participant;
 use App\Helpers\Response;
 use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
@@ -125,5 +126,9 @@ class ParticipantController extends Controller
         } catch (\Throwable $th) {
             return Response::make(500, $th->getMessage() . ' : ' . $th->getLine());
         }
+    }
+    public function export_excel_participant($tournament_slug, $group_slug = '')
+    {
+        Participant::export_excel_participant($tournament_slug, $group_slug);
     }
 }

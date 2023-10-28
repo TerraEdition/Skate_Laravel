@@ -302,7 +302,6 @@ class TeamController extends Controller
                                     if (empty($check)) {
                                         $data_save[] = [
                                             'time' => '00:00',
-                                            'tournament_id' => $g->tournament_id,
                                             'group_id' => $g->group_id,
                                             'member_id' => $member_id->id,
                                             'slug' => Carbon::now()->unix() + $i,
@@ -312,7 +311,6 @@ class TeamController extends Controller
                                     # requirements not met
                                     $data_error[] = [
                                         'time' => '00:00',
-                                        'tournament_id' => $g->tournament_id,
                                         'group_id' => $g->group_id,
                                         'member_id' => $member_id->id,
                                         'slug' => Carbon::now()->unix() + $i,

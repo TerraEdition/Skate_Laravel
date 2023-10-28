@@ -56,9 +56,7 @@ class Tournament extends Model
             'tournaments.location',
             'tournaments.description',
             'tournaments.slug',
-            DB::raw('COUNT(tournament_participants.id) as total_participant')
         )
-            ->leftJoin('tournament_participants', 'tournament_participants.tournament_id', '=', 'tournaments.id')
             ->where('tournaments.slug', $slug)
             ->groupBy(
                 'tournaments.id',
@@ -86,9 +84,7 @@ class Tournament extends Model
             'tournaments.location',
             'tournaments.description',
             'tournaments.slug',
-            DB::raw('COUNT(tournament_participants.id) as total_participant')
         )
-            ->leftJoin('tournament_participants', 'tournament_participants.tournament_id', '=', 'tournaments.id')
             ->where('tournaments.start_date', '>', date("Y-m-d"))
             ->groupBy(
                 'tournaments.id',

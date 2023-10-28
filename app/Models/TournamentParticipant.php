@@ -11,6 +11,7 @@ class TournamentParticipant extends Model
     use HasFactory;
 
     # tournament participant controller
+    # participant excel
     public static function get_by_group_slug($group_slug, $order_by_time = false)
     {
         $result =  TournamentParticipant::select(
@@ -45,17 +46,5 @@ class TournamentParticipant extends Model
             ->get();
 
         return $result->count();
-    }
-    # team member model
-    public static function is_over_limit_participant_per_team_by_group($group, $team_slug)
-    {
-        $result = TournamentParticipant::select('tournament_participants.id')
-            ->join('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
-            ->join('teams', 'teams.id', '=', 'team_members.team_id')
-            ->where('teams.slug', $team_slug)
-            ->where('tournament_participants.group_id', $group->id)
-            ->get();
-
-        return $result->count() >= $group->max_per_team;
     }
 }

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('time')->nullable('true');
             $table->string('slug');
             $table->timestamps();
-            $table->foreign('member_id')->references('id')->on('team_members');
             $table->foreign('group_id')->references('id')->on('tournament_groups');
+            $table->foreign('member_id')->references('id')->on('team_members');
         });
     }
 

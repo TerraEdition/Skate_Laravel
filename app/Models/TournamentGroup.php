@@ -36,7 +36,6 @@ class TournamentGroup extends Model
             'tournament_groups.gender',
             'tournament_groups.min_age',
             'tournament_groups.max_age',
-            'tournament_groups.max_per_team',
             'tournament_groups.slug',
             DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
         )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id');
@@ -70,15 +69,13 @@ class TournamentGroup extends Model
             'tournament_groups.min_age',
             'tournament_groups.max_age',
             'tournament_groups.slug',
-            DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
+            DB::raw('(SELECT count(id) from tournament_participants WHERE group_id = tournament_groups.id) AS total_participant')
         )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id')
             ->where(function ($query) use ($key) {
                 $key = explode(' ', Format::clean_char_search($key));
                 foreach ($key as $r) {
                     $query->where(function ($query) use ($r) {
                         $query->orWhere('tournament_groups.group', 'like', '%' . $r . '%');
-                        $query->orWhere('tournament_groups.max_participant', 'like', '%' . $r . '%');
-                        $query->orWhere('tournament_groups.max_per_team', 'like', '%' . $r . '%');
                         $query->orWhere('tournament_groups.description', 'like', '%' . $r . '%');
                     });
                 }
@@ -99,15 +96,13 @@ class TournamentGroup extends Model
             'tournament_groups.gender',
             'tournament_groups.min_age',
             'tournament_groups.max_age',
-            'tournament_groups.max_participant',
-            'tournament_groups.max_per_team',
             'tournament_groups.status',
             'tournament_groups.slug',
-            DB::raw('COUNT(tournament_participants.id) as total_participant'),
-            DB::raw('COUNT(teams.id) as team_register')
+            DB::raw('count(tournament_participants.id) AS total_participant'),
+            DB::raw('COUNT(teams.id) as team_register'),
         )
             ->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id')
-            ->leftJoin('tournament_participants', 'tournament_participants.tournament_id', '=', 'tournaments.id')
+            ->leftJoin('tournament_participants', 'tournament_participants.group_id', '=', 'tournament_groups.id')
             ->leftJoin('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
             ->leftJoin('teams', 'teams.id', '=', 'team_members.team_id')
             ->where('tournament_groups.slug', $slug)
@@ -120,8 +115,6 @@ class TournamentGroup extends Model
                 'tournament_groups.gender',
                 'tournament_groups.min_age',
                 'tournament_groups.max_age',
-                'tournament_groups.max_participant',
-                'tournament_groups.max_per_team',
                 'tournament_groups.status',
                 'tournament_groups.slug',
             )
@@ -145,10 +138,10 @@ class TournamentGroup extends Model
             'tournament_groups.gender',
             'tournament_groups.min_age',
             'tournament_groups.max_age',
-            'tournament_groups.max_per_team',
             'tournament_groups.slug',
             DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
         )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id');
+
         if ($status == 'now') {
             $result->where('tournaments.start_date', '<=', Date("Y-m-d"));
             $result->where('tournaments.end_date', '>=', Date("Y-m-d"));

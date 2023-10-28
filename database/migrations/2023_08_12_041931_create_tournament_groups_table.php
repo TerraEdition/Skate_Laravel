@@ -17,10 +17,8 @@ return new class extends Migration
             $table->string('group')->nullable(false);
             $table->enum('gender', ['0', '1', '2'])->comment('0=>All, 1=>Male, 2=>Female');
             $table->text('description')->nullable(true);
-            $table->integer('max_participant');
-            $table->integer('max_per_team');
-            $table->integer('min_age');
-            $table->integer('max_age');
+            $table->integer('min_age', unsigned: true)->comment('Birth : Year Format');
+            $table->integer('max_age', unsigned: true)->comment('Birth : Year Format');
             $table->enum('status', ['0', '1', '2'])->comment('0 => not yet start, 1 => already start, 2 => finished');
             $table->string('slug');
             $table->timestamps();
