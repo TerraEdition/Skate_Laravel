@@ -35,7 +35,7 @@
                                     </button>
                                 </form>
                                 <a href="{{ url('') }}/tournament/{{ $near_tournament->slug }}/export/{{ $data->slug }}"
-                                    class="text-decoration-none">
+                                    target="_blank" class="text-decoration-none">
                                     <small class="pb-2 mb-4 text-danger border-bottom border-danger">
                                         Jika belum ada formulir, maka bisa didownload disini
                                     </small>

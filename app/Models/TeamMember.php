@@ -38,6 +38,13 @@ class TeamMember extends Model
             ->paginate($request->get('limit') ?? 20);
     }
     # tournament excel export
+    public static function get_all_member_by_team_slug($slug)
+    {
+        return TeamMember::select('team_members.*', 'teams.team')
+            ->join('teams', 'teams.id', '=', 'team_members.team_id')
+            ->where('teams.slug', $slug)->get();
+    }
+
     public static function get_all_by_team_slug($slug)
     {
         return TeamMember::select('teams.team', 'team_members.*')

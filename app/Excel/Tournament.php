@@ -46,7 +46,7 @@ class Tournament
         $sheet->getStyle('D4')->applyFromArray(array_merge_recursive(Excel::center_middle()));
         $sheet->mergeCells('D4:' . Excel::number_to_alphabet(($group->count() - 1) + 4) . '4');
         if ($team_slug) {
-            $member = TeamMember::get_all_by_team_slug($team_slug);
+            $member = TeamMember::get_all_member_by_team_slug($team_slug);
             $sheet->setCellValueExplicit('A3', $member[0]->team, DataType::TYPE_STRING);
             $sheet->mergeCells('A3:B3');
             $col = 'A';
