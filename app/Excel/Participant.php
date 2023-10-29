@@ -44,12 +44,13 @@ class Participant
         $sheet->getStyle('D4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
         $sheet->setCellValueExplicit('E4', "WAKTU", DataType::TYPE_STRING);
         $sheet->getStyle('E4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+        $sheet->getStyle('F4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
 
         $col = "A";
         $row = 5;
         foreach ($participant as $k => $member) {
             $sheet->setCellValueExplicit($col . $row, $k + 1, DataType::TYPE_STRING);
-            $sheet->getStyle($col . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+            $sheet->getStyle($col++ . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
             # NO BIB
             $sheet->getStyle($col++ . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
 

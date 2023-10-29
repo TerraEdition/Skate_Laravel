@@ -30,4 +30,7 @@ return [
     'max_participant_reached' => 'Peserta Turnament sudah mencapai maksimal!',
     'tournament_group_is_finished' => 'Turnament Grup sudah selesai',
     'unique' => 'Kolom :attribute sudah ada sebelumnya',
+    'import_successfull' => 'Data berhasil di unggah dan di perbarui!',
+    'import_failed' => 'Ada :n data gagal di unggah dan di perbarui!, mohon untuk diperbaiki',
+    'no_participant_duplicate' => 'Ada No BIB yang sama, mohon di cek kembali',
 ];

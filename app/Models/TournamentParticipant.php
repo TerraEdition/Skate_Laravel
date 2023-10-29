@@ -14,7 +14,7 @@ class TournamentParticipant extends Model
     # participant excel
     public static function get_by_group_slug($group_slug, $order_by_time = false)
     {
-        $result =  TournamentParticipant::select(
+        $result =  static::select(
             'tournament_participants.id as participant_id',
             'tournament_groups.group',
             'teams.team',
@@ -42,9 +42,20 @@ class TournamentParticipant extends Model
     # tournament participant controller
     public static function total_participant()
     {
-        $result = TournamentParticipant::select('tournament_participants.id')
+        $result = static::select('tournament_participants.id')
             ->get();
 
         return $result->count();
+    }
+
+    # import excel
+    public static function get_participant_by_name_by_team_by_group_slug($member_name, $team_name, $group_slug)
+    {
+        return static::join('team_members', 'tournament_participants.member_id', '=', 'team_members.id')
+            ->join('teams', 'teams.id', '=', 'team_members.team_id')
+            ->where('team_members.member', $member_name)
+            ->where('teams.team', $team_name)
+            ->where('tournament_groups.slug', $group_slug)
+            ->first();
     }
 }
