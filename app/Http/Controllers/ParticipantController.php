@@ -85,24 +85,18 @@ class ParticipantController extends Controller
     public function close_competition($tournament_slug, $group_slug)
     {
         try {
-            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
+            $group = TournamentGroup::where('slug', $group_slug)->first();
             if (empty($group)) {
-                Session::flash('bg', 'alert-danger');
-                Session::flash('message', __("global.tournament_group_not_found"));
-                return redirect()->back();
+                return Response::make(400, __('global.group_not_found'));
             }
-
             # set finish tournament group
-            $group->status = 2;
-            $group->update();
+            $group->update(
+                ['status' => '2']
+            );
 
-            Session::flash('bg', 'alert-success');
-            Session::flash('message', __('global.tournament_group_updated'));
-            return redirect()->to('participant/' . $tournament_slug . '/' . $group_slug);
+            return Response::make(200, __('global.success'), ['url' => url('participant/' . $tournament_slug . '/' . $group_slug)]);
         } catch (\Throwable $th) {
-            Session::flash('bg', 'alert-danger');
-            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
-            return redirect()->back();
+            return Response::make(500, $th->getMessage() . ' : ' . $th->getLine());
         }
     }
 

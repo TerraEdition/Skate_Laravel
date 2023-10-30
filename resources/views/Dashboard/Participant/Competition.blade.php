@@ -3,7 +3,8 @@
 <div class="d-flex gap-2">
     <x-button.back url="participant" />
     <div class="dropdown">
-        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="mode_title">
+        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false" id="mode_title">
             Pilih Mode
         </button>
         <ul class="dropdown-menu">
@@ -25,6 +26,7 @@
     <table class="table">
         <tr>
             <th>#</th>
+            <th>No BIB</th>
             <th>Nama</th>
             <th>Tim</th>
             <th>Waktu</th>
@@ -33,11 +35,13 @@
         @foreach ($participant as $p)
         <tr>
             <td>{{ $loop->iteration }}</td>
+            <td>{{ $p->no_participant }}</td>
             <td>{{ $p->member }}</td>
             <td>{{ $p->team }}</td>
             <td id="time_participant{{ $p->participant_id }}">{{ $p->time ?? '00:00:000' }}</td>
             <td>
-                <div data-participant_id="{{ $p->participant_id }}" data-participant_name="{{ $p->member }}" class="btn btn-sm btn-primary" id="show_stopwatch">
+                <div data-participant_id="{{ $p->participant_id }}" data-participant_number="{{ $p->no_participant }}"
+                    data-participant_name="{{ $p->member }}" class="btn btn-sm btn-primary" id="show_stopwatch">
                     Mulai</div>
             </td>
         </tr>
@@ -45,7 +49,8 @@
     </table>
 </div>
 
-<div class="modal fade" id="timeCompetition" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="timeCompetitionLabel" aria-hidden="true">
+<div class="modal fade" id="timeCompetition" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="timeCompetitionLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -65,24 +70,13 @@
 
                 <button type="button" class="btn btn-primary" id="start_time">Mulai</button>
                 <button type="button" class="btn btn-primary" id="save_time">Simpan</button>
-                <button type="button" class="btn btn-danger d-none" id="finish_time" data-participant_id="">Selesai</button>
+                <button type="button" class="btn btn-danger d-none" id="finish_time"
+                    data-participant_id="">Selesai</button>
             </div>
         </div>
     </div>
 </div>
 @endsection
-
-
-
-
-
-
-
-
-
-
-
-
 
 @section('js')
 <script src="{{ asset('js/peer.min.js') }}"></script>

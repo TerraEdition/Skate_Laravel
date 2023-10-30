@@ -42,14 +42,13 @@ function chooseMode(model) {
 }
 function format_input_time(time) {
     const [menit, detik] = time.split(':');
-    const milidetik = '000'; // Menambahkan milidetik dengan nilai awal 00
 
     // Menambahkan 0 di depan menit dan detik jika hanya satu digit
     const menitFormatted = menit.length === 1 ? '0' + menit : menit;
     const detikFormatted = detik.length === 1 ? '0' + detik : detik;
 
     // Menggabungkan menit, detik, dan milidetik
-    const waktuFormatted = `${menitFormatted}:${detikFormatted}:${milidetik}`;
+    const waktuFormatted = `${menitFormatted}:${detikFormatted}`;
 
     return waktuFormatted;
 }
@@ -88,7 +87,7 @@ async function stop_time(participant_id) {
         document.querySelector("#time_participant" + participant_id).textContent = show_time.textContent
     }
     if (data.status) {
-        show_time.textContent = "00:00:000";
+        show_time.textContent = "00:00";
     } else {
         alert(data.message)
     }
@@ -115,6 +114,7 @@ async function save_time_participant_mode_input(participant_id) {
             .then(res => {
                 return res.json()
             })
+
         return response;
     } catch (error) {
         return "Error fetching data:", error;
@@ -166,6 +166,7 @@ openScreen.addEventListener('click', function () {
                 finish_btn.setAttribute('data-participant_id', this.dataset.participant_id)
                 modal_stopwatch.show()
                 window_screen.postMessage({ message: "Participant", value: this.dataset.participant_name }, '*');
+                window_screen.postMessage({ message: "Participant_Number", value: this.dataset.participant_number }, '*');
             }
         })
     })
@@ -196,9 +197,20 @@ openScreen.addEventListener('click', function () {
 
     // close group if finished
     close_group_btn.addEventListener('click', function () {
-        window_screen.postMessage({ message: "Finish", value: '' }, '*');
-        window.location.replace(current_url + '/close')
+        close_tournament()
     })
     // }
+    async function close_tournament() {
+        try {
+            const response = await fetch(current_url + '/close');
+            const data = await response.json();
+            if (data.status) {
+                window_screen.postMessage({ message: "Finish", value: '' }, '*');
+                window.location.replace(data.data.url)
+            }
+        } catch (error) {
+            console.log("Error fetching data:", error)
+        }
+    }
 
 })

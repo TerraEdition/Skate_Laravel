@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 class TournamentGroup extends Model
 {
     use HasFactory, Sluggable;
+    protected $fillable = ['status'];
     public function sluggable(): array
     {
         return [
@@ -24,7 +25,7 @@ class TournamentGroup extends Model
     # tournament excel
     public static function get_all($status, $tournament_slug = false)
     {
-        $result = TournamentGroup::select(
+        $result = static::select(
             'tournaments.tournament',
             'tournaments.start_date',
             'tournaments.end_date',
@@ -63,7 +64,7 @@ class TournamentGroup extends Model
     public static function get_by_tournament_slug($request, $tournament_slug)
     {
         $key = $request->get('key') ?? '';
-        return TournamentGroup::select(
+        return static::select(
             'tournament_groups.group',
             'tournament_groups.gender',
             'tournament_groups.min_age',
@@ -84,11 +85,25 @@ class TournamentGroup extends Model
             ->orderBy($request->get('sort_at') ?? 'tournament_groups.group', $request->get('sort_by') ?? 'asc')
             ->paginate($request->get('limit') ?? 20);
     }
-    # tournament group controller
     # tournament participant controller
+    public static function get_id_by_tournament_slug_by_group_slug($tournament_slug, $slug)
+    {
+        return static::select(
+            'tournament_groups.id',
+        )
+            ->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id')
+            ->leftJoin('tournament_participants', 'tournament_participants.group_id', '=', 'tournament_groups.id')
+            ->leftJoin('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
+            ->leftJoin('teams', 'teams.id', '=', 'team_members.team_id')
+            ->where('tournament_groups.slug', $slug)
+            ->where('tournaments.slug', $tournament_slug)
+
+            ->first();
+    }
+    # tournament group controller
     public static function get_by_tournament_slug_by_group_slug($tournament_slug, $slug)
     {
-        return TournamentGroup::select(
+        return static::select(
             'tournament_groups.id',
             'tournaments.id as tournament_id',
             'tournaments.tournament',
