@@ -139,7 +139,7 @@ class ParticipantController extends Controller
         try {
             # check input validation
             $validator = Validator::make($request->all(), [
-                'excel' => 'file|mimes:xlsx|max:2048',
+                'excel' => 'required|file|mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'group_slug' => 'required',
             ], [], [
                 'excel' => 'File Excel',
@@ -165,27 +165,37 @@ class ParticipantController extends Controller
             $spreadsheet = $reader->load($path . $excel);
             $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
             $data_error = [];
-            $duplicate_no_participant = collect($sheet)->duplicate('B');
-            if (!empty($duplicate_no_participant)) {
-                Session::flash('bg', 'alert-danger');
-                Session::flash('message', __('global.no_participant_duplicate'));
-                return redirect()->back();
-            }
             foreach ($sheet as $k => $p) {
-                if ($k > 1) {
+                if ($k > 4) {
                     $error = false;
-                    $update_participant = TournamentParticipant::get_participant_by_name_by_team_by_group_slug($p['C'], $p['D'], $p['E']);
+                    $update_participant = TournamentParticipant::get_participant_by_name_by_team_by_group_slug($p['C'], $p['D'], $request->input('group_slug'));
+
                     if (empty($update_participant)) {
                         $error = true;
+                        $msg = __('global.participant_not_found');
                     }
-                    dd($p['F']);
+
+                    if (!preg_match('/^\d{2}:\d{2}$/', $p['E'])) {
+                        $p['E'] = '00:00';
+                    }
                     if (!$error) {
-                        $update_participant->no_participant = $p['B'];
+                        $update_participant->no_participant = str_pad($p['B'], 3, '0', STR_PAD_LEFT);
                         $update_participant->time = $p['E'];
                         $update_participant->update();
+                    } else {
+                        $data_error[] = [
+                            'row' => $k,
+                            'no_participant' => $p['B'],
+                            'member' => $p['C'],
+                            'team' => $p['D'],
+                            'time' => $p['E'],
+                            'msg' => $msg,
+                            'group_slug' => $request->input('group_slug'),
+                        ];
                     }
                 }
             }
+            DB::commit();
             if (!empty($data_error)) {
                 # show error handle
                 Session::flash('bg', 'alert-danger');
@@ -193,11 +203,11 @@ class ParticipantController extends Controller
                 cache()->forever('data_error', $data_error);
                 return redirect()->to(url()->current() . '/failed');
             } else {
+                cache()->delete('data_error');
                 Session::flash('bg', 'alert-success');
                 Session::flash('message', __('global.import_successfull'));
                 return redirect()->back();
             }
-            DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             Session::flash('bg', 'alert-danger');
@@ -207,6 +217,15 @@ class ParticipantController extends Controller
     }
     public function failed_import_excel_participant($tournament_slug, $group_slug)
     {
-        return dd(cache()->get('data_error'));
+        try {
+            $data = [
+                'data' => cache()->get('data_error'),
+            ];
+            return view('Dashboard.Participant.Import_Failed', $data);
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
     }
 }

@@ -77,7 +77,7 @@ class TeamMember extends Model
     # team controller
     public static function get_id_by_member_name_by_team_slug($member, $team_slug)
     {
-        return TeamMember::select('id')
+        return TeamMember::select('teams.id', 'team_members.member', 'team_members.gender', 'teams.team', 'team_members.birth', 'teams.slug as team_slug')
             ->join('teams', 'teams.id', '=', 'team_members.team_id')
             ->where('teams.slug', $team_slug)
             ->where('team_members.member', $member)->first();

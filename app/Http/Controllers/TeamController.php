@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Convert;
 use App\Helpers\Date;
+use App\Helpers\Excel;
 use App\Helpers\Files;
 use App\Models\ContactPerson;
 use App\Models\Team;
@@ -232,7 +233,7 @@ class TeamController extends Controller
         try {
             # check input validation
             $validator = Validator::make($request->all(), [
-                'excel' => 'file|mimes:xlsx',
+                'excel' => 'required|file|mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'team_slug' => 'required',
             ], [], [
                 'excel' => 'File Excel',
@@ -258,9 +259,14 @@ class TeamController extends Controller
             $spreadsheet = $reader->load($path . $excel);
             $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
             $sheet2 = $spreadsheet->getSheet(1)->toArray(null, true, true, true);
-            dump($sheet);
-            dd($sheet2);
+
             $group = TournamentGroup::get_all_by_tournament_name('incoming', $sheet2[1]['C']);
+            if (empty($group)) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.group_not_found'));
+                return redirect()->back();
+            }
+
             $data_error = [];
             $data_save = [];
             foreach ($sheet as $k => $p) {
@@ -268,37 +274,42 @@ class TeamController extends Controller
                     $error = false;
                     if (!Date::is_format_excel($p['B'])) {
                         # check format date is d-m-Y
-                        $error = true;
+                        Session::flash('bg', 'alert-danger');
+                        Session::flash('message', "Kesalahan Format tanggal lahir di baris : " . $k);
+                        return redirect()->back();
                     } else {
                         $member_id = TeamMember::get_id_by_member_name_by_team_slug($p['A'], $request->input('team_slug'));
-                        $age = Date::calculate_age($p['B']);
+                        $age_in_year = Date("Y", strtotime($p['B']));
                         $gender = Convert::gender_short($p['C']);
                         if (empty($member_id)) {
                             # new member
                             $member_id = new TeamMember();
                             $member_id->member = $p['A'];
                             $member_id->gender = $p['B'];
-                            $member_id->birth = $p['C'];
+                            $member_id->birth = date("Y-m-d", strtotime($p['C']));
                             $member_id->team_id = $team->id;
                             $member_id->save();
+                        } else {
+                            $gender = $member_id->gender;
                         }
                         # check rule group tournament like age, gender
                         foreach ($group as $i => $g) {
-                            if ($p[($i + 1) + "C"] == '1') {
+                            if ($p[Excel::number_to_alphabet(($i + 1) + Excel::alphabet_to_number("C"))] == '1') {
+
                                 # check age
-                                if ($age < $g->min_age || $age > $g->max_age) {
+                                if ($age_in_year > $g->max_age || $age_in_year < $g->min_age) {
                                     $error = true;
+                                    $msg = "Tahun Kelahiran tidak memenuhi persyaratan";
                                 }
-                                # check gender
-                                if (in_array($g->gender, ['1', '2'])) {
-                                    # boy or girl
-                                    if ($gender != $g->gender) {
-                                        $error = true;
-                                    }
+                                # boy or girl
+                                if ($gender != $g->gender) {
+                                    $error = true;
+                                    $msg = "Jenis Kelamin tidak memenuhi persyaratan";
                                 }
                                 if (!$error) {
                                     # check already participant
-                                    $check = TournamentParticipant::where('member_id', $member_id->id)->where('group_id', $g->group_id)->first();
+                                    $check = TournamentParticipant::where('member_id', $member_id->id)
+                                        ->where('group_id', $g->group_id)->first();
                                     if (empty($check)) {
                                         $data_save[] = [
                                             'time' => '00:00',
@@ -310,10 +321,17 @@ class TeamController extends Controller
                                 } else {
                                     # requirements not met
                                     $data_error[] = [
+                                        'row' => $k,
                                         'time' => '00:00',
                                         'group_id' => $g->group_id,
+                                        'team_slug' => $member_id->team_slug,
+                                        'team' => $member_id->team,
+                                        'birth' => $member_id->birth,
+                                        'group' => $g->group,
                                         'member_id' => $member_id->id,
+                                        'member' => $member_id->member,
                                         'slug' => Carbon::now()->unix() + $i,
+                                        'msg' => $msg,
                                     ];
                                 }
                             }
@@ -325,14 +343,34 @@ class TeamController extends Controller
                 # save participant
                 TournamentParticipant::insert($data_save);
             }
+            DB::commit();
             if (!empty($data_error)) {
                 # show error handle
-
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.import_failed', ['n' => count($data_error)]));
+                cache()->forever('data_error', $data_error);
+                return redirect()->to(url()->current() . '/failed');
+            } else {
+                cache()->delete('data_error');
+                Session::flash('bg', 'alert-success');
+                Session::flash('message', __('global.import_successfull'));
+                return redirect()->back();
             }
-            DB::commit();
         } catch (\Throwable $th) {
-            dd("ERROR");
             DB::rollBack();
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
+    public function import_excel_failed()
+    {
+        try {
+            $data = [
+                'data' => cache()->get('data_error'),
+            ];
+            return view('Dashboard.Team.Import_Failed', $data);
+        } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();

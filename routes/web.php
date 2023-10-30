@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('edit/{team_slug}', 'put');
             Route::post('create', 'store');
             Route::post('{team_slug}/register-tournament', 'import_excel');
+            Route::get('{team_slug}/register-tournament/failed', 'import_excel_failed');
         });
         Route::prefix('{team_slug}/member')->group(function () {
             Route::controller(TeamMemberController::class)->group(function () {

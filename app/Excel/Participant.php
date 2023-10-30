@@ -52,7 +52,8 @@ class Participant
             $sheet->setCellValueExplicit($col . $row, $k + 1, DataType::TYPE_STRING);
             $sheet->getStyle($col++ . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
             # NO BIB
-            $sheet->getStyle($col++ . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+            $sheet->getStyle($col . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+            $sheet->setCellValueExplicit($col++ . $row, $member->no_participant, DataType::TYPE_STRING);
 
             $sheet->getStyle($col . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
             $sheet->setCellValueExplicit($col++ . $row, $member->member, DataType::TYPE_STRING);
