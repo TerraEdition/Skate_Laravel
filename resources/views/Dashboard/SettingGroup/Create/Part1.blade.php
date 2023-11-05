@@ -25,5 +25,8 @@
             <small class="text-danger ms-2">{{ $message }}</small>
         @enderror
     </div>
-    <x-button.submit />
+    <div class="d-flex gap-2">
+        <x-button.back url="participant/{{ $tournament_slug }}/{{ $group->slug }}" />
+        <x-button.submit />
+    </div>
 </form>

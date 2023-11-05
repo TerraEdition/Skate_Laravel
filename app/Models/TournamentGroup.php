@@ -112,7 +112,7 @@ class TournamentGroup extends Model
             'tournament_groups.status',
             'tournament_groups.slug',
             DB::raw('count(tournament_participants.id) AS total_participant'),
-            DB::raw('COUNT(teams.id) as team_register'),
+            DB::raw('COUNT(DISTINCT teams.id) as team_register'),
         )
             ->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id')
             ->leftJoin('tournament_participants', 'tournament_participants.group_id', '=', 'tournament_groups.id')

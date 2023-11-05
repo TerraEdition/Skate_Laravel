@@ -68,8 +68,8 @@ class TeamMember extends Model
             ->join('teams', 'teams.id', '=', 'team_members.team_id')
             ->where('teams.slug', $team_slug)
             ->whereIn('gender', $gender)
-            ->whereRaw('YEAR(team_members.birth) >= ' . $min_birth)
-            ->whereRaw('YEAR(team_members.birth) <= ' . $max_birth)
+            ->whereRaw('team_members.birth >= ' . $min_birth)
+            ->whereRaw('team_members.birth <= ' . $max_birth)
             ->whereRaw('team_members.id NOT IN ( SELECT member_id FROM tournament_participants where group_id = ' . $group->id . ')')
             ->orderBy('team_members.member', 'ASC')->get();
     }

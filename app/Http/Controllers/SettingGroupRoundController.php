@@ -30,6 +30,7 @@ class SettingGroupRoundController extends Controller
             $data = [
                 'group' => $group,
                 'step' => $step,
+                'tournament_slug' => $tournament_slug,
                 'data' => Session::get('data_setting_group_' . $group_slug) ?? [],
                 'participant' => TournamentParticipant::get_all_participant_by_group_slug($group_slug),
             ];

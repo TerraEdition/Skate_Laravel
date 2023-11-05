@@ -321,12 +321,12 @@ class TeamController extends Controller
                                         $check = TournamentParticipant::where('member_id', $member_id->id)
                                             ->where('group_id', $g->group_id)->first();
                                         if (empty($check)) {
-                                            $data_save[] = [
-                                                'time' => '00:00:000',
-                                                'group_id' => $g->group_id,
-                                                'member_id' => $member_id->id,
-                                                'slug' => Carbon::now()->unix() + $i,
-                                            ];
+                                            $save = new TournamentParticipant();
+                                            $save->time = '00:00:000';
+                                            $save->group_id =  $g->group_id;
+                                            $save->member_id =  $member_id->id;
+                                            $save->slug =  Carbon::now()->unix() + $i;
+                                            $save->save();
                                         }
                                     }
                                 } else {
@@ -350,10 +350,7 @@ class TeamController extends Controller
                     }
                 }
             }
-            if (!empty($data_save)) {
-                # save participant
-                TournamentParticipant::insert($data_save);
-            }
+
             DB::commit();
             if (!empty($data_error)) {
                 # show error handle
