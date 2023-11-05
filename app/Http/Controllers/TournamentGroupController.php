@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Format;
+use App\Models\SettingGroupRound;
 use App\Models\Tournament;
 use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
@@ -93,6 +94,7 @@ class TournamentGroupController extends Controller
                 'tournament_slug' => $tournament_slug,
                 'data' => $group,
                 'participant' => TournamentParticipant::get_by_group_slug($group->slug),
+                'is_close' => !empty(SettingGroupRound::where('group_id', $group->id)->first()),
             ];
             return view('Dashboard.Tournament.Group.Detail', $data);
         } catch (\Throwable $th) {

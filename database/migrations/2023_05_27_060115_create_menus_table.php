@@ -36,7 +36,7 @@ return new class extends Migration
                 'updated_at' => Carbon::now()
             ],
             [
-                'menu' => 'Tim',
+                'menu' => 'Tim & Peserta',
                 'url' => '/team',
                 'icon' => 'fa-solid fa-people-group',
                 'slug' => 'tim',
@@ -56,10 +56,10 @@ return new class extends Migration
                 'updated_at' => Carbon::now()
             ],
             [
-                'menu' => 'Peserta',
+                'menu' => 'Pertandingan',
                 'url' => '/participant',
                 'icon' => 'fa-solid fa-person-skating',
-                'slug' => 'peserta',
+                'slug' => 'pertandingan',
                 'parent_id' => '0',
                 'tab_id' => '1',
                 'created_at' => Carbon::now(),

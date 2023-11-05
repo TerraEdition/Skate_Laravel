@@ -32,11 +32,9 @@ class Tournament
         $sheet->setCellValueExplicit('A4', 'Nama', DataType::TYPE_STRING);
         $sheet->getStyle('A4')->applyFromArray(array_merge_recursive(Excel::center_middle()));
         $sheet->mergeCells('A4:A6');
-        $sheet->setCellValueExplicit('B4', 'Tanggal Lahir', DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit('B4', 'Tahun Lahir', DataType::TYPE_STRING);
         $sheet->getStyle('B4')->applyFromArray(array_merge_recursive(Excel::center_middle()));
-        $sheet->mergeCells('B4:B5');
-        $sheet->setCellValueExplicit('B6', 'd-m-Y (' . date('d-m-Y') . ')', DataType::TYPE_STRING);
-        $sheet->getStyle('B6')->applyFromArray(array_merge_recursive(Excel::center_middle()));
+        $sheet->mergeCells('B4:B6');
         $sheet->setCellValueExplicit('C4', 'Jenis Kelamin', DataType::TYPE_STRING);
         $sheet->getStyle('C4')->applyFromArray(array_merge_recursive(Excel::center_middle()));
         $sheet->mergeCells('C4:C5');
@@ -54,7 +52,7 @@ class Tournament
             foreach ($member as $m) {
                 $sheet->setCellValueExplicit($col++ . $row, $m->member, DataType::TYPE_STRING);
                 // $sheet->getStyle($col . $row)->getNumberFormat()->setFormatCode('d-m-Y');
-                $sheet->setCellValueExplicit($col++ . $row, date('d-m-Y', strtotime($m->birth)), DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit($col++ . $row, ($m->birth), DataType::TYPE_STRING);
                 $sheet->setCellValueExplicit($col++ . $row, $m->gender == '1' ? 'L' : 'P', DataType::TYPE_STRING);
                 $row++;
                 $col = 'A';
@@ -66,7 +64,7 @@ class Tournament
             $sheet->getStyle($col . $row)->applyFromArray(array_merge_recursive(Excel::center_middle()));
             $sheet->setCellValueExplicit($col++ . $row, $g->group, DataType::TYPE_STRING);
         }
-        $sheet->setCellValueExplicit('D6', 'isi dengan angka 1 untuk mendaftar', DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit('D6', 'isi dengan v untuk mendaftar', DataType::TYPE_STRING);
         $sheet->mergeCells('D6:' . Excel::number_to_alphabet(($group->count() - 1) + 4) . '6');
         $sheet->getStyle('D6')->applyFromArray(array_merge_recursive(Excel::center_middle()));
 
@@ -86,24 +84,18 @@ class Tournament
         $sheet2->setCellValueExplicit('B3', ':', DataType::TYPE_STRING);
         $sheet2->setCellValueExplicit('C3', $tournament->location, DataType::TYPE_STRING);
         $sheet2->mergeCells('C3:D3');
-        $sheet2->setCellValueExplicit('A4', 'Jam', DataType::TYPE_STRING);
-        $sheet2->setCellValueExplicit('B4', ':', DataType::TYPE_STRING);
-        $sheet2->setCellValueExplicit('C4', $tournament->start_time . ' - ' . $tournament->end_time, DataType::TYPE_STRING);
-        $sheet2->mergeCells('C4:D4');
 
         # group tournament
         $sheet2->setCellValueExplicit('A7', 'Group', DataType::TYPE_STRING);
         $sheet2->setCellValueExplicit('B7', 'Batas Umur', DataType::TYPE_STRING);
         $sheet2->setCellValueExplicit('C7', 'Kelompok', DataType::TYPE_STRING);
-        $sheet2->setCellValueExplicit('D7', 'Maksimal Peserta Per Tim', DataType::TYPE_STRING);
-
+        // update versioning for screen participant
         $row = 8;
         $col = "A";
         foreach ($group as $g) {
             $sheet2->setCellValueExplicit($col++ . $row, $g->group, DataType::TYPE_STRING);
-            $sheet2->setCellValueExplicit($col++ . $row, $g->min_age . ' - ' . $g->max_age . ' Tahun', DataType::TYPE_STRING);
+            $sheet2->setCellValueExplicit($col++ . $row, $g->min_age . ' - ' . $g->max_age, DataType::TYPE_STRING);
             $sheet2->setCellValueExplicit($col++ . $row, Convert::gender($g->gender, false), DataType::TYPE_STRING);
-            $sheet2->setCellValueExplicit($col++ . $row, $g->max_per_team . ' Peserta', DataType::TYPE_STRING);
             $row++;
             $col = "A";
         }

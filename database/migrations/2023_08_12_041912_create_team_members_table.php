@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('team_id');
             $table->string('member')->nullable(false);
             $table->enum('gender', ['1', '2'])->comment('1=>Male, 2=>Female');
-            $table->date('birth');
+            $table->integer('birth')->comment("Year");
             $table->string('address')->nullable(true);
             $table->string('phone')->nullable(true);
             $table->string('email')->nullable(true);

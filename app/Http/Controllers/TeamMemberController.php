@@ -42,7 +42,7 @@ class TeamMemberController extends Controller
             $validator = Validator::make($request->all(), [
                 'member' => ['required', Rule::unique('team_members', 'member')],
                 'address' => 'nullable',
-                'birth' => 'required|date_format:Y-m-d',
+                'birth' => 'required|date_format:Y',
                 'email' => 'nullable|email',
                 'phone' => 'nullable|numeric',
                 'gender' => 'required|in:1,2',
@@ -50,7 +50,7 @@ class TeamMemberController extends Controller
             ], [], [
                 'member' => 'Nama Aggota',
                 'address' => 'Alamat',
-                'birth' => 'Tanggal Lahir',
+                'birth' => 'Tahun Lahir',
                 'email' => 'Email',
                 'phone' => 'No HP',
                 'gender' => 'Jenis Kelamin',
@@ -154,7 +154,7 @@ class TeamMemberController extends Controller
             $validator = Validator::make($request->all(), [
                 'member' => ['required', new unique_slug('team_members', 'member', $member_slug)],
                 'address' => 'nullable',
-                'birth' => 'required|date_format:Y-m-d',
+                'birth' => 'required|date_format:Y',
                 'email' => 'nullable|email',
                 'phone' => 'nullable|numeric',
                 'gender' => 'required|in:1,2',
@@ -162,7 +162,7 @@ class TeamMemberController extends Controller
             ], [], [
                 'member' => 'Nama Aggota',
                 'address' => 'Alamat',
-                'birth' => 'Tanggal Lahir',
+                'birth' => 'Tahun Lahir',
                 'email' => 'Email',
                 'phone' => 'No HP',
                 'gender' => 'Jenis Kelamin',

@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('tournament');
             $table->date('start_date');
             $table->date('end_date');
-            $table->time('start_time');
-            $table->time('end_time');
             $table->string('location');
             $table->text('description')->nullable(true);
             $table->string('slug');

@@ -2,9 +2,7 @@
 @section('css')
     <link rel="stylesheet" href="<?= asset('css/upload_image.css') ?>">
 @endsection
-@section('js')
-    <script src="<?= asset('js/upload_image.js') ?>"></script>
-@endsection
+
 
 @section('content')
     <form action="{{ url()->current() }}" method="POST" enctype="multipart/form-data">
@@ -25,6 +23,17 @@
                     <input type="text" class="form-control" id="team" name="team"
                         class="@error('team') is-invalid @enderror" value="{{ old('team', $data->team) }}">
                     @error('team')
+                        <small class="text-danger ms-2">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label for="team_initial" class="form-label">Kode Tim
+                        <x-required />
+                    </label>
+                    <input type="text" class="form-control" id="team_initial" name="team_initial"
+                        class="@error('team_initial') is-invalid @enderror"
+                        value="{{ old('team_initial', $data->team_initial) }}">
+                    @error('team_initial')
                         <small class="text-danger ms-2">{{ $message }}</small>
                     @enderror
                 </div>
@@ -116,4 +125,30 @@
             <x-button.submit />
         </div>
     </form>
+@endsection
+
+@section('js')
+    <script src="<?= asset('js/upload_image.js') ?>"></script>
+    <script>
+        document.querySelector('#team').addEventListener('keyup', function() {
+            // set initial team
+            const namaTim = this.value;
+
+            // Buat inisial tim
+            const inisialTim = generateInitials(namaTim);
+
+            // Tampilkan inisial pada elemen yang diinginkan
+            document.querySelector('#team_initial').textContent = inisialTim;
+        });
+
+        function generateInitials(namaTim) {
+            // Split nama tim menjadi kata-kata
+            const words = namaTim.split(' ');
+
+            // Buat inisial dari karakter pertama setiap kata
+            const inisial = words.map(word => word.charAt(0)).join('');
+
+            return inisial;
+        }
+    </script>
 @endsection

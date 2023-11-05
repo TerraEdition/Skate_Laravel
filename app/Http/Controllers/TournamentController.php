@@ -51,8 +51,6 @@ class TournamentController extends Controller
                 'tournament' => ['required', Rule::unique('tournaments', 'tournament')],
                 'start_date' => 'required|date_format:Y-m-d|after:' . date('Y-m-d'),
                 'end_date' => 'required|date_format:Y-m-d|after:' . $request->input('start_date'),
-                'start_time' => 'required|date_format:H:i',
-                'end_time' => 'required|date_format:H:i|after:start_time',
                 'location' => 'required',
                 'description' => 'nullable',
             ], [
@@ -60,8 +58,6 @@ class TournamentController extends Controller
             ], [
                 'tournament' => 'Turnamen',
                 'start_date' => 'Tanggal Mulai',
-                'end_date' => 'Tanggal Selesai',
-                'start_time' => 'Waktu Mulai',
                 'end_time' => 'Waktu Selesai',
                 'location' => 'Lokasi',
                 'description' => 'deskripsi',
@@ -80,8 +76,6 @@ class TournamentController extends Controller
             $save_tournament->description = Format::clean(trim($request->input('description')));
             $save_tournament->start_date = trim($request->input('start_date'));
             $save_tournament->end_date = trim($request->input('end_date'));
-            $save_tournament->start_time = trim($request->input('start_time'));
-            $save_tournament->end_time = trim($request->input('end_time'));
             $save_tournament->save();
 
             DB::commit();

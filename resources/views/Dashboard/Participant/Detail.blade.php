@@ -45,11 +45,17 @@
 
     <div class="d-flex justify-content-between mt-3">
         <div class="fs-5"> Peserta Turnamen <b>{{ $group->tournament }}</b> di Grup <b>{{ $group->group }}</b></div>
-        @if ($group->status < 2)
-            <a href="{{ url()->current() }}/competition" class="btn btn-outline-primary">
-                {{ $group->status == 0 ? 'Mulai Pertandingan' : 'Lanjutkan Pertandingan' }}
-            </a>
-        @endif
+        <div>
+            @if (empty($setting_group))
+                <a href="{{ url()->current() }}/setting-group" class="btn btn-outline-success">
+                    Pengaturan Grup
+                </a>
+            @elseif ($group->status < 2)
+                <a href="{{ url()->current() }}/competition" class="btn btn-outline-primary">
+                    {{ $group->status == 0 ? 'Mulai Pertandingan' : 'Lanjutkan Pertandingan' }}
+                </a>
+            @endif
+        </div>
     </div>
 
     <div class="table-responsive">
@@ -62,6 +68,8 @@
                 <th>Waktu</th>
                 @if ($group->status == 2)
                     <th>Posisi</th>
+                @else
+                    <th>Seat</th>
                 @endif
             </tr>
             @foreach ($participant as $p)
@@ -73,6 +81,8 @@
                     <td>{{ $p->time ?? '00:00' }}</td>
                     @if ($group->status == 2)
                         <td>{{ $loop->iteration }}</td>
+                    @else
+                        <td>{{ $p->seat }}</td>
                     @endif
                 </tr>
             @endforeach

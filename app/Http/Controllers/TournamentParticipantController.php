@@ -70,7 +70,7 @@ class TournamentParticipantController extends Controller
 
             # save tournament_participants
             $save_tournament_participant = new TournamentParticipant();
-            $save_tournament_participant->time = '00:00';
+            $save_tournament_participant->time = '00:00:000';
             $save_tournament_participant->group_id = trim($group->id);
             $save_tournament_participant->member_id = trim($request->input('member_id'));
             $save_tournament_participant->slug = Carbon::now()->unix();
@@ -79,6 +79,24 @@ class TournamentParticipantController extends Controller
             Session::flash('bg', 'alert-success');
             Session::flash('message', __('global.team_created'));
             return redirect()->to('tournament/' . $tournament_slug . '/group/' . $group_slug);
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
+
+    public function trash($tournament_slug, $group_slug, $participant_id)
+    {
+        try {
+            $delete = TournamentParticipant::where('id', $participant_id)->first();
+            if (empty($delete)) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.participant_not_found'));
+                return redirect()->back();
+            }
+            $delete->delete();
+            return redirect()->back();
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());

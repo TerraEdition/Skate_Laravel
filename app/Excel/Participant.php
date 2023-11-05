@@ -44,6 +44,7 @@ class Participant
         $sheet->getStyle('D4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
         $sheet->setCellValueExplicit('E4', "WAKTU", DataType::TYPE_STRING);
         $sheet->getStyle('E4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+        $sheet->setCellValueExplicit('F4', "SEAT", DataType::TYPE_STRING);
         $sheet->getStyle('F4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
 
         $col = "A";
@@ -61,7 +62,7 @@ class Participant
             $sheet->setCellValueExplicit($col++ . $row, $member->team, DataType::TYPE_STRING);
             $sheet->getStyle($col . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
             $sheet->setCellValueExplicit($col++ . $row, $member->time, DataType::TYPE_STRING);
-            # POSITION
+            # Seat
             $sheet->getStyle($col++ . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
             $col = 'A';
             $row++;

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('team_id');
             $table->string('team')->nullable(false);
+            $table->string('team_initial')->nullable(false);
             $table->string('coach');
             $table->string('website');
             $table->string('address');

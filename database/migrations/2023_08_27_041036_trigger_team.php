@@ -17,6 +17,7 @@ return new class extends Migration
                 INSERT INTO teams_log (
                     team_id,
                     team,
+                    team_initial,
                     coach,
                     website,
                     address,
@@ -29,6 +30,7 @@ return new class extends Migration
                 ) VALUES (
                     NEW.id,
                     NEW.team,
+                    NEW.team_initial,
                     NEW.coach,
                     NEW.website,
                     NEW.address,
@@ -49,6 +51,7 @@ return new class extends Migration
                 INSERT INTO teams_log (
                     team_id,
                     team,
+                    team_initial,
                     coach,
                     website,
                     address,
@@ -61,6 +64,7 @@ return new class extends Migration
                 ) VALUES (
                     NEW.id,
                     NEW.team,
+                    NEW.team_initial,
                     NEW.coach,
                     NEW.website,
                     NEW.address,
@@ -81,6 +85,7 @@ return new class extends Migration
                 INSERT INTO teams_log (
                     team_id,
                     team,
+                    team_initial,
                     coach,
                     website,
                     address,
@@ -93,6 +98,7 @@ return new class extends Migration
                 ) VALUES (
                     OLD.id,
                     OLD.team,
+                    OLD.team_initial,
                     OLD.coach,
                     OLD.website,
                     OLD.address,

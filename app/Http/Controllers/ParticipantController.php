@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Excel\Participant;
 use App\Helpers\Files;
 use App\Helpers\Response;
+use App\Models\SettingGroupRound;
 use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
 use Carbon\Carbon;
@@ -42,6 +43,7 @@ class ParticipantController extends Controller
         try {
             $data = [
                 'group' => $group,
+                'setting_group' => SettingGroupRound::get_by_group_slug($group_slug),
                 'participant' => TournamentParticipant::get_by_group_slug($group_slug, ($group->status == 2 ? true : false)),
             ];
             return view('Dashboard.Participant.Detail', $data);
@@ -132,8 +134,9 @@ class ParticipantController extends Controller
     {
         try {
             # check input validation
+            // |mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
             $validator = Validator::make($request->all(), [
-                'excel' => 'required|file|mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'excel' => 'required|file',
                 'group_slug' => 'required',
             ], [], [
                 'excel' => 'File Excel',
@@ -154,7 +157,7 @@ class ParticipantController extends Controller
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
             $path = storage_path('app/public/excel/participant/');
             Files::is_existing($path);
-            $request->file('excel')->storeAs('public/excel/participant', $excel);
+            $request->file('excel')->storeAs('excel/participant', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
             $spreadsheet = $reader->load($path . $excel);
             $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
@@ -170,7 +173,7 @@ class ParticipantController extends Controller
                     }
 
                     if (!preg_match('/^\d{2}:\d{2}$/', $p['E'])) {
-                        $p['E'] = '00:00';
+                        $p['E'] = '00:00:000';
                     }
                     if (!$error) {
                         $update_participant->no_participant = str_pad($p['B'], 3, '0', STR_PAD_LEFT);

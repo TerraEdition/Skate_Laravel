@@ -62,6 +62,10 @@ class Date
         $birth_date = Carbon::parse($date);
         return $birth_date->diffInYears($now);
     }
+    public static function calculate_year($year)
+    {
+        return date("Y") - $year;
+    }
 
     public static function is_format_excel($date)
     {

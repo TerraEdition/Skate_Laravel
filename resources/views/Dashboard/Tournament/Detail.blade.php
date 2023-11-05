@@ -17,14 +17,6 @@
         <h5>Rincian : </h5>
         <table class="table">
             <tr>
-                <td>Jam Mulai</td>
-                <td>{{ $data->start_time }}</td>
-            </tr>
-            <tr>
-                <td>Jam Selesai</td>
-                <td>{{ $data->end_time }}</td>
-            </tr>
-            <tr>
                 <td>Lokasi</td>
                 <td>{{ $data->location }}</td>
             </tr>

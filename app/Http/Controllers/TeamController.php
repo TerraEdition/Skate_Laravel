@@ -7,6 +7,7 @@ use App\Helpers\Date;
 use App\Helpers\Excel;
 use App\Helpers\Files;
 use App\Models\ContactPerson;
+use App\Models\SettingGroupRound;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\Tournament;
@@ -51,6 +52,7 @@ class TeamController extends Controller
             # check input validation
             $validator = Validator::make($request->all(), [
                 'team' => ['required', Rule::unique('teams', 'team')],
+                'team_initial' => ['required', 'max:5', Rule::unique('teams', 'team_initial')],
                 'coach' => 'required|max:100',
                 'address' => 'required',
                 'web' => 'nullable|active_url',
@@ -61,6 +63,7 @@ class TeamController extends Controller
                 'contact.*.phone' => 'required|numeric',
             ], [], [
                 'team' => 'Tim',
+                'team_initial' => 'Kode Tim',
                 'coach' => 'Pelatih',
                 'web' => 'URL Website',
                 'address' => 'Alamat',
@@ -83,6 +86,7 @@ class TeamController extends Controller
 
             $save_team = new Team();
             $save_team->team = trim($request->input('team'));
+            $save_team->team_initial = trim($request->input('team_initial'));
             $save_team->address = trim($request->input('address'));
             $save_team->email = trim($request->input('email'));
             $save_team->website = trim($request->input('web'));
@@ -156,6 +160,7 @@ class TeamController extends Controller
             # check input validation
             $validator = Validator::make($request->all(), [
                 'team' => ['required', new unique_slug('teams', 'team', $team_slug)],
+                'team_initial' => ['required', 'max:5', new unique_slug('teams', 'team_initial', $team_slug)],
                 'coach' => 'required|max:100',
                 'address' => 'required',
                 'web' => 'nullable|active_url',
@@ -166,6 +171,7 @@ class TeamController extends Controller
                 'contact.*.phone' => 'required|numeric',
             ], [], [
                 'team' => 'Tim',
+                'team_initial' => 'Kode Tim',
                 'coach' => 'Pelatih',
                 'web' => 'URL Website',
                 'address' => 'Alamat',
@@ -192,6 +198,7 @@ class TeamController extends Controller
                 return redirect()->back();
             }
             $save_team->team = trim($request->input('team'));
+            $save_team->team_initial = trim($request->input('team_initial'));
             $save_team->address = trim($request->input('address'));
             $save_team->email = trim($request->input('email'));
             $save_team->website = trim($request->input('web'));
@@ -232,8 +239,9 @@ class TeamController extends Controller
     {
         try {
             # check input validation
+            // mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
             $validator = Validator::make($request->all(), [
-                'excel' => 'required|file|mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'excel' => 'required|file',
                 'team_slug' => 'required',
             ], [], [
                 'excel' => 'File Excel',
@@ -254,7 +262,7 @@ class TeamController extends Controller
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
             $path = storage_path('app/public/excel/join_tournament/');
             Files::is_existing($path);
-            $request->file('excel')->storeAs('public/excel/join_tournament', $excel);
+            $request->file('excel')->storeAs('excel/join_tournament', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
             $spreadsheet = $reader->load($path . $excel);
             $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
@@ -272,21 +280,20 @@ class TeamController extends Controller
             foreach ($sheet as $k => $p) {
                 if ($k > 6) {
                     $error = false;
-                    if (!Date::is_format_excel($p['B'])) {
+                    if (($p['B'] <= 1990) || ($p['B'] >= date("Y"))) {
                         # check format date is d-m-Y
                         Session::flash('bg', 'alert-danger');
                         Session::flash('message', "Kesalahan Format tanggal lahir di baris : " . $k);
                         return redirect()->back();
                     } else {
                         $member_id = TeamMember::get_id_by_member_name_by_team_slug($p['A'], $request->input('team_slug'));
-                        $age_in_year = Date("Y", strtotime($p['B']));
                         $gender = Convert::gender_short($p['C']);
                         if (empty($member_id)) {
                             # new member
                             $member_id = new TeamMember();
                             $member_id->member = $p['A'];
-                            $member_id->gender = $p['B'];
-                            $member_id->birth = date("Y-m-d", strtotime($p['C']));
+                            $member_id->gender = $gender;
+                            $member_id->birth = $p['B'];
                             $member_id->team_id = $team->id;
                             $member_id->save();
                         } else {
@@ -294,10 +301,10 @@ class TeamController extends Controller
                         }
                         # check rule group tournament like age, gender
                         foreach ($group as $i => $g) {
-                            if ($p[Excel::number_to_alphabet(($i + 1) + Excel::alphabet_to_number("C"))] == '1') {
+                            if ($p[Excel::number_to_alphabet(($i + 1) + Excel::alphabet_to_number("C"))] == 'v') {
 
                                 # check age
-                                if ($age_in_year > $g->max_age || $age_in_year < $g->min_age) {
+                                if ($p['B'] > $g->max_age || $p['B'] < $g->min_age) {
                                     $error = true;
                                     $msg = "Tahun Kelahiran tidak memenuhi persyaratan";
                                 }
@@ -307,22 +314,26 @@ class TeamController extends Controller
                                     $msg = "Jenis Kelamin tidak memenuhi persyaratan";
                                 }
                                 if (!$error) {
-                                    # check already participant
-                                    $check = TournamentParticipant::where('member_id', $member_id->id)
-                                        ->where('group_id', $g->group_id)->first();
-                                    if (empty($check)) {
-                                        $data_save[] = [
-                                            'time' => '00:00',
-                                            'group_id' => $g->group_id,
-                                            'member_id' => $member_id->id,
-                                            'slug' => Carbon::now()->unix() + $i,
-                                        ];
+                                    # check group is close or not because already setting group seat before
+                                    $is_close = SettingGroupRound::where('group_id', $g->group_id)->first();
+                                    if (empty($is_close)) {
+                                        # check already participant
+                                        $check = TournamentParticipant::where('member_id', $member_id->id)
+                                            ->where('group_id', $g->group_id)->first();
+                                        if (empty($check)) {
+                                            $data_save[] = [
+                                                'time' => '00:00:000',
+                                                'group_id' => $g->group_id,
+                                                'member_id' => $member_id->id,
+                                                'slug' => Carbon::now()->unix() + $i,
+                                            ];
+                                        }
                                     }
                                 } else {
                                     # requirements not met
                                     $data_error[] = [
                                         'row' => $k,
-                                        'time' => '00:00',
+                                        'time' => '00:00:000',
                                         'group_id' => $g->group_id,
                                         'team_slug' => $member_id->team_slug,
                                         'team' => $member_id->team,

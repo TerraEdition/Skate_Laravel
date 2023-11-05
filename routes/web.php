@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingGroupRoundController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\TournamentController;
@@ -97,6 +98,7 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::get('create', 'create');
                     Route::post('create', 'store');
                     Route::get('{slug}', 'detail');
+                    Route::delete('{participant_id}', 'trash');
                 });
             });
         });
@@ -105,14 +107,23 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(ParticipantController::class)->group(function () {
             Route::get('', 'index');
             Route::prefix('{tournament_slug}/{group_slug}')->group(function () {
-                Route::get('', 'detail');
-                Route::get('export-excel', 'export_excel_participant');
-                Route::post('import-excel', 'import_excel_participant');
-                Route::get('import-excel/failed', 'failed_import_excel_participant');
-                Route::get('competition', 'competition');
-                Route::get('competition/screen', 'tournament_screen');
-                Route::get('competition/screen/mini', 'mini_screen');
-                Route::get('competition/close', 'close_competition');
+                Route::controller(ParticipantController::class)->group(function () {
+                    Route::get('', 'detail');
+                    Route::get('export-excel', 'export_excel_participant');
+                    Route::post('import-excel', 'import_excel_participant');
+                    Route::get('import-excel/failed', 'failed_import_excel_participant');
+                    Route::get('competition', 'competition');
+                    Route::get('competition/screen', 'tournament_screen');
+                    Route::get('competition/screen/mini', 'mini_screen');
+                    Route::get('competition/close', 'close_competition');
+                });
+                Route::prefix('setting-group')->group(function () {
+                    Route::controller(SettingGroupRoundController::class)->group(function () {
+                        Route::get('', 'create');
+                        Route::post('', 'store');
+                        Route::get('back', 'cancel');
+                    });
+                });
             });
         });
     });

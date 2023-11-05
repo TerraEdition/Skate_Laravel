@@ -9,6 +9,7 @@ const modal_stopwatch = new bootstrap.Modal('#timeCompetition')
 
 const input_minute = document.querySelector('#input_minute')
 const input_seconds = document.querySelector('#input_seconds')
+const input_miliseconds = document.querySelector('#input_miliseconds')
 
 let ready_screen = false
 let mode = 1
@@ -41,14 +42,17 @@ function chooseMode(model) {
     }
 }
 function format_input_time(time) {
-    const [menit, detik] = time.split(':');
+    const [menit, detik, milidetik] = time.split(':');
 
     // Menambahkan 0 di depan menit dan detik jika hanya satu digit
-    const menitFormatted = menit.length === 1 ? '0' + menit : menit;
-    const detikFormatted = detik.length === 1 ? '0' + detik : detik;
+    const menitFormatted = menit.padStart(2, '0');
+    const detikFormatted = detik.padStart(2, '0');
+
+    // Menambahkan '0' di depan milidetik jika panjangnya kurang dari 3 karakter
+    const milidetikFormatted = milidetik.padStart(3, '0');
 
     // Menggabungkan menit, detik, dan milidetik
-    const waktuFormatted = `${menitFormatted}:${detikFormatted}`;
+    const waktuFormatted = `${menitFormatted}:${detikFormatted}:${milidetikFormatted}`;
 
     return waktuFormatted;
 }
@@ -79,7 +83,7 @@ async function stop_time(participant_id) {
     modal_stopwatch.hide()
     if (mode == 1) {
         data = await save_time_participant_mode_input(participant_id);
-        document.querySelector("#time_participant" + participant_id).textContent = format_input_time(input_minute.value + ":" + input_seconds.value)
+        document.querySelector("#time_participant" + participant_id).textContent = format_input_time(input_minute.value + ":" + input_seconds.value+":"+input_miliseconds.value)
     } else {
         clearInterval(startTime);
         milliseconds = 0
@@ -110,7 +114,7 @@ async function save_time_participant_mode_input(participant_id) {
     try {
         const response = await fetch(base_url + '/api/participant/save-time?participant_id=' + participant_id +
             '&time=' +
-            format_input_time(input_minute.value + ":" + input_seconds.value))
+            format_input_time(input_minute.value + ":" + input_seconds.value+":"+input_miliseconds.value))
             .then(res => {
                 return res.json()
             })
@@ -179,7 +183,7 @@ openScreen.addEventListener('click', function () {
     saveTime.addEventListener('click', function () {
         saveTime.classList.add('d-none');
         finish_btn.classList.remove('d-none');
-        window_screen.postMessage({ message: "Save", value: format_input_time(input_minute.value + ":" + input_seconds.value) }, '*');
+        window_screen.postMessage({ message: "Save", value: format_input_time(input_minute.value + ":" + input_seconds.value+":"+input_miliseconds.value) }, '*');
     })
 
     finish_btn.addEventListener('click', function () {
@@ -187,7 +191,7 @@ openScreen.addEventListener('click', function () {
         participant_id = this.dataset.participant_id;
         if (mode == 1) {
             saveTime.classList.remove('d-none');
-            window_screen.postMessage({ message: "Stop", value: format_input_time(input_minute.value + ":" + input_seconds.value) }, '*');
+            window_screen.postMessage({ message: "Stop", value: format_input_time(input_minute.value + ":" + input_seconds.value+":"+input_miliseconds.value) }, '*');
         } else {
             start_btn.classList.remove('d-none');
             window_screen.postMessage({ message: "Stop", value: show_time.textContent }, '*');
