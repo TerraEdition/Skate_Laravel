@@ -22,7 +22,7 @@ class Menu
         if (in_array('member', $key)) {
             return (object)['id' => '0', 'menu' => 'Anggota'];
         } else if (in_array('participant', $key)) {
-            return (object)['id' => '0', 'menu' => 'Peserta'];
+            return (object)['id' => '0', 'menu' => 'Pertandingan'];
         } else if (in_array('group', $key)) {
             return (object)['id' => '0', 'menu' => 'Grup'];
         } else if (in_array('password', $key)) {
