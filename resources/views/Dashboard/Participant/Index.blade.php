@@ -37,11 +37,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Jam Acara</td>
-                                <td>:</td>
-                                <td>{{ $r->start_time }} - {{ $r->end_time }}</td>
-                            </tr>
-                            <tr>
                                 <td>Lokasi</td>
                                 <td>:</td>
                                 <td>{{ $r->location }}</td>
