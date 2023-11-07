@@ -79,4 +79,16 @@ class TournamentParticipant extends Model
             ->orderBy('tournament_participants.id', 'asc')
             ->get();
     }
+
+    # team member controller
+    public static function get_tournament_by_member_slug($member_slug){
+        return static::select('tournament_groups.group','tournaments.tournament','tournaments.start_date','tournaments.end_date')
+            ->join('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
+            ->join('teams', 'teams.id', '=', 'team_members.team_id')
+            ->join('tournament_groups', 'tournament_groups.id', '=', 'tournament_participants.group_id')
+            ->join('tournaments', 'tournaments.id', '=', 'tournament_groups.tournament_id')
+            ->where('team_members.slug', $member_slug)
+            ->orderBy('tournament_groups.group', 'desc')
+            ->paginate(20);
+    }
 }

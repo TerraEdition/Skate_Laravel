@@ -50,4 +50,16 @@ class Team extends Model
 
         return $result;
     }
+    # team controller
+    public static function get_by_team_name($team)
+    {
+        $result = Team::select(
+            'teams.*',
+        )
+            ->where('team', $team)
+            ->first();
+
+        return $result;
+    }
+
 }

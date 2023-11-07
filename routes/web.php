@@ -49,6 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::get('', 'index')->name('home');
+            Route::get('export', 'export_excel_by_pass');
+            Route::post('import', 'import_excel_by_pass');
         });
     });
     Route::prefix('password')->group(function () {

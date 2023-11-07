@@ -56,7 +56,7 @@ class TeamController extends Controller
                 'coach' => 'required|max:100',
                 'address' => 'required',
                 'web' => 'nullable|active_url',
-                'email' => 'required|email',
+                'email' => 'nullable|email',
                 'image' => 'nullable|image',
                 'contact' => 'nullable|array',
                 'contact.*.name' => 'required',
@@ -164,7 +164,7 @@ class TeamController extends Controller
                 'coach' => 'required|max:100',
                 'address' => 'required',
                 'web' => 'nullable|active_url',
-                'email' => 'required|email',
+                'email' => 'nullable|email',
                 'image' => 'nullable|image',
                 'contact' => 'nullable|array',
                 'contact.*.name' => 'required',
@@ -260,7 +260,7 @@ class TeamController extends Controller
 
             DB::beginTransaction();
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
-            $path = storage_path('app/public/excel/join_tournament/');
+            $path = storage_path('app/excel/join_tournament/');
             Files::is_existing($path);
             $request->file('excel')->storeAs('excel/join_tournament', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();

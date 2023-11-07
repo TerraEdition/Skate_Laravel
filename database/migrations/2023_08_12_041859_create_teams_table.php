@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('team')->unique()->nullable(false);
             $table->string('team_initial')->unique()->nullable(false);
-            $table->string('coach');
-            $table->string('website');
-            $table->string('address');
-            $table->string('email');
+            $table->string('coach')->nullable();
+            $table->string('website')->nullable();
+            $table->string('address')->nullable();
+            $table->string('email')->nullable();
             $table->string('image')->default('default.png');
             $table->string('slug');
             $table->timestamps();

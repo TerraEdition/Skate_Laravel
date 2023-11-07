@@ -21,8 +21,27 @@ class TournamentGroup extends Model
             ]
         ];
     }
-    # participant controller
-    # tournament excel
+    # dashboard controller
+    # dashboard excel
+    public static function get_all_tournament_closest()
+    {
+        $result = static::select(
+            'tournaments.tournament',
+            'tournaments.start_date',
+            'tournaments.end_date',
+            'tournaments.location',
+            'tournaments.slug as tournament_slug',
+            'tournament_groups.id as group_id',
+            'tournament_groups.group',
+            'tournament_groups.gender',
+            'tournament_groups.min_age',
+            'tournament_groups.max_age',
+            'tournament_groups.slug',
+            DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
+        )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id');
+
+        return $result->where('tournaments.id', '1')->orderBy('tournament_groups.group', 'asc')->get();
+    }
     public static function get_all($status, $tournament_slug = false)
     {
         $result = static::select(

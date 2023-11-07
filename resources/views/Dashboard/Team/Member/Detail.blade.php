@@ -50,13 +50,24 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>No.</th>
                     <th>Turnamen</th>
                     <th>Grup</th>
                     <th>Jadwal</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                @foreach ($tournament_incoming as $ti)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $ti->tournament }}</td>
+                        <td>{{ $ti->group }}</td>
+                        <td>{{ Date::format_short($ti->start_date) }} - {{ Date::format_short($ti->end_date) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
         </table>
+        {{ $tournament_incoming->links('Paginate.Custom') }}
     </div>
 
     <div class="modal fade" id="modal-match-log" tabindex="-1" aria-hidden="true">

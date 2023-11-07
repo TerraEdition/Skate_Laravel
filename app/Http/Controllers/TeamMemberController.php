@@ -7,6 +7,7 @@ use App\Models\TeamMember;
 use App\Rules\unique_slug;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\TournamentParticipant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -115,6 +116,7 @@ class TeamMemberController extends Controller
             $data = [
                 'team_slug' => $team_slug,
                 'data' => $member,
+                'tournament_incoming' => TournamentParticipant::get_tournament_by_member_slug($member_slug),
             ];
             return view('Dashboard.Team.Member.Detail', $data);
         } catch (\Throwable $th) {
