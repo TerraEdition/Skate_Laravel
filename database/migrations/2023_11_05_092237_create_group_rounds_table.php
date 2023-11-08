@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('group_rounds');
+        Schema::dropIfExists('setting_group_rounds');
     }
 };
