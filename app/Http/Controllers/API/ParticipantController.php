@@ -33,9 +33,32 @@ class ParticipantController extends Controller
             }
             $save_time_participant->time = $request->get('time');
             $save_time_participant->update();
+            # set live score
+            $this->_set_cache_live_score($save_time_participant->group_id);
             return Response::make(200, __('global.participant_updated'));
         } catch (\Throwable $th) {
             return Response::make(500, $th->getMessage() . ' : ' . $th->getLine());
         }
+    }
+    private function _set_cache_live_score($group_id){
+        $participant = TournamentParticipant::get_by_group_id($group_id);
+        cache()->forever('score_grup_'.$group_id,$participant);
+    }
+
+    public function get_live_score($group_id){
+        $participant = cache()->get('score_grup_'.$group_id);
+        if(empty($participant)){
+            $participant = TournamentParticipant::get_by_group_id($group_id);
+        }
+        if(empty($participant)){
+            $participant = [];
+        }
+
+        $data=[
+            'participant'=> $participant,
+        ];
+         $htmlData =view('Home.DisplayScore', $data)->render();
+
+         return Response::make(200, __('global.success'),['html' => $htmlData]);
     }
 }

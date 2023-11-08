@@ -1,17 +1,46 @@
 @extends('Home.Layout.Main')
 @section('content')
-    <table class="table table-striped table-primary">
-        <tr>
-            <th>No.</th>
-            <th>Pertandingan</th>
-            <th>Kelas</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>1dasda</td>
-            <td>asdds</td>
-        </tr>
+    <div class="modal fade" id="firstModal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="firstModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body bg-success text-center">
+                    <img src="{{ asset('storage/screen/1.jpeg') }}" alt="" class="w-50 h-50">
+                </div>
+            </div>
+        </div>
+    </div>
+    <x-alert />
+    <div class="text-light py-3 px-2">
+        Pertandingan yang dipertandingkan :
+    </div>
+    <table class="table table-striped table-success">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Kelas / Grup</th>
+                <th>Total Peserta</th>
+            </tr>
+        </thead>
+        @foreach ($group as $t)
+            <tr class="group-info" data-slug="{{ $t->slug }}">
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ ucwords($t->group) }}</td>
+                <td>{{ $t->total_participant }} Peserta</td>
+            </tr>
+        @endforeach
     </table>
+
+    {{ $group->links('Paginate.Custom') }}
 @endsection
 @section('js')
+    <script>
+        new bootstrap.Modal(document.getElementById('firstModal')).show();
+
+        document.querySelectorAll(".group-info").forEach(element => {
+            element.addEventListener('click', function() {
+                location.replace(current_url + '/' + element.dataset.slug)
+            });
+        });
+    </script>
 @endsection

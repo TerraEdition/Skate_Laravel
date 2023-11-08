@@ -26,17 +26,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(HomeController::class)->group(function () {
-    Route::get('/', 'index');
-});
-Route::controller(LoginController::class)->group(function () {
-    Route::get('/logout', 'destroy');
-});
 Route::middleware('already.login')->group(function () {
     Route::prefix('login')->group(function () {
         Route::controller(LoginController::class)->group(function () {
             Route::get('/', 'index')->name('login');
             Route::post('/', 'store');
+            Route::get('/logout', 'destroy');
         });
     });
     Route::prefix('register')->group(function () {
@@ -136,3 +131,10 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 });
+
+Route::middleware('if.mobile')->group(function () {
+    Route::controller(HomeController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('{group_slug}', 'detail');
+    });
+    });

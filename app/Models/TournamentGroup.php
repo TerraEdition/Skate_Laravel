@@ -102,6 +102,14 @@ class TournamentGroup extends Model
             ->orderBy($request->get('sort_at') ?? 'tournament_groups.group', $request->get('sort_by') ?? 'asc')
             ->paginate($request->get('limit') ?? 20);
     }
+    # home controller
+    public static function get_by_group_slug($group_slug){
+        return static::select(
+            'tournament_groups.id',
+            'tournament_groups.group',
+            'tournament_groups.slug',
+        )->where('slug',$group_slug)->first();
+    }
     # tournament participant controller
     public static function get_id_by_tournament_slug_by_group_slug($tournament_slug, $slug)
     {

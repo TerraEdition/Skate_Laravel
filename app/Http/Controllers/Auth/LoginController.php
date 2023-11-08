@@ -27,18 +27,25 @@ class LoginController extends Controller
                     return redirect()->intended();
                 } else {
                     # email not verify
+                    Session::flash('bg', 'alert-danger');
                     if (!$user->email_verified_at) {
                         # send again email verified
-                        return redirect()->back()->with('msg', __('global.user_email_not_verified'));
+                        Session::flash('message', __('global.user_email_not_verified'));
+                        return redirect()->back();
                     }
-                    return redirect()->back()->with('msg', __('global.user_not_active'));
+                    Session::flash('message', __('global.user_not_active'));
+                    return redirect()->back();
                 }
             } else {
-                return redirect()->back()->with('msg', __('global.password_not_valid'));
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.password_not_valid'));
+                return redirect()->back();
             }
         } catch (\Throwable $th) {
             # throw $th;
-            return redirect()->back()->with('msg', __('global.error_system'));
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
         }
     }
 
@@ -53,7 +60,9 @@ class LoginController extends Controller
             return redirect()->to('login')->with('msg', __('global.logout_successfull'));
         } catch (\Throwable $th) {
             # throw $th;
-            return redirect()->back()->with('msg', __('global.error_system'));
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
         }
     }
 }

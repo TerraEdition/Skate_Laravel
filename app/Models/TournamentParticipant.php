@@ -43,6 +43,8 @@ class TournamentParticipant extends Model
                 END ASC,
                 tournament_participants.time"
             ), "ASC");
+        }else{
+            $result->orderBy('tournament_participants.no_participant','asc');
         }
         return $result->get();
     }
@@ -78,6 +80,38 @@ class TournamentParticipant extends Model
             ->orderBy('tournament_participants.no_participant', 'asc')
             ->orderBy('tournament_participants.id', 'asc')
             ->get();
+    }
+    # API Participant Controller
+    public static function get_by_group_id($group_id)
+    {
+        $result =  static::select(
+            'tournament_participants.id as participant_id',
+            'tournament_groups.group',
+            'teams.team',
+            'team_members.birth',
+            'team_members.gender',
+            'team_members.member',
+            'tournament_participants.time',
+            'tournament_participants.no_participant',
+            'setting_group_rounds.seat',
+        )
+            ->leftJoin('tournament_groups', 'tournament_groups.id', '=', 'tournament_participants.group_id')
+            ->leftJoin('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
+            ->leftJoin('teams', 'teams.id', '=', 'team_members.team_id')
+            ->leftJoin('setting_group_rounds', 'setting_group_rounds.participant_id', '=', 'tournament_participants.id')
+            ->where('tournament_groups.id', $group_id)
+            ->where(function ($query) {
+                $query->where('setting_group_rounds.round', '1')
+                    ->orWhereNull('setting_group_rounds.round');
+            })
+            ->orderBy(DB::raw(
+                "CASE
+                WHEN tournament_participants.time = '' THEN 2
+                ELSE 1
+                END ASC,
+                tournament_participants.time"
+            ), "ASC");
+        return $result->get();
     }
 
     # team member controller
