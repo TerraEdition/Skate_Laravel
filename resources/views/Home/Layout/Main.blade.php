@@ -12,7 +12,7 @@
     @yield('css')
 </head>
 
-<body class="bg-success">
+<body class="bg-primary overflow-auto">
     @yield('content')
     <script>
         var base_url = @json(url('/'));

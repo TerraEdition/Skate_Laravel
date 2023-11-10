@@ -11,15 +11,17 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $tournament = Tournament::get_near_tournament();
-        $data =[
-            'tournament_incoming'=>$tournament,
-            'group'=>TournamentGroup::get_by_tournament_slug($request,$tournament->slug),
+        $data = [
+            'tournament_incoming' => $tournament,
+            'group' => TournamentGroup::get_by_tournament_slug($request, $tournament->slug ?? 'null'),
         ];
         return view('Home.Index', $data);
     }
-    public function detail($group_slug){
+    public function detail($group_slug)
+    {
         $group = TournamentGroup::get_by_group_slug($group_slug);
         if (empty($group)) {
             Session::flash('bg', 'alert-danger');
@@ -28,7 +30,7 @@ class HomeController extends Controller
         }
         try {
             $data = [
-                'group'=>$group,
+                'group' => $group,
             ];
             return view('Home.Detail', $data);
         } catch (\Throwable $th) {

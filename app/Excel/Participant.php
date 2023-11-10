@@ -21,7 +21,7 @@ class Participant
         $sheet = $spreadsheet->getActiveSheet();
         $tournament = ModelsTournament::get_detail_by_slug($tournament_slug);
         $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
-        $participant = TournamentParticipant::get_by_group_slug($group_slug);
+        $participant = TournamentParticipant::get_by_group_slug($group_slug, true);
         $spreadsheet->getSheet(0)->setTitle('Hasil Lomba');
         # sheet pendaftaran
         $sheet->setCellValueExplicit('A1', strtoupper('Hasil Lomba Turnamen : ' . $tournament->tournament), DataType::TYPE_STRING);

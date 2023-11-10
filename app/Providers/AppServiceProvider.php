@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app['request']->server->set('HTTP', true);
         } else {
             //else register your services you require for production
-            $this->app['request']->server->set('HTTP', true);
+            $this->app['request']->server->set('HTTPS', true);
         }
     }
 }
