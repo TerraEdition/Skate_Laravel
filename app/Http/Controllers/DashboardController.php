@@ -32,12 +32,33 @@ class DashboardController extends Controller
     private function _generate_initial(string $name): string
     {
         $words = explode(' ', $name);
-        return mb_strtoupper(
-            mb_substr($words[0], 0, 1, 'UTF-8') .
-                mb_substr(end($words), 0, 1, 'UTF-8'),
-            'UTF-8'
-        );
+
+        // Jika hanya satu kata, ambil tiga huruf pertama
+        if (count($words) === 1) {
+            return mb_strtoupper(mb_substr($words[0], 0, 3, 'UTF-8'), 'UTF-8');
+        }
+
+        $firstInitial = mb_substr($words[0], 0, 1, 'UTF-8');
+
+        // Identifikasi dan gabungkan kata-kata serupa
+        $lastInitial = '';
+        if (count($words) > 1) {
+            $lastWord = end($words);
+            $lastInitial = mb_substr($lastWord, 0, 1, 'UTF-8');
+
+            // Check for similarity and merge if needed
+            $similarityThreshold = 0.8; // You can adjust this threshold
+            similar_text($firstInitial, $lastInitial, $similarityPercentage);
+
+            if ($similarityPercentage >= $similarityThreshold) {
+                // Combine the last initial with the first initial
+                $firstInitial .= mb_substr($lastWord, 1, 1, 'UTF-8');
+            }
+        }
+
+        return mb_strtoupper($firstInitial, 'UTF-8');
     }
+
     public function import_excel_by_pass(Request $request)
     {
         try {

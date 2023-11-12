@@ -267,7 +267,7 @@ class TeamController extends Controller
 
             DB::beginTransaction();
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
-            $path = storage_path('app/public/excel/join_tournament/');
+            $path = storage_path('app/excel/join_tournament/');
             Files::is_existing($path);
             $request->file('excel')->storeAs('excel/join_tournament', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
