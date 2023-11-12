@@ -142,9 +142,16 @@ class TeamController extends Controller
                 Session::flash('message', __('global.team_not_found'));
                 return redirect()->back();
             }
+            $contact = ContactPerson::where("team_id", $team->id)->get();
+            if($contact->isEmpty()){
+                $contact->push([
+                    'name' => '',
+                    'phone' => '',
+                ]);
+            }
             $data = [
                 'data' => $team,
-                'contact' => ContactPerson::where("team_id", $team->id)->get()
+                'contact' => $contact
             ];
             return view('Dashboard.Team.Edit', $data);
         } catch (\Throwable $th) {
@@ -260,7 +267,7 @@ class TeamController extends Controller
 
             DB::beginTransaction();
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
-            $path = storage_path('app/excel/join_tournament/');
+            $path = storage_path('app/public/excel/join_tournament/');
             Files::is_existing($path);
             $request->file('excel')->storeAs('excel/join_tournament', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -322,7 +329,6 @@ class TeamController extends Controller
                                             ->where('group_id', $g->group_id)->first();
                                         if (empty($check)) {
                                             $save = new TournamentParticipant();
-                                            $save->time = '00:00:000';
                                             $save->group_id =  $g->group_id;
                                             $save->member_id =  $member_id->id;
                                             $save->slug =  Carbon::now()->unix() + $i;
@@ -333,7 +339,6 @@ class TeamController extends Controller
                                     # requirements not met
                                     $data_error[] = [
                                         'row' => $k,
-                                        'time' => '00:00:000',
                                         'group_id' => $g->group_id,
                                         'team_slug' => $member_id->team_slug,
                                         'team' => $member_id->team,

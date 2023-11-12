@@ -12,12 +12,19 @@
                 <li><a class="dropdown-item" id="mode_stopwatch">Stopwatch</a></li>
             </ul>
         </div>
-        <div class="btn btn-sm btn-success" id="new-screen"><i class="fa-solid fa-tv"></i> Buka Layar Turnamen</div>
+        <div class="btn btn-sm btn-success" id="new-screen" data-seat="{{ $seat_now }}"><i class="fa-solid fa-tv"></i>
+            Buka Layar Turnamen</div>
     </div>
     <x-alert />
     <div class="d-flex justify-content-between mt-3">
         <div class="fs-5"> Peserta Turnamen <b>{{ $group->tournament }}</b> di Grup <b>{{ $group->group }}</b></div>
-        @if ($group->status == 1)
+        @if ($seat_now < $group->total_seat)
+            <div class="btn btn-outline-primary" id="continue_group" data-next="{{ $seat_now + 1 }}">Lanjut Ke Seat
+                {{ $seat_now + 1 }}
+            </div>
+        @elseif ($seat_now == $group->total_seat && $group->total_seat > 1)
+            <div class="btn btn-outline-primary" id="final_group">Lanjut Ke Pertandingan Final</div>
+        @elseif($group->status == 1)
             <div class="btn btn-outline-primary" id="close_group">Tutup Pertandingan Grup Ini</div>
         @endif
     </div>
@@ -43,7 +50,8 @@
                         <div data-participant_id="{{ $p->participant_id }}"
                             data-participant_number="{{ $p->no_participant }}" data-participant_name="{{ $p->member }}"
                             class="btn btn-sm btn-primary" id="show_stopwatch">
-                            Mulai</div>
+                            Mulai
+                        </div>
                     </td>
                 </tr>
             @endforeach
@@ -69,11 +77,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-
                     <button type="button" class="btn btn-primary" id="start_time">Mulai</button>
                     <button type="button" class="btn btn-primary" id="save_time">Simpan</button>
-                    <button type="button" class="btn btn-danger d-none" id="finish_time"
-                        data-participant_id="">Selesai</button>
+                    <button type="button" class="btn btn-danger d-none" id="finish_time" data-participant_id="">
+                        Selesai
+                    </button>
                 </div>
             </div>
         </div>

@@ -3,6 +3,8 @@ const start_btn = document.querySelector("#start_time")
 const finish_btn = document.querySelector("#finish_time")
 const show_time = document.getElementById("show_time")
 const close_group_btn = document.getElementById("close_group")
+const next_seat_btn = document.getElementById("continue_group")
+const final_seat_btn = document.getElementById("final_group")
 const saveTime = document.querySelector('#save_time')
 let milliseconds = 0
 const modal_stopwatch = new bootstrap.Modal('#timeCompetition')
@@ -162,7 +164,9 @@ openScreen.addEventListener('click', function () {
             console.log('Pesan dari jendela anak:', event.data);
         }
     });
-    // window_screen.onload = function () {
+    window_screen.onload = function () {
+        window_screen.postMessage({ message: "Set_Seat", value: openScreen.dataset.seat }, '*');
+    }
     ready_screen = true
     show_modal_btn.forEach(btn => {
         btn.addEventListener('click', function () {
@@ -198,22 +202,37 @@ openScreen.addEventListener('click', function () {
         }
         stop_time(participant_id);
     })
+    // Next Seat if finished
+    if(next_seat_btn!==null){
+        next_seat_btn.addEventListener('click', function () {
+            window_screen.postMessage({ message: "Finish", value: '' }, '*');
+            window.location.replace(current_url+'?seat='+next_seat_btn.dataset.next);
+        })
+    }
+    // Next Seat if finished
+    if(final_seat_btn!==null){
+        final_seat_btn.addEventListener('click', function () {
+            window_screen.postMessage({ message: "Finish", value: '' }, '*');
+            window.location.replace(current_url+'/setup_finalize');
+        })
+    }
 
     // close group if finished
-    close_group_btn.addEventListener('click', function () {
-        close_tournament()
-    })
-    // }
-    async function close_tournament() {
-        try {
-            const response = await fetch(current_url + '/close');
-            const data = await response.json();
-            if (data.status) {
-                window_screen.postMessage({ message: "Finish", value: '' }, '*');
-                window.location.replace(data.data.url)
+    if(close_group_btn!==null){
+        close_group_btn.addEventListener('click', function () {
+            close_tournament()
+       })
+        async function close_tournament() {
+            try {
+                const response = await fetch(current_url + '/close');
+                const data = await response.json();
+                if (data.status) {
+                    window_screen.postMessage({ message: "Finish", value: '' }, '*');
+                    window.location.replace(data.data.url)
+                }
+            } catch (error) {
+                console.log("Error fetching data:", error)
             }
-        } catch (error) {
-            console.log("Error fetching data:", error)
         }
     }
 

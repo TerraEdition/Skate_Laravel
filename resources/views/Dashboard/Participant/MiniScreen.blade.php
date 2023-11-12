@@ -35,7 +35,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $p->member }}</td>
-                    <td>{{ $p->time ? $p->time : '00:00' }}</td>
+                    <td>{{ $p->time ? $p->time : '00:00:000' }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -63,7 +63,7 @@
                     <td>{{ $p->no_participant }}</td>
                     <td>{{ $p->member }}</td>
                     <td>{{ $p->team }}</td>
-                    <td>{{ $p->time ? $p->time : '00:00' }}</td>
+                    <td>{{ $p->time ? $p->time : '00:00:000' }}</td>
                     <td>{{ $loop->iteration }}</td>
                 </tr>
             @endforeach

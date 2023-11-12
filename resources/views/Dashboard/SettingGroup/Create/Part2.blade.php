@@ -1,7 +1,7 @@
 <form action="{{ url()->current() }}" method="POST">
     @csrf
     @php
-        $total_seat = (int) $data['total_seat']['data'];
+        $total_seat = (int) $data['total_seat'][0]['data'];
         $start = 0;
         $offset = ceil($group->total_participant / $total_seat);
     @endphp
@@ -20,7 +20,9 @@
                                     <select id="seat" name="seat[{{ $i }}][]"
                                         data-index="{{ $p }}" class="form-control">
                                         @foreach ($participant as $pc)
-                                            <option value="{{ $pc->id }}" data-team="{{ $pc->team_initial }}"
+                                            <option value="{{ $pc->id }}"
+                                                data-team_initial="{{ $pc->team_initial }}"
+                                                data-team="{{ $pc->team }}"
                                                 {{ $participant[$p]->id == $pc->id ? 'selected' : '' }}>
                                                 {{ $pc->member }}
                                             </option>
@@ -48,11 +50,13 @@
 <script>
     const select_participan = document.querySelectorAll('#seat');
     let old_value = '';
-    let new_value = '';
+    let old_team_initial = '';
     let old_team = '';
     select_participan.forEach(e => {
         e.addEventListener('click', function() {
             old_value = this.value;
+            old_team_initial = this.options[this.selectedIndex].getAttribute(
+                'data-team_initial');
             old_team = this.options[this.selectedIndex].getAttribute(
                 'data-team');
         });
@@ -63,22 +67,26 @@
 
         // Perbarui teks tim untuk elemen saat pertama kali halaman dimuat
         const teamText = document.querySelector("#team-text" + e.dataset.index);
-        teamText.innerHTML = e.options[e.selectedIndex].getAttribute('data-team');
+        teamText.innerHTML = e.options[e.selectedIndex].getAttribute('data-team_initial');
+        teamText.setAttribute('title', e.options[e.selectedIndex].getAttribute('data-team'));
     });
 
     function change_value_with_other_element(selectedElement) {
         select_participan.forEach(a => {
             if (a !== selectedElement && a.value === selectedElement.value) {
+                const aTeamInitial = a.options[a.selectedIndex].getAttribute('data-team_initial');
                 const aTeam = a.options[a.selectedIndex].getAttribute('data-team');
                 a.value = old_value;
 
                 // Perbarui teks tim untuk elemen 'a'
                 const teamTextA = document.querySelector("#team-text" + a.dataset.index);
-                teamTextA.innerHTML = old_team;
+                teamTextA.innerHTML = old_team_initial;
+                teamTextA.setAttribute('title', old_team);
 
                 // Perbarui teks tim untuk elemen yang dipilih
                 const teamTextSelected = document.querySelector("#team-text" + selectedElement.dataset.index);
-                teamTextSelected.innerHTML = aTeam;
+                teamTextSelected.innerHTML = aTeamInitial;
+                teamTextSelected.setAttribute('title', aTeam);
             }
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ParticipantTournamentDetail;
 use App\Models\SettingGroupRound;
 use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
@@ -76,10 +77,13 @@ class SettingGroupRoundController extends Controller
                 }
                 Session::put('data_setting_group_' . $group_slug, [
                     'total_seat' => [
+                        [
                         'round' => 1,
+                        'group_id'=>TournamentGroup::where("slug",$group_slug)->first()->id,
                         'data' => $request->input('total_seat'),
                         'passes_position' => $request->input('passes_position'),
                         'participant_left' => $request->input('passes_position') * $request->input('total_seat'),
+                        ]
                     ],
                 ]);
             } else {
@@ -95,11 +99,9 @@ class SettingGroupRoundController extends Controller
                         ]
                     )
                 );
-                if (end(Session::get('data_setting_group_' . $group_slug)['total_seat']) == 1) {
                     # selesai
                     $this->_final_store($group_slug);
                     return redirect()->to('participant/' . $tournament_slug . '/' . $group_slug);
-                }
             }
             Session::put('setting_group_' . $group_slug, $step + 1);
             return redirect()->back();
@@ -133,10 +135,19 @@ class SettingGroupRoundController extends Controller
             return redirect()->back();
         }
         $data = Session::get('data_setting_group_' . $group_slug);
+        # save rule group
+        foreach($data['total_seat'] as $rule){
+                $save_rule =new SettingGroupRound();
+                $save_rule->group_id = $rule['group_id'];
+                $save_rule->passes =$rule['passes_position'];
+                $save_rule->round = 1;
+                $save_rule->save();
+        }
+
         # save group seat
         foreach ($data['seat']['data'] ?? [] as $key => $k) {
             foreach ($k as $r) {
-                $save_seat = new SettingGroupRound();
+                $save_seat = new ParticipantTournamentDetail();
                 $save_seat->participant_id = $r;
                 $save_seat->group_id = $group->id;
                 $save_seat->seat = $key;

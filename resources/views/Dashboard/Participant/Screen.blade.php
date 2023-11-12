@@ -60,7 +60,7 @@
                 <h4 id="participant_number"></h4>
                 <div id="show_time">00:00:000</div>
             </div>
-            <img src="{{ asset('storage/screen/1.jpeg') }}" alt="" class="w-50 h-50">
+            {{-- <img src="{{ asset('storage/screen/1.jpeg') }}" alt="" class="w-50 h-50"> --}}
         </div>
     </div>
     <div class="container" id="mini_screen">
@@ -72,13 +72,18 @@
 
 </html>
 <script>
+    let seat_now = 1
     const show_time = document.getElementById("show_time")
     const participant_name = document.getElementById("participant_name")
     const participant_number = document.getElementById("participant_number")
     const mini_screen = document.getElementById("mini_screen")
     let milliseconds = 0
     window.addEventListener('message', function(event) {
-        if (event.data.message == "Start") {
+        if (event.data.message == "Set_Seat") {
+            seat_now = event.data.value
+            console.log(seat_now)
+            loadMiniScreen();
+        } else if (event.data.message == "Start") {
             startTime = setInterval(update_time, 10)
         } else if (event.data.message == "Stop") {
             stop_time()
@@ -118,7 +123,7 @@
             clearInterval(startTime)
         };
     }
-
+    loadMiniScreen();
     // load mini screen
     async function loadMiniScreen() {
         try {
@@ -133,7 +138,7 @@
                 <span class="visually-hidden">Loading...</span>
             </div>
             `
-            const response = await fetch(window.location.href + '/mini');
+            const response = await fetch(window.location.href + '/mini?seat=' + seat_now);
             const data = await response.json();
             if (data.status) {
                 mini_screen.innerHTML = data.data
@@ -142,6 +147,4 @@
             console.log("Error fetching data:", error)
         }
     }
-
-    loadMiniScreen()
 </script>

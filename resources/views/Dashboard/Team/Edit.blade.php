@@ -91,18 +91,18 @@
                             <div class="col-6 mb-2">
                                 <input type="text" class="form-control" id="contact_name"
                                     name="contact[{{ $k }}][name]"
-                                    class="@error('contact.$k.name') is-invalid @enderror"
-                                    value="{{ old('contact.' . $k . '.name', $c->name) }}">
-                                @error('contact.*.name')
+                                    class="@error('contact.' . $k . '.name') is-invalid @enderror"
+                                    value="{{ old('contact.' . $k . '.name', $c['name']) }}">
+                                @error('contact.' . $k . '.name')
                                     <small class="text-danger ms-2">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-6 mb-2">
                                 <input type="number" class="form-control" id="phone"
                                     name="contact[{{ $k }}][phone]"
-                                    class="@error('contact.$k.phone') is-invalid @enderror"
-                                    value="{{ old('contact.' . $k . '.phone', $c->phone) }}">
-                                @error('contact.*.phone')
+                                    class="@error('contact.' . $k . '.phone') is-invalid @enderror"
+                                    value="{{ old('contact.' . $k . '.phone', $c['phone']) }}">
+                                @error('contact.' . $k . '.phone')
                                     <small class="text-danger ms-2">{{ $message }}</small>
                                 @enderror
                             </div>

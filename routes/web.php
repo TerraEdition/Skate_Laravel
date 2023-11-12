@@ -110,10 +110,17 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::get('export-excel', 'export_excel_participant');
                     Route::post('import-excel', 'import_excel_participant');
                     Route::get('import-excel/failed', 'failed_import_excel_participant');
-                    Route::get('competition', 'competition');
-                    Route::get('competition/screen', 'tournament_screen');
-                    Route::get('competition/screen/mini', 'mini_screen');
-                    Route::get('competition/close', 'close_competition');
+                    Route::prefix('competition')->group(function () {
+                        Route::get('', 'competition');
+                        Route::get('setup_finalize', 'setup_final');
+                        Route::post('setup_finalize', 'store_setup_final');
+                        Route::get('final', 'competition_final');
+                        Route::get('screen', 'tournament_screen');
+                        Route::get('screen/mini', 'mini_screen');
+                        Route::get('close', 'close_competition');
+                        Route::get('final/screen', 'tournament_screen');
+                        Route::get('final/screen/mini', 'mini_screen');
+                    });
                 });
                 Route::prefix('setting-group')->group(function () {
                     Route::controller(SettingGroupRoundController::class)->group(function () {
@@ -137,4 +144,4 @@ Route::middleware('if.mobile')->group(function () {
         Route::get('/', 'index');
         Route::get('{group_slug}', 'detail');
     });
-    });
+});

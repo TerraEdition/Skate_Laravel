@@ -6,6 +6,7 @@ use App\Helpers\Response;
 use App\Http\Controllers\Controller;
 use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
+use App\Models\ParticipantTournamentDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,7 +28,7 @@ class ParticipantController extends Controller
                 return Response::make(400, $validator->errors());
             }
             # save time
-            $save_time_participant = TournamentParticipant::where('id', $request->get('participant_id'))->first();
+            $save_time_participant = ParticipantTournamentDetail::where('id', $request->get('participant_id'))->first();
             if (empty($save_time_participant)) {
                 return Response::make(400, __('global.participant_not_found'));
             }

@@ -70,7 +70,6 @@ class TournamentParticipantController extends Controller
 
             # save tournament_participants
             $save_tournament_participant = new TournamentParticipant();
-            $save_tournament_participant->time = '00:00:000';
             $save_tournament_participant->group_id = trim($group->id);
             $save_tournament_participant->member_id = trim($request->input('member_id'));
             $save_tournament_participant->slug = Carbon::now()->unix();

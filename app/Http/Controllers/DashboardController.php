@@ -56,7 +56,7 @@ class DashboardController extends Controller
 
             DB::beginTransaction();
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
-            $path = storage_path('app/excel/participant/');
+            $path = storage_path('app/public/excel/participant/');
             Files::is_existing($path);
             $request->file('excel')->storeAs('excel/participant', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -67,7 +67,7 @@ class DashboardController extends Controller
             foreach ($sheet as $k => $p) {
                 if ($k > 6) {
                     foreach ($group as $i => $g) {
-                        if ($p[Excel::number_to_alphabet(($i + 1) + Excel::alphabet_to_number("C"))] == 'v') {
+                        if ($p[Excel::number_to_alphabet(($i + 1) + Excel::alphabet_to_number("D"))] == 'v') {
                             $error = false;
                             # check group is close or not because already setting group seat before
                             $is_close = SettingGroupRound::where('group_id', $g->group_id)->first();
@@ -84,7 +84,7 @@ class DashboardController extends Controller
                                         $team->website = '';
                                         $team->address = '';
                                         $team->email = '';
-                                        $team->team_initial = $this->_generate_initial($p['B']);
+                                        $team->team_initial = $p['C']==''? $this->_generate_initial($p['B']) : strtoupper($p['C']);
                                         $team->save();
                                     }
                                     $member = TeamMember::get_id_by_member_name_by_team_slug($p['A'], $request->input('team_slug'));
@@ -102,8 +102,7 @@ class DashboardController extends Controller
                                     if (empty($check)) {
                                         # check already participant
                                         $save = new TournamentParticipant();
-                                        $save->time = '00:00:000';
-                                        $save->no_participant = str_pad($p['C'], 3, '0', STR_PAD_LEFT);
+                                        $save->no_participant = str_pad($p['D'], 3, '0', STR_PAD_LEFT);
                                         $save->group_id =  $g->group_id;
                                         $save->member_id =  $member->id;
                                         $save->slug =  Carbon::now()->unix() + $k;
