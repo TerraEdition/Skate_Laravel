@@ -31,7 +31,6 @@ Route::middleware('already.login')->group(function () {
         Route::controller(LoginController::class)->group(function () {
             Route::get('/', 'index')->name('login');
             Route::post('/', 'store');
-            Route::get('/logout', 'destroy');
         });
     });
     Route::prefix('register')->group(function () {
@@ -42,6 +41,11 @@ Route::middleware('already.login')->group(function () {
     });
 });
 Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('login')->group(function () {
+        Route::controller(LoginController::class)->group(function () {
+            Route::get('/logout', 'destroy');
+        });
+    });
     Route::prefix('dashboard')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::get('', 'index')->name('home');

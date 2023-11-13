@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\Login\StoreRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Session;
 class LoginController extends Controller
 {
     #
@@ -22,7 +23,7 @@ class LoginController extends Controller
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
                 if ($user->is_active == '1') {
-                    $user->createToken('authToken')->plainTextToken;
+                    // $user->createToken('authToken')->plainTextToken;
                     # redirect last url
                     return redirect()->intended();
                 } else {

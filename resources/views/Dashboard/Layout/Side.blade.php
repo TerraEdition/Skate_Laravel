@@ -112,5 +112,18 @@
                 @endforeach
             </div>
         </div>
+
+    </div>
+    <div class="list-group sticky-bottom">
+        <a href="{{ url('logout') }}" class="list-group-item list-group-flush border-none rounded my-1">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <i class="fa-solid fa-right-from-bracket"></i> Keluar
+                </div>
+                <div>
+                    &nbsp;
+                </div>
+            </div>
+        </a>
     </div>
 </div>
