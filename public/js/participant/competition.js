@@ -85,7 +85,10 @@ async function stop_time(participant_id) {
     modal_stopwatch.hide()
     if (mode == 1) {
         data = await save_time_participant_mode_input(participant_id);
-        document.querySelector("#time_participant" + participant_id).textContent = format_input_time(input_minute.value + ":" + input_seconds.value+":"+input_miliseconds.value)
+        document.querySelector("#time_participant" + participant_id).textContent = format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value)
+        input_minute.value = '';
+        input_seconds.value = '';
+        input_miliseconds.value = '';
     } else {
         clearInterval(startTime);
         milliseconds = 0
@@ -116,7 +119,7 @@ async function save_time_participant_mode_input(participant_id) {
     try {
         const response = await fetch(base_url + '/api/participant/save-time?participant_id=' + participant_id +
             '&time=' +
-            format_input_time(input_minute.value + ":" + input_seconds.value+":"+input_miliseconds.value))
+            format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value))
             .then(res => {
                 return res.json()
             })
@@ -187,7 +190,7 @@ openScreen.addEventListener('click', function () {
     saveTime.addEventListener('click', function () {
         saveTime.classList.add('d-none');
         finish_btn.classList.remove('d-none');
-        window_screen.postMessage({ message: "Save", value: format_input_time(input_minute.value + ":" + input_seconds.value+":"+input_miliseconds.value) }, '*');
+        window_screen.postMessage({ message: "Save", value: format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value) }, '*');
     })
 
     finish_btn.addEventListener('click', function () {
@@ -195,7 +198,7 @@ openScreen.addEventListener('click', function () {
         participant_id = this.dataset.participant_id;
         if (mode == 1) {
             saveTime.classList.remove('d-none');
-            window_screen.postMessage({ message: "Stop", value: format_input_time(input_minute.value + ":" + input_seconds.value+":"+input_miliseconds.value) }, '*');
+            window_screen.postMessage({ message: "Stop", value: format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value) }, '*');
         } else {
             start_btn.classList.remove('d-none');
             window_screen.postMessage({ message: "Stop", value: show_time.textContent }, '*');
@@ -203,25 +206,25 @@ openScreen.addEventListener('click', function () {
         stop_time(participant_id);
     })
     // Next Seat if finished
-    if(next_seat_btn!==null){
+    if (next_seat_btn !== null) {
         next_seat_btn.addEventListener('click', function () {
             window_screen.postMessage({ message: "Finish", value: '' }, '*');
-            window.location.replace(current_url+'?seat='+next_seat_btn.dataset.next);
+            window.location.replace(current_url + '?seat=' + next_seat_btn.dataset.next);
         })
     }
     // Next Seat if finished
-    if(final_seat_btn!==null){
+    if (final_seat_btn !== null) {
         final_seat_btn.addEventListener('click', function () {
             window_screen.postMessage({ message: "Finish", value: '' }, '*');
-            window.location.replace(current_url+'/setup_finalize');
+            window.location.replace(current_url + '/setup_finalize');
         })
     }
 
     // close group if finished
-    if(close_group_btn!==null){
+    if (close_group_btn !== null) {
         close_group_btn.addEventListener('click', function () {
             close_tournament()
-       })
+        })
         async function close_tournament() {
             try {
                 const response = await fetch(current_url + '/close');

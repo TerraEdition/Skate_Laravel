@@ -35,28 +35,11 @@ class DashboardController extends Controller
 
         // Jika hanya satu kata, ambil tiga huruf pertama
         if (count($words) === 1) {
-            return mb_strtoupper(mb_substr($words[0], 0, 3, 'UTF-8'), 'UTF-8');
+            return $this->generateUniqueInitial(mb_strtoupper(mb_substr($words[0], 0, 3, 'UTF-8'), 'UTF-8'));
         }
 
-        $firstInitial = mb_substr($words[0], 0, 1, 'UTF-8');
-
-        // Identifikasi dan gabungkan kata-kata serupa
-        $lastInitial = '';
-        if (count($words) > 1) {
-            $lastWord = end($words);
-            $lastInitial = mb_substr($lastWord, 0, 1, 'UTF-8');
-
-            // Check for similarity and merge if needed
-            $similarityThreshold = 0.8; // You can adjust this threshold
-            similar_text($firstInitial, $lastInitial, $similarityPercentage);
-
-            if ($similarityPercentage >= $similarityThreshold) {
-                // Combine the last initial with the first initial
-                $firstInitial .= mb_substr($lastWord, 1, 1, 'UTF-8');
-            }
-        }
-
-        return mb_strtoupper($firstInitial, 'UTF-8');
+        $initials =  $name[0] . substr(trim(strstr($name, ' ')), 0, 4);
+        return $initials;
     }
 
     public function import_excel_by_pass(Request $request)
@@ -77,7 +60,7 @@ class DashboardController extends Controller
 
             DB::beginTransaction();
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
-            $path = storage_path('app/public/excel/participant/');
+            $path = storage_path('app/excel/participant/');
             Files::is_existing($path);
             $request->file('excel')->storeAs('excel/participant', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -105,7 +88,7 @@ class DashboardController extends Controller
                                         $team->website = '';
                                         $team->address = '';
                                         $team->email = '';
-                                        $team->team_initial = $p['C']==''? $this->_generate_initial($p['B']) : strtoupper($p['C']);
+                                        $team->team_initial = $p['C'] == '' ? $this->_generate_initial($p['B']) : strtoupper($p['C']);
                                         $team->save();
                                     }
                                     $member = TeamMember::get_id_by_member_name_by_team_slug($p['A'], $request->input('team_slug'));

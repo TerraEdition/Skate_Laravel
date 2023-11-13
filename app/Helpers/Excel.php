@@ -42,7 +42,7 @@ class Excel
     {
         return array(
             'font' => [
-                'bold' => false
+                'bold' => true
             ],
         );
     }

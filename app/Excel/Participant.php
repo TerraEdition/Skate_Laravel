@@ -2,10 +2,7 @@
 
 namespace App\Excel;
 
-use App\Helpers\Convert;
-use App\Helpers\Date;
 use App\Helpers\Excel;
-use App\Models\TeamMember;
 use App\Models\Tournament as ModelsTournament;
 use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
@@ -26,26 +23,25 @@ class Participant
         # sheet pendaftaran
         $sheet->setCellValueExplicit('A1', strtoupper('Hasil Lomba Turnamen : ' . $tournament->tournament), DataType::TYPE_STRING);
         $sheet->mergeCells('A1:F1');
-        $sheet->getStyle('A1')->applyFromArray(array_merge_recursive(Excel::center_top()));
+        $sheet->getStyle('A1')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::bold()));
         $sheet->setCellValueExplicit('A3', strtoupper('RACE ' . $tournament->tournament), DataType::TYPE_STRING);
-        $sheet->getStyle('A3')->applyFromArray(array_merge_recursive(Excel::center_top()));
-        $sheet->setCellValueExplicit('B3', '1', DataType::TYPE_STRING);
-        $sheet->getStyle('B3')->applyFromArray(array_merge_recursive(Excel::center_top()));
-        $sheet->setCellValueExplicit('C3', strtoupper($group->group), DataType::TYPE_STRING);
-        $sheet->mergeCells('C3:F3');
+        $sheet->getStyle('A3')->applyFromArray(array_merge_recursive(Excel::left_top(), Excel::bold()));
+        $sheet->mergeCells('A3:C3');
+        $sheet->setCellValueExplicit('D3', '1', DataType::TYPE_STRING);
+        $sheet->getStyle('D3')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::bold()));
+        $sheet->setCellValueExplicit('E3', strtoupper($group->group), DataType::TYPE_STRING);
+        $sheet->getStyle('E3')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::bold()));
 
         $sheet->setCellValueExplicit('A4', "NO", DataType::TYPE_STRING);
-        $sheet->getStyle('A4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+        $sheet->getStyle('A4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border(), Excel::bold()));
         $sheet->setCellValueExplicit('B4', "NO BIB", DataType::TYPE_STRING);
-        $sheet->getStyle('B4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+        $sheet->getStyle('B4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border(), Excel::bold()));
         $sheet->setCellValueExplicit('C4', "NAMA ATLET", DataType::TYPE_STRING);
-        $sheet->getStyle('C4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+        $sheet->getStyle('C4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border(), Excel::bold()));
         $sheet->setCellValueExplicit('D4', "TIM", DataType::TYPE_STRING);
-        $sheet->getStyle('D4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+        $sheet->getStyle('D4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border(), Excel::bold()));
         $sheet->setCellValueExplicit('E4', "WAKTU", DataType::TYPE_STRING);
-        $sheet->getStyle('E4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
-        $sheet->setCellValueExplicit('F4', "SEAT", DataType::TYPE_STRING);
-        $sheet->getStyle('F4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
+        $sheet->getStyle('E4')->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border(), Excel::bold()));
 
         $col = "A";
         $row = 5;
@@ -62,8 +58,6 @@ class Participant
             $sheet->setCellValueExplicit($col++ . $row, $member->team, DataType::TYPE_STRING);
             $sheet->getStyle($col . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
             $sheet->setCellValueExplicit($col++ . $row, $member->time, DataType::TYPE_STRING);
-            # Seat
-            $sheet->getStyle($col++ . $row)->applyFromArray(array_merge_recursive(Excel::center_top(), Excel::border()));
             $col = 'A';
             $row++;
         }

@@ -41,25 +41,27 @@ class ParticipantController extends Controller
             return Response::make(500, $th->getMessage() . ' : ' . $th->getLine());
         }
     }
-    private function _set_cache_live_score($group_id){
+    private function _set_cache_live_score($group_id)
+    {
         $participant = TournamentParticipant::get_by_group_id($group_id);
-        cache()->forever('score_grup_'.$group_id,$participant);
+        cache()->forever('score_grup_' . $group_id, $participant);
     }
 
-    public function get_live_score($group_id){
-        $participant = cache()->get('score_grup_'.$group_id);
-        if(empty($participant)){
+    public function get_live_score($group_id)
+    {
+        $participant = cache()->get('score_grup_' . $group_id);
+        if (empty($participant)) {
             $participant = TournamentParticipant::get_by_group_id($group_id);
         }
-        if(empty($participant)){
+        if (empty($participant)) {
             $participant = [];
         }
 
-        $data=[
-            'participant'=> $participant,
+        $data = [
+            'participant' => $participant,
         ];
-         $htmlData =view('Home.DisplayScore', $data)->render();
+        $htmlData = view('Home.DisplayScore', $data)->render();
 
-         return Response::make(200, __('global.success'),['html' => $htmlData]);
+        return Response::make(200, __('global.success'), ['html' => $htmlData]);
     }
 }

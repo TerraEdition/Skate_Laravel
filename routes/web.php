@@ -108,6 +108,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::controller(ParticipantController::class)->group(function () {
                     Route::get('', 'detail');
                     Route::get('export-excel', 'export_excel_participant');
+                    Route::get('export-pdf', 'export_pdf_participant');
                     Route::post('import-excel', 'import_excel_participant');
                     Route::get('import-excel/failed', 'failed_import_excel_participant');
                     Route::prefix('competition')->group(function () {

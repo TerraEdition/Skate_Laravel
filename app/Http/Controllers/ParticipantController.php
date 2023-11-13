@@ -7,6 +7,7 @@ use App\Helpers\Files;
 use App\Helpers\Response;
 use App\Models\SettingGroupRound;
 use App\Models\ParticipantTournamentDetail;
+use App\Models\Tournament;
 use App\Models\TournamentGroup;
 use App\Models\TournamentParticipant;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ParticipantController extends Controller
 {
@@ -54,10 +56,10 @@ class ParticipantController extends Controller
             return redirect()->back();
         }
     }
-    public function competition(Request $request,$tournament_slug, $group_slug)
+    public function competition(Request $request, $tournament_slug, $group_slug)
     {
         try {
-            $seat_now = $request->get('seat')??'1';
+            $seat_now = $request->get('seat') ?? '1';
             $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
             if (empty($group)) {
                 Session::flash('bg', 'alert-danger');
@@ -66,7 +68,7 @@ class ParticipantController extends Controller
             } else {
                 if ($group->status == 0) {
                     # set start tournament group
-                    $update_group = TournamentGroup::where('slug',$group->slug)->first();
+                    $update_group = TournamentGroup::where('slug', $group->slug)->first();
                     $update_group->status = '1';
                     $update_group->update();
                 } else if ($group->status == 2) {
@@ -77,8 +79,8 @@ class ParticipantController extends Controller
             }
             $data = [
                 'group' => $group,
-                'seat_now'=>$seat_now,
-                'participant' => TournamentParticipant::get_by_group_slug($group_slug,seat:$seat_now),
+                'seat_now' => $seat_now,
+                'participant' => TournamentParticipant::get_by_group_slug($group_slug, seat: $seat_now),
             ];
             return view('Dashboard.Participant.Competition', $data);
         } catch (\Throwable $th) {
@@ -104,8 +106,8 @@ class ParticipantController extends Controller
             }
             $data = [
                 'group' => $group,
-                'seat_now'=>'final',
-                'participant' => TournamentParticipant::get_final_by_group_slug($group_slug,seat:1),
+                'seat_now' => 'final',
+                'participant' => TournamentParticipant::get_final_by_group_slug($group_slug, seat: 1),
             ];
             return view('Dashboard.Participant.Competition', $data);
         } catch (\Throwable $th) {
@@ -115,7 +117,8 @@ class ParticipantController extends Controller
         }
     }
 
-    public function setup_final($tournament_slug,$group_slug){
+    public function setup_final($tournament_slug, $group_slug)
+    {
         try {
             $group = SettingGroupRound::get_by_group_slug($group_slug);
             if (empty($group)) {
@@ -129,20 +132,21 @@ class ParticipantController extends Controller
                     return redirect()->back();
                 }
             }
-            $data =[
+            $data = [
                 'group' => $group,
             ];
-             return view('Dashboard.Participant.SetupFinalize', $data);
+            return view('Dashboard.Participant.SetupFinalize', $data);
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());
             return redirect()->back();
         }
     }
-    public function store_setup_final(Request $request,$tournament_slug,$group_slug){
+    public function store_setup_final(Request $request, $tournament_slug, $group_slug)
+    {
         try {
-              # check input validation
-              $validator = Validator::make($request->all(), [
+            # check input validation
+            $validator = Validator::make($request->all(), [
                 'participant' => 'required|array',
                 'participant.*' => 'required|integer',
             ], [], [
@@ -167,7 +171,7 @@ class ParticipantController extends Controller
             }
             DB::beginTransaction();
             # set finish tournament group
-            foreach($request->input('participant') as $r){
+            foreach ($request->input('participant') as $r) {
                 $save_finalize = new ParticipantTournamentDetail();
                 $save_finalize->participant_id = $r;
                 $save_finalize->group_id = $group->id;
@@ -177,7 +181,7 @@ class ParticipantController extends Controller
                 $save_finalize->save();
             }
             DB::commit();
-            return redirect()->to('participant/'.$tournament_slug.'/'.$group_slug.'/competition/final');
+            return redirect()->to('participant/' . $tournament_slug . '/' . $group_slug . '/competition/final');
         } catch (\Throwable $th) {
             DB::rollback();
             Session::flash('bg', 'alert-danger');
@@ -214,13 +218,13 @@ class ParticipantController extends Controller
         }
     }
 
-    public function mini_screen(Request $request,$tournament_slug, $group_slug)
+    public function mini_screen(Request $request, $tournament_slug, $group_slug)
     {
         try {
-            $seat_now = $request->get('seat')??'1';
+            $seat_now = $request->get('seat') ?? '1';
             $data = [
                 'data' => TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug),
-                'participant' => TournamentParticipant::get_by_group_slug($group_slug, true,$seat_now)
+                'participant' => TournamentParticipant::get_by_group_slug($group_slug, true, $seat_now)
             ];
             $view = view('Dashboard.Participant.MiniScreen', $data)->render();
             return Response::make(200, __('global.success'), $view);
@@ -254,6 +258,7 @@ class ParticipantController extends Controller
                 Session::flash('message', __('global.group_not_found'));
                 return redirect()->back();
             }
+
 
             DB::beginTransaction();
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
@@ -321,6 +326,27 @@ class ParticipantController extends Controller
                 'data' => cache()->get('data_error'),
             ];
             return view('Dashboard.Participant.Import_Failed', $data);
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
+
+    public function export_pdf_participant($tournament_slug, $group_slug)
+    {
+        try {
+            $tournament = Tournament::get_detail_by_slug($tournament_slug);
+            $group = TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug);
+
+            $data = [
+                'title' => $tournament->tournament,
+                'group' => $group,
+                'tournament' => $tournament,
+                'participant' => TournamentParticipant::get_by_group_slug($group_slug, true),
+            ];
+            $pdf = PDF::loadView('Dashboard.PDF.Tournament.Close', $data);
+            return $pdf->stream($data['title'] . '.pdf');
         } catch (\Throwable $th) {
             Session::flash('bg', 'alert-danger');
             Session::flash('message', $th->getMessage() . ':' . $th->getLine());

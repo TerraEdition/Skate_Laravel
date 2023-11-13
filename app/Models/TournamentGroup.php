@@ -86,6 +86,7 @@ class TournamentGroup extends Model
             'tournament_groups.gender',
             'tournament_groups.min_age',
             'tournament_groups.max_age',
+            'tournament_groups.status',
             'tournament_groups.slug',
             DB::raw('(SELECT count(id) from tournament_participants WHERE group_id = tournament_groups.id) AS total_participant')
         )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id')
@@ -103,19 +104,20 @@ class TournamentGroup extends Model
             ->paginate($request->get('limit') ?? 20);
     }
     # home controller
-    public static function get_by_group_slug($group_slug){
+    public static function get_by_group_slug($group_slug)
+    {
         return static::select(
             'tournament_groups.id',
             'tournament_groups.group',
             'tournament_groups.slug',
-        )->where('slug',$group_slug)->first();
+        )->where('slug', $group_slug)->first();
     }
     # tournament participant controller
     public static function get_id_by_tournament_slug_by_group_slug($tournament_slug, $slug)
     {
         return static::select(
             'tournament_groups.id',
-            )
+        )
             ->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id')
             ->leftJoin('tournament_participants', 'tournament_participants.group_id', '=', 'tournament_groups.id')
             ->leftJoin('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
@@ -124,7 +126,7 @@ class TournamentGroup extends Model
             ->where('tournaments.slug', $tournament_slug)
 
             ->first();
-        }
+    }
     # tournament group controller
     # participant controller
     public static function get_by_tournament_slug_by_group_slug($tournament_slug, $slug)
