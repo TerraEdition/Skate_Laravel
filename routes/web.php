@@ -41,9 +41,9 @@ Route::middleware('already.login')->group(function () {
     });
 });
 Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('login')->group(function () {
+    Route::prefix('logout')->group(function () {
         Route::controller(LoginController::class)->group(function () {
-            Route::get('/logout', 'destroy');
+            Route::get('/', 'destroy');
         });
     });
     Route::prefix('dashboard')->group(function () {

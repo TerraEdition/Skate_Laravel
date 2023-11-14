@@ -100,9 +100,17 @@ class TournamentGroup extends Model
                 }
             })
             ->where('tournaments.slug', $tournament_slug)
+            ->orderBy(DB::raw(
+                "CASE
+                WHEN tournament_groups.status = '1' THEN 1
+                WHEN tournament_groups.status = '2' THEN 3
+                ELSE 2
+            END"
+            ), "ASC")
             ->orderBy($request->get('sort_at') ?? 'tournament_groups.group', $request->get('sort_by') ?? 'asc')
             ->paginate($request->get('limit') ?? 20);
     }
+
     # home controller
     public static function get_by_group_slug($group_slug)
     {
@@ -153,6 +161,7 @@ class TournamentGroup extends Model
             ->leftJoin('participant_tournament_detail', 'participant_tournament_detail.participant_id', '=', 'tournament_participants.id')
             ->where('tournament_groups.slug', $slug)
             ->where('tournaments.slug', $tournament_slug)
+
             ->groupBy(
                 'tournaments.id',
                 'tournament_groups.id',

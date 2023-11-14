@@ -15,7 +15,7 @@ class HomeController extends Controller
     {
         $tournament = Tournament::get_near_tournament();
         $data = [
-            'tournament_incoming' => $tournament,
+            'tournament' => $tournament,
             'group' => TournamentGroup::get_by_tournament_slug($request, $tournament->slug ?? 'null'),
         ];
         return view('Home.Index', $data);
