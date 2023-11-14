@@ -19,15 +19,15 @@
             <div class="modal-content">
                 <table class="table table-secondary">
                     <tr>
-                        <td class="table-warning">{{$group->where('status', 1)->count()}}</td>
+                        <td class="table-warning text-center">{{$group->where('status', 1)->count()}}</td>
                         <td>Sedang Berjalan</td>
                     </tr>
                     <tr>
-                        <td class="table-primary" width="50%">{{$group->where('status', 0)->count()}}</td>
+                        <td class="table-primary text-center" width="50%">{{$group->where('status', 0)->count()}}</td>
                         <td>Belum di Mulai</td>
                     </tr>
                     <tr>
-                        <td class="table-success">{{$group->where('status', 2)->count()}}</td>
+                        <td class="table-success text-center">{{$group->where('status', 2)->count()}}</td>
                         <td>Selesai</td>
                     </tr>
                 </table>
