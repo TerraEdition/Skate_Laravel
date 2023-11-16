@@ -35,7 +35,7 @@ class DashboardController extends Controller
 
         // Jika hanya satu kata, ambil tiga huruf pertama
         if (count($words) === 1) {
-            return $this->generateUniqueInitial(mb_strtoupper(mb_substr($words[0], 0, 3, 'UTF-8'), 'UTF-8'));
+            return (mb_strtoupper(mb_substr($words[0], 0, 3, 'UTF-8'), 'UTF-8'));
         }
 
         $initials =  $name[0] . substr(trim(strstr($name, ' ')), 0, 4);

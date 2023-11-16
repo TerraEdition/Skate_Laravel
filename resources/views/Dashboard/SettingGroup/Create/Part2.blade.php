@@ -1,93 +1,89 @@
-<form action="{{ url()->current() }}" method="POST">
-    @csrf
-    @php
-        $total_seat = (int) $data['total_seat'][0]['data'];
-        $start = 0;
-        $offset = ceil($group->total_participant / $total_seat);
-    @endphp
-    @for ($i = 1; $i <= $total_seat; $i++)
-        <div class="mb-3">
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                data-bs-target="#seat{{ $i }}" aria-expanded="false">
-                Seat {{ $i }}
-            </button>
-            <div class="collapse show" id="seat{{ $i }}">
-                <div class="card mt-3">
-                    <div class="card-body">
-                        @for ($p = $start; $p < $offset; $p++)
-                            @if (isset($participant[$p]))
-                                <div class="input-group mb-3">
-                                    <select id="seat" name="seat[{{ $i }}][]"
-                                        data-index="{{ $p }}" class="form-control">
-                                        @foreach ($participant as $pc)
-                                            <option value="{{ $pc->id }}"
-                                                data-team_initial="{{ $pc->team_initial }}"
-                                                data-team="{{ $pc->team }}"
-                                                {{ $participant[$p]->id == $pc->id ? 'selected' : '' }}>
-                                                {{ $pc->member }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <span class="input-group-text" id="team-text{{ $p }}"></span>
-                                </div>
-                            @endif
-                        @endfor
+@php
+    $total_seat = (int) $data['total_seat'][0]['data'];
+    $start = 0;
+    $offset = ceil($group->total_participant / $total_seat);
+@endphp
+<div class="row">
+    <div class="col-6">
+        <form action="{{ url()->current() }}" method="POST">
+            @csrf
+        </form>
+        @for ($i = 1; $i <= $total_seat; $i++)
+            <div class="mb-3">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#seat{{ $i }}" aria-expanded="false">
+                    Seat {{ $i }}
+                </button>
+                <div class="collapse show" id="seat{{ $i }}">
+                    <div class="card mt-3" ondragover="allowDrop(event)" ondrop="drop(event, {{ $i }})">
+                        <div class="card-body" id="seat{{ $i }}-content">
+
+                        </div>
                     </div>
                 </div>
-                @php
-                    $start = $p;
-                    $offset += $offset;
-                @endphp
+            </div>
+        @endfor
+        <div class="d-flex gap-2">
+            <a href="{{ url()->current() }}/back" class="btn btn-sm btn-danger">Reset dan Ulang</a>
+            <div class="btn btn-sm btn-success">Simpan</div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                Peserta
+            </div>
+            <div class="card-body d-flex flex-wrap gap-3" ondragover="allowDrop(event)"
+                ondrop="drop(event, 'participants')" id="participants-content">
+                @foreach ($participant as $p)
+                    <div draggable="true" ondragstart="drag(event)">
+                        <div class="border border-2 border-dark p-2">
+                            {{ $p->member }}
+                        </div>
+                        <input type="hidden" value="{{ $p->id }}" data-seat_no='participants'>
+                    </div>
+                @endforeach
             </div>
         </div>
-    @endfor
-    <div class="d-flex gap-2">
-        <a href="{{ url()->current() }}/back" class="btn btn-sm btn-danger">Reset dan Ulang</a>
-        <x-button.submit />
     </div>
-</form>
-
+</div>
 <script>
-    const select_participan = document.querySelectorAll('#seat');
-    let old_value = '';
-    let old_team_initial = '';
-    let old_team = '';
-    select_participan.forEach(e => {
-        e.addEventListener('click', function() {
-            old_value = this.value;
-            old_team_initial = this.options[this.selectedIndex].getAttribute(
-                'data-team_initial');
-            old_team = this.options[this.selectedIndex].getAttribute(
-                'data-team');
-        });
+    var draggedItem = null;
 
-        e.addEventListener('change', function() {
-            change_value_with_other_element(this);
-        });
+    function allowDrop(event) {
+        event.preventDefault();
+    }
 
-        // Perbarui teks tim untuk elemen saat pertama kali halaman dimuat
-        const teamText = document.querySelector("#team-text" + e.dataset.index);
-        teamText.innerHTML = e.options[e.selectedIndex].getAttribute('data-team_initial');
-        teamText.setAttribute('title', e.options[e.selectedIndex].getAttribute('data-team'));
-    });
+    function drag(event) {
+        draggedItem = event.target;
+        event.stopPropagation(); // Stop the event propagation
+        event.dataTransfer.setData("text", event.target.innerHTML);
+    }
 
-    function change_value_with_other_element(selectedElement) {
-        select_participan.forEach(a => {
-            if (a !== selectedElement && a.value === selectedElement.value) {
-                const aTeamInitial = a.options[a.selectedIndex].getAttribute('data-team_initial');
-                const aTeam = a.options[a.selectedIndex].getAttribute('data-team');
-                a.value = old_value;
-
-                // Perbarui teks tim untuk elemen 'a'
-                const teamTextA = document.querySelector("#team-text" + a.dataset.index);
-                teamTextA.innerHTML = old_team_initial;
-                teamTextA.setAttribute('title', old_team);
-
-                // Perbarui teks tim untuk elemen yang dipilih
-                const teamTextSelected = document.querySelector("#team-text" + selectedElement.dataset.index);
-                teamTextSelected.innerHTML = aTeamInitial;
-                teamTextSelected.setAttribute('title', aTeam);
+    function drop(event, target) {
+        event.preventDefault();
+        var data = event.dataTransfer.getData("text");
+        var draggedElement = document.createElement("div");
+        draggedElement.innerHTML = data;
+        draggedElement.draggable = true;
+        draggedElement.addEventListener('dragstart', drag);
+        draggedElement.children[1].setAttribute('data-seat_no', target)
+        if (target === 'participants') {
+            var participantsContent = document.getElementById('participants-content');
+            if (participantsContent) {
+                participantsContent.appendChild(draggedElement);
             }
-        });
+        } else {
+            var targetContent = document.getElementById(`seat${target}-content`);
+            if (targetContent) {
+                targetContent.appendChild(draggedElement);
+            }
+        }
+
+        // Remove the original element from Participants
+        if (draggedItem && draggedItem.parentNode) {
+            draggedItem.parentNode.removeChild(draggedItem);
+        }
+
     }
 </script>
