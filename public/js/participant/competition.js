@@ -8,7 +8,7 @@ const final_seat_btn = document.getElementById("final_group")
 const saveTime = document.querySelector('#save_time')
 let milliseconds = 0
 const modal_stopwatch = new bootstrap.Modal('#timeCompetition')
-
+const round = document.querySelector('#round_now')
 const input_minute = document.querySelector('#input_minute')
 const input_seconds = document.querySelector('#input_seconds')
 const input_miliseconds = document.querySelector('#input_miliseconds')
@@ -106,7 +106,7 @@ async function save_time_participant_mode_stopwatch(participant_id) {
     try {
         const response = await fetch(base_url + '/api/participant/save-time?participant_id=' + participant_id +
             '&time=' +
-            show_time.textContent)
+            show_time.textContent +'&round='+round.value)
             .then(res => {
                 return res.json()
             })
@@ -119,7 +119,7 @@ async function save_time_participant_mode_input(participant_id) {
     try {
         const response = await fetch(base_url + '/api/participant/save-time?participant_id=' + participant_id +
             '&time=' +
-            format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value))
+            format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value) +'&round='+round.value)
             .then(res => {
                 return res.json()
             })

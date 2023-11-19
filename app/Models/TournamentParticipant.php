@@ -92,6 +92,7 @@ class TournamentParticipant extends Model
         if($seat>0){
             $result->where('participant_tournament_detail.seat', $seat);
         }
+        $result->where('participant_tournament_detail.round', '2');
 
         if ($order_by_time) {
             $result->orderBy(DB::raw(

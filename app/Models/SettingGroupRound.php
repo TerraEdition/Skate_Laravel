@@ -16,7 +16,7 @@ class SettingGroupRound extends Model
     {
         return static::select(
             'setting_group_rounds.id',
-            'setting_group_rounds.group_id',
+            'tournament_participants.group_id',
             'setting_group_rounds.passes',
             'setting_group_rounds.round',
             'tournament_groups.slug',
@@ -28,7 +28,7 @@ class SettingGroupRound extends Model
         ->where('tournament_groups.slug', $group_slug)
         ->groupBy(
             'setting_group_rounds.id',
-            'setting_group_rounds.group_id',
+            'tournament_participants.group_id',
             'setting_group_rounds.passes',
             'setting_group_rounds.round',
             'tournament_groups.slug',

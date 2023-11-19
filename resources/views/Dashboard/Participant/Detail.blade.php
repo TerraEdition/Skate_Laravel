@@ -1,3 +1,6 @@
+@php
+    use App\Helpers\Model;
+@endphp
 @extends('Dashboard.Layout.Main')
 @section('content')
     <x-alert />
@@ -80,38 +83,114 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table">
-            <tr>
-                <th>#</th>
-                <th>No BIB</th>
-                <th>Nama</th>
-                <th>Tim</th>
-                <th>Waktu</th>
-                @if ($group->status == 2)
-                    <th>Posisi</th>
-                @else
-                    <th>Seat</th>
-                @endif
-            </tr>
-            @foreach ($participant as $p)
+        @if ($group->round == 1)
+            <table class="table">
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $p->no_participant }}</td>
-                    <td>{{ $p->member }}</td>
-                    <td>{{ $p->team }}</td>
-                    <td>{{ $p->time ?? '00:00' }}</td>
+                    <th>#</th>
+                    <th>No BIB</th>
+                    <th>Nama</th>
+                    <th>Tim</th>
+                    <th>Waktu</th>
                     @if ($group->status == 2)
-                        <td>{{ $loop->iteration }}</td>
+                        <th>Posisi</th>
                     @else
-                        <td>{{ $p->seat }}</td>
+                        <th>Seat</th>
                     @endif
                 </tr>
-            @endforeach
-        </table>
-
-
-
-
-
+                @foreach ($participant as $p)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $p->no_participant }}</td>
+                        <td>{{ $p->member }}</td>
+                        <td>{{ $p->team }}</td>
+                        <td>{{ $p->time ?? '00:00' }}</td>
+                        @if ($group->status == 2)
+                            <td>{{ $loop->iteration }}</td>
+                        @else
+                            <td>{{ $p->seat }}</td>
+                        @endif
+                    </tr>
+                @endforeach
+            </table>
+        @else
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                @for ($i = 0; $i < $group->total_seat; $i++)
+                    <li class="nav-item" role="presentation">
+                        <button @class(['nav-link active' => $i == 0, 'nav-link' => $i > 0]) id="seat{{ $i }}-tab" data-bs-toggle="tab"
+                            data-bs-target="#seat{{ $i }}-tab-pane" type="button" role="tab"
+                            aria-controls="seat{{ $i }}-tab-pane" aria-selected="true">Seat
+                            {{ $i + 1 }}</button>
+                    </li>
+                @endfor
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link " id="final-tab" data-bs-toggle="tab" data-bs-target="#final-tab-pane"
+                        type="button" role="tab" aria-controls="final-tab-pane" aria-selected="true">Final
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                @for ($i = 0; $i < $group->total_seat; $i++)
+                    <div @class([
+                        'tab-pane fade show active' => $i == 0,
+                        'tab-pane fade' => $i > 0,
+                    ]) id="seat{{ $i }}-tab-pane" role="tabpanel"
+                        aria-labelledby="seat{{ $i }}-tab" tabindex="0">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>#</th>
+                                    <th>No BIB</th>
+                                    <th>Nama</th>
+                                    <th>Tim</th>
+                                    <th>Waktu</th>
+                                    <th>Posisi</th>
+                                </tr>
+                                @php
+                                    $participant_perseat = Model::ParticipantPerSeat($group->slug, $i + 1);
+                                @endphp
+                                @foreach ($participant_perseat as $k => $p)
+                                    <tr @class(['bg-primary text-light' => $k < $group->passes])>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $p->no_participant }}</td>
+                                        <td>{{ $p->member }}</td>
+                                        <td>{{ $p->team }}</td>
+                                        <td>{{ $p->time ?? '00:00' }}</td>
+                                        <td>{{ $loop->iteration }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                @endfor
+                <div class="tab-pane fade" id="final-tab-pane" role="tabpanel" aria-labelledby="final-tab" tabindex="0">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th>#</th>
+                                <th>No BIB</th>
+                                <th>Nama</th>
+                                <th>Tim</th>
+                                <th>Waktu</th>
+                                <th>Posisi</th>
+                            </tr>
+                            @php
+                                $participant_final = Model::ParticipantPerFinal($group->slug);
+                            @endphp
+                            @foreach ($participant_final as $k => $p)
+                                <tr @class(['bg-primary text-light' => $k < $group->passes])>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $p->no_participant }}</td>
+                                    <td>{{ $p->member }}</td>
+                                    <td>{{ $p->team }}</td>
+                                    <td>{{ $p->time ?? '00:00' }}</td>
+                                    <td>{{ $loop->iteration }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </div>
+    @endif
     </div>
 @endsection

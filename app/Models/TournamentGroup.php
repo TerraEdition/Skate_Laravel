@@ -118,7 +118,18 @@ class TournamentGroup extends Model
             'tournament_groups.id',
             'tournament_groups.group',
             'tournament_groups.slug',
-        )->where('slug', $group_slug)->first();
+            DB::raw('max(participant_tournament_detail.seat) as total_seat'),
+            DB::raw('max(participant_tournament_detail.round) as round'),
+        )
+        ->leftJoin('tournament_participants', 'tournament_participants.group_id', '=', 'tournament_groups.id')
+        ->leftJoin('participant_tournament_detail', 'participant_tournament_detail.participant_id', '=', 'tournament_participants.id')
+        ->where('tournament_groups.slug', $group_slug)
+        ->groupBy(
+            'tournament_groups.id',
+            'tournament_groups.group',
+            'tournament_groups.slug',
+        )
+        ->first();
     }
     # tournament participant controller
     public static function get_id_by_tournament_slug_by_group_slug($tournament_slug, $slug)
@@ -137,7 +148,7 @@ class TournamentGroup extends Model
     }
     # tournament group controller
     # participant controller
-    public static function get_by_tournament_slug_by_group_slug($tournament_slug, $slug)
+    public static function get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug)
     {
         return static::select(
             'tournament_groups.id',
@@ -159,7 +170,7 @@ class TournamentGroup extends Model
             ->leftJoin('team_members', 'team_members.id', '=', 'tournament_participants.member_id')
             ->leftJoin('teams', 'teams.id', '=', 'team_members.team_id')
             ->leftJoin('participant_tournament_detail', 'participant_tournament_detail.participant_id', '=', 'tournament_participants.id')
-            ->where('tournament_groups.slug', $slug)
+            ->where('tournament_groups.slug', $group_slug)
             ->where('tournaments.slug', $tournament_slug)
 
             ->groupBy(

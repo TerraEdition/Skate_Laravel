@@ -126,7 +126,7 @@ class SettingGroupRoundController extends Controller
         }
     }
 
-    public function _final_store($group_slug)
+    private function _final_store($group_slug)
     {
         $group = TournamentGroup::select('id')->where('slug', $group_slug)->first();
         if (empty($group)) {
@@ -150,7 +150,7 @@ class SettingGroupRoundController extends Controller
                 $save_seat = new ParticipantTournamentDetail();
                 $save_seat->participant_id = $r;
                 $save_seat->group_id = $group->id;
-                $save_seat->seat = $key;
+                $save_seat->seat = $key + 1;
                 $save_seat->round = '1';
                 $save_seat->save();
             }

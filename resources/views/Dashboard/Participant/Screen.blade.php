@@ -81,7 +81,6 @@
     window.addEventListener('message', function(event) {
         if (event.data.message == "Set_Seat") {
             seat_now = event.data.value
-            console.log(seat_now)
             loadMiniScreen();
         } else if (event.data.message == "Start") {
             startTime = setInterval(update_time, 10)
@@ -138,6 +137,7 @@
                 <span class="visually-hidden">Loading...</span>
             </div>
             `
+            console.log(seat_now)
             const response = await fetch(window.location.href + '/mini?seat=' + seat_now);
             const data = await response.json();
             if (data.status) {

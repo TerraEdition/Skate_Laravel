@@ -15,6 +15,7 @@
         <div class="btn btn-sm btn-success" id="new-screen" data-seat="{{ $seat_now }}"><i class="fa-solid fa-tv"></i>
             Buka Layar Turnamen</div>
     </div>
+    <input type="hidden" id="round_now" value="{{ $group->round }}">
     <x-alert />
     <div class="d-flex justify-content-between mt-3">
         <div class="fs-5"> Peserta Turnamen <b>{{ $group->tournament }}</b> di Grup <b>{{ $group->group }}</b></div>

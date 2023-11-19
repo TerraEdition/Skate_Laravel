@@ -19,16 +19,20 @@ class ParticipantController extends Controller
             $validator = Validator::make($request->all(), [
                 'participant_id' => 'required|integer',
                 'time' => 'required',
+                'round'=>'required|integer'
             ], [], [
                 'participant_id' => 'peserta',
                 'time' => 'waktu',
+                'round' => 'babak',
             ]);
             # check if validation fails
             if ($validator->fails()) {
                 return Response::make(400, $validator->errors());
             }
             # save time
-            $save_time_participant = ParticipantTournamentDetail::where('participant_id', $request->get('participant_id'))->first();
+            $save_time_participant = ParticipantTournamentDetail::where('participant_id', $request->get('participant_id'))
+            ->where('round',$request->get('round'))
+            ->first();
             if (empty($save_time_participant)) {
                 return Response::make(400, __('global.participant_not_found'));
             }
