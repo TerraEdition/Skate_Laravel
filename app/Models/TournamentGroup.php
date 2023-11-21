@@ -121,15 +121,35 @@ class TournamentGroup extends Model
             DB::raw('max(participant_tournament_detail.seat) as total_seat'),
             DB::raw('max(participant_tournament_detail.round) as round'),
         )
-        ->leftJoin('tournament_participants', 'tournament_participants.group_id', '=', 'tournament_groups.id')
-        ->leftJoin('participant_tournament_detail', 'participant_tournament_detail.participant_id', '=', 'tournament_participants.id')
-        ->where('tournament_groups.slug', $group_slug)
-        ->groupBy(
+            ->leftJoin('tournament_participants', 'tournament_participants.group_id', '=', 'tournament_groups.id')
+            ->leftJoin('participant_tournament_detail', 'participant_tournament_detail.participant_id', '=', 'tournament_participants.id')
+            ->where('tournament_groups.slug', $group_slug)
+            ->groupBy(
+                'tournament_groups.id',
+                'tournament_groups.group',
+                'tournament_groups.slug',
+            )
+            ->first();
+    }
+    # api participant controller
+    public static function get_by_group_id($group_id)
+    {
+        return static::select(
             'tournament_groups.id',
             'tournament_groups.group',
             'tournament_groups.slug',
+            DB::raw('max(participant_tournament_detail.seat) as total_seat'),
+            DB::raw('max(participant_tournament_detail.round) as round'),
         )
-        ->first();
+            ->leftJoin('tournament_participants', 'tournament_participants.group_id', '=', 'tournament_groups.id')
+            ->leftJoin('participant_tournament_detail', 'participant_tournament_detail.participant_id', '=', 'tournament_participants.id')
+            ->where('tournament_groups.id', $group_id)
+            ->groupBy(
+                'tournament_groups.id',
+                'tournament_groups.group',
+                'tournament_groups.slug',
+            )
+            ->first();
     }
     # tournament participant controller
     public static function get_id_by_tournament_slug_by_group_slug($tournament_slug, $slug)

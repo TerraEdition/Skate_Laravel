@@ -123,6 +123,7 @@ Route::middleware('auth:sanctum')->group(function () {
                         Route::get('screen', 'tournament_screen');
                         Route::get('screen/mini', 'mini_screen');
                         Route::get('close', 'close_competition');
+                        Route::get('final/close', 'close_competition');
                         Route::get('final/screen', 'tournament_screen');
                         Route::get('final/screen/mini', 'mini_screen');
                     });
