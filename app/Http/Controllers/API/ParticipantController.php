@@ -19,7 +19,7 @@ class ParticipantController extends Controller
             $validator = Validator::make($request->all(), [
                 'participant_id' => 'required|integer',
                 'time' => 'required',
-                'round'=>'required|integer'
+                'round' => 'required|integer'
             ], [], [
                 'participant_id' => 'peserta',
                 'time' => 'waktu',
@@ -31,8 +31,8 @@ class ParticipantController extends Controller
             }
             # save time
             $save_time_participant = ParticipantTournamentDetail::where('participant_id', $request->get('participant_id'))
-            ->where('round',$request->get('round'))
-            ->first();
+                ->where('round', $request->get('round'))
+                ->first();
             if (empty($save_time_participant)) {
                 return Response::make(400, __('global.participant_not_found'));
             }
@@ -51,7 +51,7 @@ class ParticipantController extends Controller
         cache()->forever('score_grup_' . $group_id, $participant);
     }
 
-    public function get_live_score($group_id)
+    public function get_live_score(Request $request, $group_id)
     {
         $participant = cache()->get('score_grup_' . $group_id);
         if (empty($participant)) {
@@ -60,8 +60,10 @@ class ParticipantController extends Controller
         if (empty($participant)) {
             $participant = [];
         }
-
+        $group = TournamentGroup::get_by_group_id($group_id);
         $data = [
+            'group' => $group,
+            'index_seat' => $request->get('index') ?? 0,
             'participant' => $participant,
         ];
         $htmlData = view('Home.DisplayScore', $data)->render();

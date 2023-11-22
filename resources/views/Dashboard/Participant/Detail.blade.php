@@ -83,7 +83,7 @@
     </div>
 
     <div class="table-responsive">
-        @if ($group->round == 1)
+        @if ($group->round <= 1 && $group->total_seat == 1)
             <table class="table">
                 <tr>
                     <th>#</th>

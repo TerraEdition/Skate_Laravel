@@ -174,7 +174,7 @@ class ParticipantController extends Controller
             foreach ($request->input('participant') as $r) {
                 $save_finalize = new ParticipantTournamentDetail();
                 $save_finalize->participant_id = $r;
-                $save_finalize->group_id = $group->id;
+                $save_finalize->group_id = $group->group_id;
                 $save_finalize->time = '00:00:000';
                 $save_finalize->seat = '1';
                 $save_finalize->round = '2';
@@ -222,10 +222,10 @@ class ParticipantController extends Controller
     {
         try {
             $seat_now = $request->get('seat') ?? '1';
-            if($seat_now=='final'){
-                $participant = TournamentParticipant::get_final_by_group_slug($group_slug,true,1);
-            }else{
-                $participant= TournamentParticipant::get_by_group_slug($group_slug, true, $seat_now);
+            if ($seat_now == 'final') {
+                $participant = TournamentParticipant::get_final_by_group_slug($group_slug, true, 1);
+            } else {
+                $participant = TournamentParticipant::get_by_group_slug($group_slug, true, $seat_now);
             }
             $data = [
                 'data' => TournamentGroup::get_by_tournament_slug_by_group_slug($tournament_slug, $group_slug),

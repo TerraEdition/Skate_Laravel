@@ -17,7 +17,16 @@
                 <div class="collapse show" id="seat{{ $i }}">
                     <div class="card mt-3" ondragover="allowDrop(event)" ondrop="drop(event, {{ $i }})">
                         <div class="card-body card-seat" id="seat{{ $i }}-content">
-
+                            @if ($total_seat == 1)
+                                @foreach ($participant as $p)
+                                    <div draggable="true" ondragstart="drag(event)">
+                                        <div class="border border-2 border-dark p-2" title="{{ $p->team }}">
+                                            {{ $p->member }} - {{ $p->team_initial }}
+                                        </div>
+                                        <input type="hidden" value="{{ $p->id }}" data-seat_no='participants'>
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -29,22 +38,26 @@
         </div>
     </div>
     <div class="col-6">
-        <div class="card">
-            <div class="card-header">
-                Peserta
-            </div>
-            <div class="card-body card-participant d-flex flex-wrap gap-3" ondragover="allowDrop(event)"
-                ondrop="drop(event, 'participants')" id="participants-content">
-                @foreach ($participant as $p)
-                    <div draggable="true" ondragstart="drag(event)">
-                        <div class="border border-2 border-dark p-2">
-                            {{ $p->member }}
+        @if ($total_seat > 1)
+            <div class="card">
+                <div class="card-header">
+                    Peserta
+                </div>
+                <div class="card-body card-participant d-flex flex-wrap gap-3" ondragover="allowDrop(event)"
+                    ondrop="drop(event, 'participants')" id="participants-content">
+                    @foreach ($participant as $p)
+                        <div draggable="true" ondragstart="drag(event)">
+                            <div class="border border-2 border-dark p-2" title="{{ $p->team }}">
+                                {{ $p->member }} - {{ $p->team_initial }}
+                            </div>
+                            <input type="hidden" value="{{ $p->id }}" data-seat_no='participants'>
                         </div>
-                        <input type="hidden" value="{{ $p->id }}" data-seat_no='participants'>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-        </div>
+        @else
+            <div class="card-participant"></div>
+        @endif
     </div>
 </div>
 <script>
@@ -94,8 +107,10 @@
         if (card_participant.children.length > 0) {
             alert("Masih ada peserta yang masih tersedia")
         } else {
+            error = false;
             [...card_seat].some((a, i) => {
                 if (a.children.length <= passes) {
+                    error = true;
                     alert('Seat ' + (i + 1) + ' tidak memiliki peserta yang cukup');
                     [...form_seat.children].forEach((v, k) => {
                         if (k > 0) {
@@ -114,7 +129,9 @@
                     return false;
                 }
             })
-            form_seat.submit();
+            if (!error) {
+                form_seat.submit();
+            }
         }
     })
 </script>

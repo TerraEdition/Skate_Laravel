@@ -30,6 +30,7 @@ Route::prefix('team')->group(function () {
 Route::prefix('participant')->group(function () {
     Route::controller(ParticipantController::class)->group(function () {
         Route::get('save-time', 'save_time_participant');
+        Route::get('save-storage', 'save_storage');
     });
 });
 Route::prefix('get-live-score')->group(function () {
@@ -37,4 +38,3 @@ Route::prefix('get-live-score')->group(function () {
         Route::get('{group_slug}', 'get_live_score');
     });
 });
-
