@@ -137,7 +137,6 @@
                 <span class="visually-hidden">Loading...</span>
             </div>
             `
-            console.log(seat_now)
             const response = await fetch(window.location.href + '/mini?seat=' + seat_now);
             const data = await response.json();
             if (data.status) {

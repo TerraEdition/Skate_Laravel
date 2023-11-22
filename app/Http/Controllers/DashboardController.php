@@ -35,11 +35,11 @@ class DashboardController extends Controller
 
         // Jika hanya satu kata, ambil tiga huruf pertama
         if (count($words) === 1) {
-            return (mb_strtoupper(mb_substr($words[0], 0, 3, 'UTF-8'), 'UTF-8'));
+            return strtoupper(mb_strtoupper(mb_substr($words[0], 0, 3, 'UTF-8'), 'UTF-8'));
         }
 
         $initials =  $name[0] . substr(trim(strstr($name, ' ')), 0, 4);
-        return $initials;
+        return strtoupper($initials);
     }
 
     public function import_excel_by_pass(Request $request)
@@ -60,7 +60,7 @@ class DashboardController extends Controller
 
             DB::beginTransaction();
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
-            $path = storage_path('app/excel/participant/');
+            $path = storage_path('app/public/excel/participant/');
             Files::is_existing($path);
             $request->file('excel')->storeAs('excel/participant', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -83,7 +83,7 @@ class DashboardController extends Controller
                                     $team = Team::get_by_team_name($p['B']);
                                     if (empty($team)) {
                                         $team = new Team();
-                                        $team->team = $p['B'];
+                                        $team->team = ucwords($p['B']);
                                         $team->coach = '';
                                         $team->website = '';
                                         $team->address = '';
@@ -95,7 +95,7 @@ class DashboardController extends Controller
                                     if (empty($member)) {
                                         # new member
                                         $member = new TeamMember();
-                                        $member->member = $p['A'];
+                                        $member->member = ucwords(strtolower($p['A']));
                                         $member->gender = $g->gender;
                                         $member->birth = '0';
                                         $member->team_id = $team->id;

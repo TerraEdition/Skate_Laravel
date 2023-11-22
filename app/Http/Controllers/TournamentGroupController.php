@@ -122,4 +122,7 @@ class TournamentGroupController extends Controller
             return redirect()->back();
         }
     }
+    public function trash(){
+
+    }
 }

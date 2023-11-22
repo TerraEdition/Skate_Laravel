@@ -94,6 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('create', 'create');
                 Route::post('create', 'store');
                 Route::get('{slug}', 'detail');
+                Route::delete('{slug}', 'trash');
             });
             Route::prefix('{group_slug}/participant')->group(function () {
                 Route::controller(TournamentParticipantController::class)->group(function () {
