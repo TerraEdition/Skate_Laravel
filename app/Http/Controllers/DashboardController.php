@@ -31,15 +31,13 @@ class DashboardController extends Controller
     }
     private function _generate_initial(string $name): string
     {
-        $words = explode(' ', $name);
-
-        // Jika hanya satu kata, ambil tiga huruf pertama
-        if (count($words) === 1) {
-            return strtoupper(mb_strtoupper(mb_substr($words[0], 0, 3, 'UTF-8'), 'UTF-8'));
+        $word = explode(' ', $name);
+        $initial = '';
+        foreach ($word as $k) {
+            $initial .= strtoupper(substr($k, 0, 1));
         }
 
-        $initials =  $name[0] . substr(trim(strstr($name, ' ')), 0, 4);
-        return strtoupper($initials);
+        return $initial;
     }
 
     public function import_excel_by_pass(Request $request)
@@ -83,7 +81,7 @@ class DashboardController extends Controller
                                     $team = Team::get_by_team_name($p['B']);
                                     if (empty($team)) {
                                         $team = new Team();
-                                        $team->team = ucwords($p['B']);
+                                        $team->team = ucwords(strtolower($p['B']));
                                         $team->coach = '';
                                         $team->website = '';
                                         $team->address = '';

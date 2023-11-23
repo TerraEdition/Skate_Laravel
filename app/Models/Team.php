@@ -24,7 +24,7 @@ class Team extends Model
     {
         $key = $request->get('key') ?? '';
 
-        $result = Team::select('slug', 'team', 'updated_at')
+        $result = Team::select('slug', 'team', 'updated_at', 'team_initial')
             ->where(function ($query) use ($key) {
                 $key = explode(' ', Format::clean_char_search($key));
                 foreach ($key as $r) {
@@ -61,5 +61,4 @@ class Team extends Model
 
         return $result;
     }
-
 }

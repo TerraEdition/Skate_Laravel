@@ -197,7 +197,7 @@ class TeamMemberController extends Controller
             $save_member->save();
             DB::commit();
             Session::flash('bg', 'alert-success');
-            Session::flash('message', __('global.member_team_created'));
+            Session::flash('message', __('global.member_team_updated'));
             return redirect()->to('team/' . $team_slug . '/member/' . $member_slug);
         } catch (\Throwable $th) {
             DB::rollback();

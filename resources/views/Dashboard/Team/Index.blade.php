@@ -10,6 +10,7 @@
             <tr>
                 <th>#</th>
                 <td>Tim</td>
+                <td>Kode Tim</td>
                 <td>Tanggal</td>
                 <td>Aksi</td>
             </tr>
@@ -19,6 +20,7 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $r->team }}</td>
+                <td>{{ $r->team_initial }}</td>
                 <td>{{ Date::format_long($r->updated_at) }}</td>
                 <td>
                     <div class="d-flex gap-2">
