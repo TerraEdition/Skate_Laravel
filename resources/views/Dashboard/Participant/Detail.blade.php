@@ -57,8 +57,8 @@
                         </div>
                     </div>
                 </div>
+            </div>
         @endif
-    </div>
     </div>
     <div class="d-flex justify-content-between mt-3">
         <div class="fs-5"> Peserta Turnamen <b>{{ $group->tournament }}</b> di Grup <b>{{ $group->group }}</b></div>
@@ -70,9 +70,8 @@
             @elseif ($group->status < 2)
                 @php
                     $final_url = url()->current() . '/competition';
-                    if ($group->round > 1) {
+                    if ($group->round > 1)
                         $final_url .= '/final';
-                    }
                 @endphp
 
                 <a href="{{ $final_url }}" class="btn btn-outline-primary">
@@ -190,7 +189,6 @@
                     </div>
                 </div>
             </div>
-    </div>
-    @endif
+        @endif
     </div>
 @endsection

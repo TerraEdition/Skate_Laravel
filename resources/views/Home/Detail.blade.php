@@ -30,7 +30,7 @@
                     ]) id="seat{{ $i }}-tab" data-bs-toggle="tab"
                         onclick="change_seat({{ $i }})" data-bs-target="#seat{{ $i }}-tab-pane"
                         type="button" role="tab" aria-controls="seat{{ $i }}-tab-pane"
-                        aria-selected="true">Seat
+                        aria-selected="true">Heat
                         {{ $i + 1 }}</button>
                 </li>
             @endfor

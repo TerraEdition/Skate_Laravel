@@ -41,6 +41,11 @@
                                 <td>:</td>
                                 <td>{{ $r->location }}</td>
                             </tr>
+                            <tr>
+                                <td>Peserta</td>
+                                <td>:</td>
+                                <td>{{ $r->total_participant }}</td>
+                            </tr>
                         </table>
                     </div>
                     <div class="card-footer d-flex justify-content-end">

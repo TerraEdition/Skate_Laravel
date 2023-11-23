@@ -11,8 +11,8 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $t->no_participant }}</td>
-                <td>{{ ucwords($t->member) }}</td>
-                <td>{{ ucwords($t->team) }}</td>
+                <td>{{ strtoupper($t->member) }}</td>
+                <td>{{ strtoupper($t->team) }}</td>
                 <td>{{ $t->time }}</td>
             </tr>
         @endforeach
@@ -41,8 +41,8 @@
                                 <tr @class(['bg-primary text-light' => $k < $group->passes])>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $p->no_participant }}</td>
-                                    <td>{{ $p->member }}</td>
-                                    <td>{{ $p->team }}</td>
+                                    <td>{{ strtoupper($p->member) }}</td>
+                                    <td>{{ strtoupper($p->team) }}</td>
                                     <td>{{ $p->time ?? '00:00:000' }}</td>
                                 </tr>
                             @endforeach
@@ -71,8 +71,8 @@
                             <tr @class(['bg-primary text-light' => $k < $group->passes])>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $p->no_participant }}</td>
-                                <td>{{ $p->member }}</td>
-                                <td>{{ $p->team }}</td>
+                                <td>{{ strtoupper($p->member) }}</td>
+                                <td>{{ strtoupper($p->team) }}</td>
                                 <td>{{ $p->time ?? '00:00:000' }}</td>
                             </tr>
                         @endforeach

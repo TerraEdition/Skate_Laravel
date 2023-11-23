@@ -18,7 +18,7 @@
                 <div class="my-3">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="text-center">Seat {{ $i }}</h6>
+                            <h6 class="text-center">Heat {{ $i }}</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">

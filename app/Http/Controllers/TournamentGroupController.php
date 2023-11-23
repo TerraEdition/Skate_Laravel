@@ -36,7 +36,7 @@ class TournamentGroupController extends Controller
                 'group' => ['required', Rule::unique('tournament_groups', 'group')],
                 'category' => 'required|array',
                 'category.*' => 'required|in:1,2',
-                'min_age' => 'required|date_format:Y|gt:1990|lt:' . date("Y"),
+                'min_age' => 'required|date_format:Y|gt:1960|lt:' . date("Y"),
                 'max_age' => 'required|date_format:Y|gte:' . ($request->input('min_age') ?? 1),
                 'description' => 'nullable',
             ], [], [
@@ -122,7 +122,7 @@ class TournamentGroupController extends Controller
             return redirect()->back();
         }
     }
-    public function trash(){
-
+    public function trash()
+    {
     }
 }
