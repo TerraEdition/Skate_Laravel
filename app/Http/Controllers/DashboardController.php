@@ -58,7 +58,7 @@ class DashboardController extends Controller
 
             DB::beginTransaction();
             $excel = Carbon::now()->unix() . '.' . $request->file('excel')->extension();
-            $path = storage_path('app/public/excel/participant/');
+            $path = storage_path('app/excel/participant/');
             Files::is_existing($path);
             $request->file('excel')->storeAs('excel/participant', $excel);
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
