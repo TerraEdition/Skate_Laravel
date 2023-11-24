@@ -47,7 +47,7 @@ class Tournament extends Model
             });
         return $result
             ->orderBy($request->get('sort_at') ?? 'id', $request->get('sort_by') ?? 'desc')
-            ->paginate($request->get('limit') ?? 20);
+            ->paginate($request->get('limit') ?? 20)->withQueryString();
     }
 
     # tournament controller

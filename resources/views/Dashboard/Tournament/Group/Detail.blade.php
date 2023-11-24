@@ -79,5 +79,6 @@
                 </tr>
             @endforeach
         </table>
+        {{ $participant->links('Paginate.Custom') }}
     </div>
 @endsection

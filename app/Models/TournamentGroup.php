@@ -38,7 +38,8 @@ class TournamentGroup extends Model
             'tournament_groups.max_age',
             'tournament_groups.slug',
             DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
-        )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id');
+        )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id')
+        ->where('tournament_groups.status','0');
 
         return $result->where('tournaments.id', '1')->orderBy('tournament_groups.group', 'asc')->get();
     }
@@ -74,7 +75,7 @@ class TournamentGroup extends Model
             return $result->orderBy('tournaments.start_date', 'asc')
                 ->orderBy('tournament_groups.group', 'asc')
                 ->orderBy('tournaments.tournament', 'asc')
-                ->paginate(20);
+                ->paginate(20)->withQueryString();
         }
     }
     # tournament group controller
@@ -108,7 +109,7 @@ class TournamentGroup extends Model
             END"
             ), "ASC")
             ->orderBy($request->get('sort_at') ?? 'tournament_groups.group', $request->get('sort_by') ?? 'asc')
-            ->paginate($request->get('limit') ?? 20);
+            ->paginate($request->get('limit') ?? 20)->withQueryString();
     }
 
     # home controller
@@ -243,7 +244,7 @@ class TournamentGroup extends Model
             return $result->orderBy('tournaments.start_date', 'asc')
                 ->orderBy('tournament_groups.group', 'asc')
                 ->orderBy('tournaments.tournament', 'asc')
-                ->paginate(20);
+                ->paginate(20)->withQueryString();
         }
     }
 }

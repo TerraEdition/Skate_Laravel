@@ -39,7 +39,7 @@ class TeamMember extends Model
             })
             ->where('teams.slug', $slug)
             ->orderBy($request->get('sort_at') ?? 'team_members.member', $request->get('sort_by') ?? 'asc')
-            ->paginate($request->get('limit') ?? 20);
+            ->paginate($request->get('limit') ?? 20)->withQueryString();
     }
     # tournament excel export
     public static function get_all_member_by_team_slug($slug)

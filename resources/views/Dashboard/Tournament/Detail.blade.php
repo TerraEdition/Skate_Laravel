@@ -62,4 +62,5 @@
             @endforeach
         </table>
     </div>
+    {{ $group->links('Paginate.Custom') }}
 @endsection

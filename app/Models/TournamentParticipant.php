@@ -184,6 +184,6 @@ class TournamentParticipant extends Model
             ->join('tournaments', 'tournaments.id', '=', 'tournament_groups.tournament_id')
             ->where('team_members.slug', $member_slug)
             ->orderBy('tournament_groups.group', 'desc')
-            ->paginate(20);
+            ->paginate(20)->withQueryString();
     }
 }

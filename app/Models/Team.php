@@ -41,7 +41,7 @@ class Team extends Model
             });
 
         $result->orderBy($request->get('sort_at') ?? 'id', $request->get('sort_by') ?? 'desc');
-        return $result->paginate($request->get('limit') ?? 20);
+        return $result->paginate($request->get('limit') ?? 20)->withQueryString();
     }
 
     # team controller
