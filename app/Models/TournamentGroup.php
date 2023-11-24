@@ -58,14 +58,14 @@ class TournamentGroup extends Model
             DB::raw('(SELECT count(id) from tournament_participants where tournament_participants.group_id = tournament_groups.id ) as total_participant')
         )->leftJoin('tournaments', 'tournament_groups.tournament_id', '=', 'tournaments.id');
         if ($status == 'now') {
-            $result->where('tournaments.start_date', '<=', Date("Y-m-d"));
-            $result->where('tournaments.end_date', '>=', Date("Y-m-d"));
+            // $result->where('tournaments.start_date', '<=', Date("Y-m-d"));
+            // $result->where('tournaments.end_date', '>=', Date("Y-m-d"));
             $result->orWhere('tournament_groups.status', '1');
         } else if ($status == 'completed') {
-            $result->where('tournaments.end_date', '<', Date("Y-m-d"));
+            // $result->where('tournaments.end_date', '<', Date("Y-m-d"));
             $result->orWhere('tournament_groups.status', '2');
         } else if ($status == 'incoming') {
-            $result->where('tournaments.start_date', '>', Date("Y-m-d"));
+            // $result->where('tournaments.start_date', '>', Date("Y-m-d"));
             $result->where('tournament_groups.status', '0');
         }
         if ($tournament_slug) {

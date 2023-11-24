@@ -95,18 +95,32 @@ async function stop_time(participant_id) {
         data = await save_time_participant_mode_stopwatch(participant_id);
         document.querySelector("#time_participant" + participant_id).textContent = show_time.textContent
     }
+    if (document.querySelector("#dns").checked) {
+        document.querySelector("#time_participant" + participant_id).textContent = "DNS"
+    }
+    reset_dns()
     if (data.status) {
-        show_time.textContent = "00:00";
+        show_time.textContent = "00:00:000";
     } else {
         alert(data.message)
     }
 }
-
+function reset_dns() {
+    // DNS = Don't Not Finish
+    document.querySelector("#dns").checked = false;
+    input_minute.removeAttribute('disabled');
+    input_seconds.removeAttribute('disabled');
+    input_miliseconds.removeAttribute('disabled');
+}
 async function save_time_participant_mode_stopwatch(participant_id) {
     try {
+        if (document.querySelector("#dns").checked) {
+            time = 'DNS';
+        } else {
+            time = show_time.textContent;
+        }
         const response = await fetch(base_url + '/api/participant/save-time?participant_id=' + participant_id +
-            '&time=' +
-            show_time.textContent +'&round='+round.value)
+            '&time=' + time + '&round=' + round.value)
             .then(res => {
                 return res.json()
             })
@@ -117,20 +131,34 @@ async function save_time_participant_mode_stopwatch(participant_id) {
 }
 async function save_time_participant_mode_input(participant_id) {
     try {
+        console.log(document.querySelector("#dns").checked)
+        if (document.querySelector("#dns").checked) {
+            time = 'DNS';
+        } else {
+            time = format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value);
+        }
         const response = await fetch(base_url + '/api/participant/save-time?participant_id=' + participant_id +
-            '&time=' +
-            format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value) +'&round='+round.value)
+            '&time=' + time + '&round=' + round.value)
             .then(res => {
                 return res.json()
             })
-
         return response;
     } catch (error) {
         return "Error fetching data:", error;
     }
 }
 
-
+document.querySelector("#dns").addEventListener('click', function () {
+    if (this.checked) {
+        input_minute.setAttribute('disabled', 'disabled');
+        input_seconds.setAttribute('disabled', 'disabled');
+        input_miliseconds.setAttribute('disabled', 'disabled');
+    } else {
+        input_minute.removeAttribute('disabled');
+        input_seconds.removeAttribute('disabled');
+        input_miliseconds.removeAttribute('disabled');
+    }
+})
 
 // Open New Screen
 const popupCenter = ({ url, title, w, h }) => {
@@ -190,18 +218,30 @@ openScreen.addEventListener('click', function () {
     saveTime.addEventListener('click', function () {
         saveTime.classList.add('d-none');
         finish_btn.classList.remove('d-none');
-        window_screen.postMessage({ message: "Save", value: format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value) }, '*');
+        if (document.querySelector("#dns").checked) {
+            time = 'DNS';
+        } else {
+            time = format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value);
+        }
+        window_screen.postMessage({ message: "Save", value: time }, '*');
     })
 
     finish_btn.addEventListener('click', function () {
         finish_btn.classList.add('d-none');
         participant_id = this.dataset.participant_id;
+        if (document.querySelector("#dns").checked) {
+            window_screen.postMessage({ message: "Stop", value: "DNS" }, '*');
+        } else {
+            if (mode == 1) {
+                window_screen.postMessage({ message: "Stop", value: format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value) }, '*');
+            } else {
+                window_screen.postMessage({ message: "Stop", value: show_time.textContent }, '*');
+            }
+        }
         if (mode == 1) {
             saveTime.classList.remove('d-none');
-            window_screen.postMessage({ message: "Stop", value: format_input_time(input_minute.value + ":" + input_seconds.value + ":" + input_miliseconds.value) }, '*');
         } else {
             start_btn.classList.remove('d-none');
-            window_screen.postMessage({ message: "Stop", value: show_time.textContent }, '*');
         }
         stop_time(participant_id);
     })

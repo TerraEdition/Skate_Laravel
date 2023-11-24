@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Excel\Tournament as ExcelTournament;
 use App\Helpers\Format;
 use App\Models\Tournament;
+use App\Models\TournamentGallery;
 use App\Models\TournamentGroup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -132,5 +133,45 @@ class TournamentController extends Controller
     public function export_tournament($tournament_slug, $team_slug = '')
     {
         ExcelTournament::export_excel($tournament_slug, $team_slug);
+    }
+
+    public function gallery($tournament_slug)
+    {
+        try {
+            $data = [
+                'tournament' => Tournament::get_detail_by_slug($tournament_slug),
+                'gallery' => TournamentGallery::get_by_tournament_slug($tournament_slug),
+            ];
+
+            if (empty($data['tournament'])) {
+                Session::flash('bg', 'alert-danger');
+                Session::flash('message', __('global.tournament_not_found'));
+                return redirect()->back();
+            }
+
+            return view('Dashboard.Tournament.Gallery.Index', $data);
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
+    }
+    public function store_gallery(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|file',
+            ], [], [
+                'file' => 'Berkas',
+            ]);
+            # check if validation fails
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+        } catch (\Throwable $th) {
+            Session::flash('bg', 'alert-danger');
+            Session::flash('message', $th->getMessage() . ':' . $th->getLine());
+            return redirect()->back();
+        }
     }
 }

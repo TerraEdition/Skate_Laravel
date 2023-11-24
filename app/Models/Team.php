@@ -24,12 +24,18 @@ class Team extends Model
     {
         $key = $request->get('key') ?? '';
 
-        $result = Team::select('slug', 'team', 'updated_at', 'team_initial')
+        $result = Team::select(
+            'teams.slug',
+            'teams.team',
+            'teams.updated_at',
+            'teams.team_initial',
+            DB::raw('(SELECT COUNT(team_members.id) FROM team_members WHERE team_members.team_id = teams.id) AS total_member')
+        )
             ->where(function ($query) use ($key) {
                 $key = explode(' ', Format::clean_char_search($key));
                 foreach ($key as $r) {
                     $query->where(function ($query) use ($r) {
-                        $query->orWhere('team', 'like', '%' . $r . '%');
+                        $query->orWhere('teams.team', 'like', '%' . $r . '%');
                     });
                 }
             });

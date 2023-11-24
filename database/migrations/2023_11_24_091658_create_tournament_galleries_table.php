@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('tournament_galleries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tournament_id');
-            $table->string('image');
-            $table->text('description')->nullable(true);
+            $table->unsignedBigInteger('group_id');
+            $table->string('title')->nullable('true');
+            $table->string('description')->nullable('true');
+            $table->string('file');
             $table->string('slug');
             $table->timestamps();
-            $table->foreign('tournament_id')->references('id')->on('tournaments');
-            $table->index(['image']);
         });
     }
 

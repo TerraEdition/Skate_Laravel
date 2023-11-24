@@ -25,7 +25,9 @@
                 <td>
                     <div class="d-flex gap-2">
                         <x-button.detail url="team/{{$r->slug}}" />
+                        @if($r->total_member == 0)
                         <x-button.delete url="team/{{$r->slug}}" />
+                        @endif
                     </div>
                 </td>
             </tr>

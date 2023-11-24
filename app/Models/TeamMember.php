@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class TeamMember extends Model
 {
@@ -23,7 +24,10 @@ class TeamMember extends Model
     public static function get_by_team_slug($request, $slug)
     {
         $key = $request->get('key') ?? '';
-        return TeamMember::select('team_members.*')
+        return TeamMember::select(
+            'team_members.*',
+            DB::raw('(SELECT COUNT(tournament_participants.id) FROM tournament_participants WHERE tournament_participants.member_id = team_members.id) as total_tournament'),
+        )
             ->join('teams', 'teams.id', '=', 'team_members.team_id')
             ->where(function ($query) use ($key) {
                 $key = explode(' ', Format::clean_char_search($key));

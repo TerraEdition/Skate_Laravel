@@ -5,7 +5,7 @@
 
 
 <div class="d-flex justify-content-center">
-    <table class="table mt-4">
+    <table class="table mt-4" cellpadding="3">
         <tr>
             <th colspan="2">RACE {{strtoupper($tournament->tournament)}}</th>
             <th>1</th>
@@ -22,8 +22,8 @@
         <tr>
             <td class="border border-2 text-center">{{$loop->iteration}}</td>
             <td class="border border-2 text-center">{{$member->no_participant}}</td>
-            <td class="border border-2 text-center">{{$member->member}}</td>
-            <td class="border border-2 text-center">{{$member->team}}</td>
+            <td class="border border-2 text-left">{{strtoupper($member->member)}}</td>
+            <td class="border border-2 text-left">{{strtoupper($member->team)}}</td>
             <td class="border border-2 text-center">{{$member->time}}</td>
         </tr>
         @endforeach

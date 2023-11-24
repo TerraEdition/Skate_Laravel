@@ -93,7 +93,7 @@
                     @if ($group->status == 2)
                         <th>Posisi</th>
                     @else
-                        <th>Seat</th>
+                        <th>Heat</th>
                     @endif
                 </tr>
                 @foreach ($participant as $p)
@@ -117,7 +117,7 @@
                     <li class="nav-item" role="presentation">
                         <button @class(['nav-link active' => $i == 0, 'nav-link' => $i > 0]) id="seat{{ $i }}-tab" data-bs-toggle="tab"
                             data-bs-target="#seat{{ $i }}-tab-pane" type="button" role="tab"
-                            aria-controls="seat{{ $i }}-tab-pane" aria-selected="true">Seat
+                            aria-controls="seat{{ $i }}-tab-pane" aria-selected="true">Heat
                             {{ $i + 1 }}</button>
                     </li>
                 @endfor
@@ -179,8 +179,8 @@
                                 <tr @class(['bg-primary text-light' => $k < $group->passes])>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $p->no_participant }}</td>
-                                    <td>{{ $p->member }}</td>
-                                    <td>{{ $p->team }}</td>
+                                    <td>{{ strtoupper($p->member) }}</td>
+                                    <td>{{ strtoupper($p->team) }}</td>
                                     <td>{{ $p->time ?? '00:00' }}</td>
                                     <td>{{ $loop->iteration }}</td>
                                 </tr>

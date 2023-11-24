@@ -84,10 +84,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(TournamentController::class)->group(function () {
             Route::get('', 'index');
             Route::get('create', 'create');
-            Route::get('{slug}/export/{team_slug?}', 'export_tournament');
+            Route::get('{tournament_slug}/gallery', 'gallery');
+            Route::post('{tournament_slug}/gallery/upload', 'store_gallery');
+            Route::get('{tournament_slug}/export/{team_slug?}', 'export_tournament');
             Route::post('create', 'store');
-            Route::get('{slug}', 'detail');
-            Route::post('create/{slug}', 'store');
+            Route::get('{tournament_slug}', 'detail');
+            Route::get('{tournament_slug}', 'detail');
+            Route::post('create/{tournament_slug}', 'store');
         });
         Route::prefix('{tournament_slug}/group')->group(function () {
             Route::controller(TournamentGroupController::class)->group(function () {

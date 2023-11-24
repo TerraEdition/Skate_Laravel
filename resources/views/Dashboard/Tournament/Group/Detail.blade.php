@@ -50,7 +50,7 @@
     <div class="table-responsive">
         <div class="d-flex justify-content-between">
             <h5>Peserta</h5>
-            @if ($data->status == 0 && !$is_close)
+            @if ($data->status == 0 && !$is_close && strtotime($data->start_date) >= strtotime(date('Y-m-d')))
                 <x-button.create url="tournament/{{ $tournament_slug }}/group/{{ $data->slug }}/participant" />
             @endif
         </div>
@@ -71,11 +71,9 @@
                     <td>{{ Convert::gender($r->gender, false) }}</td>
                     <td>{{ Date::calculate_year($r->birth) }} Tahun</td>
                     <td>
-                        @if ($data->status == '0' && !$is_close)
+                        @if ($data->status == '0' && !$is_close && strtotime($data->start_date) >= strtotime(date('Y-m-d')))
                             <x-button.delete
                                 url="tournament/{{ $tournament_slug }}/group/{{ $data->slug }}/participant/{{ $r->participant_id }}" />
-                        @else
-                            <div class="badge bg-success">Aksi di tutup</div>
                         @endif
                     </td>
                 </tr>

@@ -25,16 +25,23 @@ class Tournament extends Model
     {
         $key = $request->get('key') ?? '';
 
-        $result = Tournament::select('tournament', 'start_date', 'end_date', 'location', 'slug')
+        $result = Tournament::select(
+            'tournaments.tournament',
+            'tournaments.start_date',
+            'tournaments.end_date',
+            'tournaments.location',
+            'tournaments.slug',
+            DB::raw('(SELECT COUNT(tournament_groups.id) FROM tournament_groups WHERE tournament_groups.tournament_id = tournaments.id) AS total_group ')
+        )
             ->where(function ($query) use ($key) {
                 $key = explode(' ', Format::clean_char_search($key));
                 foreach ($key as $r) {
                     $query->where(function ($query) use ($r) {
-                        $query->orWhere('tournament', 'like', '%' . $r . '%');
-                        $query->orWhere('location', 'like', '%' . $r . '%');
-                        $query->orWhere('start_date', 'like', '%' . $r . '%');
-                        $query->orWhere('end_date', 'like', '%' . $r . '%');
-                        $query->orWhere('description', 'like', '%' . $r . '%');
+                        $query->orWhere('tournaments.tournament', 'like', '%' . $r . '%');
+                        $query->orWhere('tournaments.location', 'like', '%' . $r . '%');
+                        $query->orWhere('tournaments.start_date', 'like', '%' . $r . '%');
+                        $query->orWhere('tournaments.end_date', 'like', '%' . $r . '%');
+                        $query->orWhere('tournaments.description', 'like', '%' . $r . '%');
                     });
                 }
             });
