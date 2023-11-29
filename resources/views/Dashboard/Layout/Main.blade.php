@@ -26,11 +26,12 @@
         </div>
     </div>
     <script>
-    var base_url = @json(url('/'));
-    var current_url = @json(url()->current());
+        var base_url = @json(url('/'));
+        var current_url = @json(url()->current());
     </script>
     <script src="<?= asset('vendors/fontawesome/js/all.min.js') ?>"></script>
     <script src="<?= asset('vendors/bootstrap/bootstrap.min.js') ?>"></script>
+    <script src="<?= asset('js/search.js') ?>"></script>
     @yield('js')
 </body>
 

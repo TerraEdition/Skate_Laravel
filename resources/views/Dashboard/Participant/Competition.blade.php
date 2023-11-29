@@ -31,7 +31,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table">
+        <table class="table" id="filter-search">
             <tr>
                 <th>#</th>
                 <th>No BIB</th>

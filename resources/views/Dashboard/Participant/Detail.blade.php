@@ -70,8 +70,9 @@
             @elseif ($group->status < 2)
                 @php
                     $final_url = url()->current() . '/competition';
-                    if ($group->round > 1)
+                    if ($group->round > 1) {
                         $final_url .= '/final';
+                    }
                 @endphp
 
                 <a href="{{ $final_url }}" class="btn btn-outline-primary">
@@ -83,7 +84,7 @@
 
     <div class="table-responsive">
         @if ($group->round <= 1 && $group->total_seat == 1)
-            <table class="table">
+            <table class="table" id="filter-search">
                 <tr>
                     <th>#</th>
                     <th>No BIB</th>
